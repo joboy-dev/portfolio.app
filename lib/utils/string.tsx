@@ -1,4 +1,4 @@
-import type { Option } from "../../interfaces/general";
+import type { Option } from "@/lib/interfaces/general";
 
 export function capitalizeFirstLetter(str: string) {
   if (!str) return str;

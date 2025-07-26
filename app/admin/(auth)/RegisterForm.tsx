@@ -29,7 +29,7 @@ export default function RegisterForm() {
           isSubmitting={isLoading}
           buttonVariant="primary"
           backgroundColor="foreground"
-          width={45}
+          width={100}
           title="Register"
           description='Set up your admin account to get started'
           className='shadow-primary/20'

@@ -41,13 +41,13 @@ export default function ContactForm({
             <FormInput
                 name="name"
                 label="Name"
-                placeholder="Enter the name of the person"
+                placeholder="Enter name"
             />
 
             <FormInput
                 name="email"
                 label="Email"
-                placeholder="Enter the email of the person"
+                placeholder="Enter email"
             />
 
             <PhoneInput
@@ -59,13 +59,13 @@ export default function ContactForm({
             <FormInput
                 name="location"
                 label="Location"
-                placeholder="Enter the location of the person"
+                placeholder="Enter location"
             />
 
             <TextAreaInput
                 name="message"
                 label="Message"
-                placeholder="Enter the message of the person"
+                placeholder="Type your message here"
             />
         </FormModal>
     )

@@ -21,7 +21,7 @@ export default function PublicNavbar() {
   const location = usePathname();
 
   return (
-    <header className="bg-background w-full border-b border-primary/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 fixed top-0 z-50">
+    <header className="bg-background w-full border-b border-primary/10 backdrop-blur supports-[backdrop-filter]:bg-background/90 fixed top-0 z-10">
       <div className="flex items-center justify-between nav-padding">
         <Logo/>
 

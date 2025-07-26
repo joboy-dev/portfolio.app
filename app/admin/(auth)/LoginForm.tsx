@@ -29,7 +29,7 @@ export default function LoginForm() {
           isSubmitting={isLoading}
           buttonVariant="primary"
           backgroundColor="foreground"
-          width={45}
+          width={100}
           title="Welcome back"
           description='Sign in to access your admin dashboard'
           className='shadow-primary/20'

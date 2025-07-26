@@ -156,7 +156,7 @@ body {
 }
 
 .page-padding {
-  @apply px-12 md:px-[120px] pt-24 pb-4;
+  @apply max-md:px-12 max-sm:px-8 px-[120px] pt-24 pb-4;
 }
 
 .nav-padding {

@@ -116,17 +116,17 @@ export default function Home() {
             </LinkButton>
 
             <LinkButton
-              to="#"
+              to={profile?.resume_url ?? '#'}
               size='lg'
               variant='ghost'
               className="font-bold max-md:w-full"
             >
               <Download className='h-6 w-6 mr-5'/>
-              Download CV
+              Download Resume
             </LinkButton>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 max-md:grid-cols-3 max-md:w-full max-md:justify-start max-md:items-center">
+          <div className="grid grid-cols-5 gap-4 max-md:grid-cols-4 max-md:w-full max-md:justify-start max-md:items-center">
             {socials.filter(social => social.url !== undefined).map((social, index) => (
               <LinkButton 
                 key={index} 
