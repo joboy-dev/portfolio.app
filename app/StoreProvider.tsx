@@ -1,5 +1,5 @@
 'use client'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { store, AppStore } from '@/lib/redux/store'
 import { getProfile } from '@/lib/redux/slices/profile/profile'
@@ -11,16 +11,20 @@ export default function StoreProvider({
 }: {
   children: React.ReactNode
 }) {
-  const storeRef = useRef<AppStore>(undefined)
+  const storeRef = useRef<AppStore | null>(null)
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = store
   }
 
-  storeRef.current.dispatch(getProfile())
-  storeRef.current.dispatch(getSkills({}))
-  storeRef.current.dispatch(getServices({}))
-  
+  useEffect(() => {
+    if (storeRef.current) {
+      // Dispatch initial data loading after component mounts
+      storeRef.current.dispatch(getProfile())
+      storeRef.current.dispatch(getSkills({}))
+      storeRef.current.dispatch(getServices({}))
+    }
+  }, [])
 
   return <Provider store={storeRef.current}>{children}</Provider>
 }

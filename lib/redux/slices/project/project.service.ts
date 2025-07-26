@@ -5,13 +5,22 @@ import API from "@/lib/utils/API";
 import { ProjectBaseFormData, UpdateProjectFormData } from "@/lib/validators/project";
 
 export interface GetProjectsParams extends BaseGetParams {
-  // Add filter params here
+  slug?: string
+  name?: string
+  domain?: string
+  project_type?: string
+  tags?: string
 };
 
 const getProjects = async (params: GetProjectsParams): Promise<ApiResponse<ProjectInterface[]>> => {
   const { data } = await API.get("/projects", { params });
   return data;
 };
+
+const getFeaturedProjects = async (): Promise<ApiResponse<ProjectInterface[]>> => {
+    const { data } = await API.get("/projects/featured");
+    return data;
+  };
 
 const getProjectById = async (id: string): Promise<ApiResponse<ProjectInterface>> => {
     const { data } = await API.get(`/projects/${id}`)
@@ -39,6 +48,7 @@ const updateProject = async ({
 
 export const projectsService = {
     getProjects,
+    getFeaturedProjects,
     getProjectById,
     deleteProject,
     createProject,

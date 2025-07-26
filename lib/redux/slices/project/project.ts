@@ -11,6 +11,7 @@ interface UpdateProjectParams extends UpdateParams<UpdateProjectFormData> {}
 
 interface ProjectState {
     projects: ProjectInterface[]
+    featuredProjects: ProjectInterface[]
     selectedProject?: ProjectInterface
     total?: number
     currentPage?: number
@@ -24,6 +25,7 @@ interface ProjectState {
 
 const initialState: ProjectState = {
     projects: [],
+    featuredProjects: [],
     selectedProject: undefined,
     total: 0,
     currentPage: 1,
@@ -40,6 +42,19 @@ export const getProjects = createAsyncThunk(
     async (params: GetProjectsParams): Promise<ApiResponse<ProjectInterface[]> | undefined> => {
         try {
             const data = await projectsService.getProjects(params)
+            return data;
+        } catch (error) {
+            ProcessError(error)
+            return 
+        }
+    }
+)
+
+export const getFeaturedProjects = createAsyncThunk(
+    'projects/getFeaturedProjects',
+    async (): Promise<ApiResponse<ProjectInterface[]> | undefined> => {
+        try {
+            const data = await projectsService.getFeaturedProjects()
             return data;
         } catch (error) {
             ProcessError(error)
@@ -115,6 +130,9 @@ export const projectSlice = createSlice({
         setProjects: (state, action) => {
             state.projects = action.payload;
         },
+        setFeaturedProjects: (state, action) => {
+            state.featuredProjects = action.payload;
+        },
         setSelectedProject: (state, action) => {
             state.selectedProject = action.payload
         },
@@ -149,6 +167,17 @@ export const projectSlice = createSlice({
         .addCase(getProjects.rejected, (state) => {
             state.isLoading = false;
             state.projects = [];
+        })
+        .addCase(getFeaturedProjects.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(getFeaturedProjects.fulfilled, (state, {payload}) => {
+            state.isLoading = false;
+            state.featuredProjects = payload?.data ?? [];
+        })
+        .addCase(getFeaturedProjects.rejected, (state) => {
+            state.isLoading = false;
+            state.featuredProjects = [];
         })
         .addCase(getProjectById.pending, (state) => {
             state.isLoading = true;
@@ -208,8 +237,9 @@ export const projectSlice = createSlice({
 })
 
 export const { 
-    setSelectedProject, 
     setProjects,
+    setFeaturedProjects,
+    setSelectedProject, 
     setCurrentPage,
     setPageSize,
     setTotal,

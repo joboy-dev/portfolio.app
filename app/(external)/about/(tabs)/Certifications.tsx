@@ -1,4 +1,6 @@
 import Loading from '@/app/loading'
+import Button from '@/components/shared/button/Button'
+import LinkButton from '@/components/shared/button/LinkButton'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
 import ListEmpty from '@/components/shared/ListEmpty'
@@ -8,7 +10,7 @@ import { getCertifications } from '@/lib/redux/slices/certification/certificatio
 import { GetCertificationsParams } from '@/lib/redux/slices/certification/certification.service'
 import { formatDate } from '@/lib/utils/formatter'
 import { renderWithLineBreaks } from '@/lib/utils/string'
-import { Building } from 'lucide-react'
+import { Building, Calendar, ExternalLink } from 'lucide-react'
 import React, { useEffect, useState } from 'react' 
 
 export default function Certifications() {
@@ -36,22 +38,36 @@ export default function Certifications() {
                         <ImageComponent 
                             src={certification.issuer_image?.url ?? ""} 
                             alt={certification.name} 
-                            width={60} 
-                            height={60}
+                            width={40} 
+                            height={40}
                             className='rounded-lg'
                             objectFit='contain'
                         />
                         <div className='w-full'>
-                            <h3 className='text-2xl max-md:text-xl font-bold'>{certification.name}</h3>
-                            <div className="flex items-center justify-between max-md:flex-col max-md:items-start max-md:justify-start max-md:gap-0">
-                                <div className='flex items-center gap-2 text-sm text-primary max-md:items-start'>
-                                    <Building className='w-4 h-4' />
-                                    <p>{certification.issuer}</p>
+                            <h3 className='text-xl max-md:text-lg font-bold'>{certification.name}</h3>
+                            <div className="">
+                                <p className='text-primary text-sm'>{certification.issuer}</p>
+                                <div className='flex items-center gap-2 max-md:items-start'>
+                                    <Calendar className='w-4 h-4' />
+                                    <p className='text-sm text-foreground/60'>{formatDate(certification.issue_date ?? "")}</p>
                                 </div>
-                                <p className='text-sm text-foreground/60'>{formatDate(certification.issue_date ?? "")}</p>
                             </div>
                         </div>
-                    </div>            
+                    </div> 
+                    {certification.credential_id && (
+                        <p className='text-sm text-foreground/60 mb-2'><span className='font-bold'>Credential ID:</span> {certification.credential_id}</p>         
+                    )}
+                    {certification.credential_url && (
+                        <Button
+                            variant='primary'
+                            size='sm'
+                            className='w-full'
+                            onClick={() => window.open(certification.credential_url, '_blank')}
+                        >
+                            <ExternalLink className='w-4 h-4 mr-2' />
+                            Verify Credential
+                        </Button>
+                    )}
                 </Card>
             ))}
         </div>
@@ -59,7 +75,7 @@ export default function Certifications() {
         <Pagination
             currentPage={currentPage ?? 1}
             totalPages={totalPages ?? 1}
-            onPageChange={(page) => setFilterState({...filterState, page})}
+            onPageChange={(page) => setFilterState(prev => ({...prev, page}))}
         />
     </div>
   )

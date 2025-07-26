@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import TextField from './TextField';
 import Button from '../button/Button';
-import { generateRandomString } from '../../../../lib/utils/string';
+import { generateRandomString } from '@/lib/utils/string';
 
 export interface FieldGroup {
   id: string;
   first: string;
-  second: string;
+  second: string;   
 }
 
 interface DynamicFieldGroupProps {
@@ -82,7 +82,7 @@ export default function DynamicFormGroup({
 
                     <Button 
                         type='button'
-                        variant='accent' 
+                        variant='dangerOutline' 
                         size='sm'
                         onClick={() => handleRemove(index)}
                     >
@@ -92,7 +92,7 @@ export default function DynamicFormGroup({
             ))}
             <Button 
                 type='button'
-                variant='secondary' 
+                variant='primary' 
                 size='sm'
                 onClick={handleAdd}
             >

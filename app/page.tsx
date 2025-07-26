@@ -16,8 +16,8 @@ import ProgressBar from "@/components/shared/ProgressBar";
 
 export default function Home() {
   const { profile, isLoading:isProfileLoading } = useAppSelector(state => state.profile)
-    const { skills, total:totalSkills } = useAppSelector(state => state.skill)
-    const { services } = useAppSelector(state => state.service)
+  const { skills, total:totalSkills } = useAppSelector(state => state.skill)
+  const { services } = useAppSelector(state => state.service)
 
   const stats = [
     { number: `${profile?.projects_count}`, label: "Projects Completed", icon: <Rocket className="h-5 w-5" /> },
@@ -160,8 +160,8 @@ export default function Home() {
           </div>
 
           {/* Floating Elements */}
-          <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-2xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-10 animate-pulse delay-1000"></div>
+          <div className="absolute -top-6 -right-6 w-24 h-24 max-md:w-16 max-md:h-16 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-2xl opacity-20 animate-pulse"></div>
+          <div className="absolute -bottom-6 -left-6 w-32 h-32 max-md:w-24 max-md:h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-10 animate-pulse delay-1000"></div>
         </div>
       </section>
 
@@ -201,9 +201,9 @@ export default function Home() {
                 className="mb-4" 
                 src={service.service_logo?.url ?? ''} 
                 alt={service.name} 
-                width={100} 
-                height={100} 
-                objectFit="fill"
+                width={80} 
+                height={80} 
+                objectFit="contain"
               />
               <h3 className="text-2xl font-bold text-foreground mb-2">{service.name}</h3>
               <p className="text-;g text-muted-foreground mb-2">{service.description}</p>
@@ -223,8 +223,8 @@ export default function Home() {
       {/* Call to Action */}
       <section className="page-padding bg-gradient-primary">
         <div className="max-w-4xl mx-auto text-center pb-12">
-          <h2 className="text-4xl font-bold text-primary-foreground mb-6">Ready to Start Your Project?</h2>
-          <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold">
+          <h2 className="text-4xl font-bold text-primary-foreground mb-6 text-center">Ready to Start Your Project?</h2>
+          <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold text-center">
             Let's discuss how we can bring your ideas to life with cutting-edge technology and thoughtful design.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

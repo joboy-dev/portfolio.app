@@ -99,8 +99,7 @@ export default function ExperiencePage() {
                     placeholder="Enter the role of the experience"
                 />
 
-                <TiptapField
-                    control={createMethods.control}
+                <TextAreaInput
                     name="description"
                     label="Description"
                     placeholder="Enter the description of the experience"
@@ -152,10 +151,9 @@ export default function ExperiencePage() {
                     name="role"
                     label="Role"
                     placeholder="Enter the role of the experience"
-                />
+                />  
 
-                <TiptapField
-                    control={editMethods.control}
+                <TextAreaInput
                     name="description"
                     label="Description"
                     placeholder="Enter the description of the experience"

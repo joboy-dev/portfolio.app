@@ -8,6 +8,10 @@ export interface ProjectInterface extends BaseModelInterface {
   slug: string
   description?: string
   tools?: string[]
+  features?: string[]
+  results?: string[]
+  challenges_and_solutions?: string[]
+  technical_details?: Record<string, string>
   domain: string
   project_type: string
   role: string

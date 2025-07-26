@@ -72,7 +72,7 @@ export default function Education() {
         <Pagination
             currentPage={currentPage ?? 1}
             totalPages={totalPages ?? 1}
-            onPageChange={(page) => setFilterState({...filterState, page})}
+            onPageChange={(page) => setFilterState(prev => ({...prev, page}))}
         />
     </div>
   )

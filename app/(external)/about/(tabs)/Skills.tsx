@@ -18,9 +18,7 @@ export default function Skills() {
   })
 
   useEffect(() => {
-    if (!skills) {
-        dispatch(getSkills({...filterState}))
-    }
+    dispatch(getSkills({...filterState}))
   }, [dispatch, filterState])
 
   return isLoading ? <Loading/> : (
@@ -36,10 +34,10 @@ export default function Skills() {
                       <ImageComponent 
                           src={skill.skill_logo?.url ?? ""} 
                           alt={skill.name} 
-                          width={40} 
-                          height={40}
+                          width={50} 
+                          height={50}
                           className='rounded-lg'
-                          objectFit='cover'
+                          objectFit='contain'
                       />
                       <div className='w-full'>
                           <h3 className='text-lg font-bold'>{skill.name}</h3>
@@ -53,7 +51,7 @@ export default function Skills() {
         <Pagination
             currentPage={currentPage ?? 1}
             totalPages={totalPages ?? 1}
-            onPageChange={(page) => setFilterState({...filterState, page})}
+            onPageChange={(page) => setFilterState(prev => ({...prev, page}))}
         />
     </div>
   )

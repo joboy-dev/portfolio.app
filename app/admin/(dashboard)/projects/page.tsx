@@ -34,6 +34,7 @@ import TagDetatchModal from '@/components/tag/TagDetatchModal'
 import TiptapField from '@/components/shared/form/TiptapField'
 import Badge from '@/components/shared/Badge'
 import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
+import AdditionalInfoField from '@/components/shared/form/AdditionalInfoField'
 
 export default function ProjectsPage() {
     const projectDomain: Option[] = [
@@ -201,9 +202,8 @@ export default function ProjectsPage() {
                     placeholder="Enter the tagline of the project"
                 />
 
-                <TiptapField
+                <TextAreaInput
                     name="description"
-                    control={createMethods.control}
                     label="Description"
                     placeholder="Enter the description of the project"
                 />
@@ -273,6 +273,37 @@ export default function ProjectsPage() {
                     placeholder="Enter the tools of the project"
                     options={[]}
                 />
+
+                <CreatableMultiSelectField
+                    methods={createMethods}
+                    name="features"
+                    label="Features"
+                    placeholder="Enter the features of the project"
+                    options={[]}
+                />
+
+                <CreatableMultiSelectField
+                    methods={createMethods}
+                    name="results"
+                    label="Results"
+                    placeholder="Enter the results of the project"
+                    options={[]}
+                />
+
+                <CreatableMultiSelectField
+                    methods={createMethods}
+                    name="challenges_and_solutions"
+                    label="Challenges and Solutions"
+                    placeholder="Enter the challenges and solutions of the project"
+                    options={[]}
+                />
+
+                <AdditionalInfoField
+                    header='Technical Details'
+                    methods={createMethods}
+                    name='technical_details'
+                />
+
             </FormModal>
 
             <FormModal
@@ -296,9 +327,8 @@ export default function ProjectsPage() {
                     placeholder="Enter the tagline of the project"
                 />
 
-                <TiptapField
+                <TextAreaInput
                     name="description"
-                    control={editMethods.control}
                     label="Description"
                     placeholder="Enter the description of the project"
                 />
@@ -338,6 +368,36 @@ export default function ProjectsPage() {
                     type="number"
                 />
 
+                <FormInput
+                    name="github_link"
+                    label="Github Link"
+                    placeholder="Enter the github link of the project"
+                />
+
+                <FormInput
+                    name="postman_link"
+                    label="Postman Link"
+                    placeholder="Enter the postman link of the project"
+                />
+
+                <FormInput
+                    name="live_link"
+                    label="Live Link"
+                    placeholder="Enter the live link of the project"
+                />
+
+                <FormInput
+                    name="google_drive_link"
+                    label="Google Drive Link"
+                    placeholder="Enter the google drive link of the project"
+                />
+
+                <FormInput
+                    name="figma_link"
+                    label="Figma Link"
+                    placeholder="Enter the figma link of the project"
+                />
+
                 <CreatableMultiSelectField
                     methods={editMethods}
                     name="tools"
@@ -349,6 +409,59 @@ export default function ProjectsPage() {
                         value: tool,
                         key: tool.length,
                     }))}
+                />
+
+                <CreatableMultiSelectField
+                    methods={editMethods}
+                    name="features"
+                    label="Features"
+                    placeholder="Enter the features of the project"
+                    options={[]}
+                    defaultValue={selectedProject?.features?.map((feature) => ({
+                        label: feature,
+                        value: feature,
+                        key: feature.length,
+                    }))}
+                />
+
+                <CreatableMultiSelectField
+                    methods={editMethods}
+                    name="results"
+                    label="Results"
+                    placeholder="Enter the results of the project"
+                    options={[]}
+                    defaultValue={selectedProject?.results?.map((result) => ({
+                        label: result,
+                        value: result,
+                        key: result.length,
+                    }))}
+                />
+
+                <CreatableMultiSelectField
+                    methods={editMethods}
+                    name="challenges_and_solutions"
+                    label="Challenges and Solutions"
+                    placeholder="Enter the challenges and solutions of the project"
+                    options={[]}
+                    defaultValue={selectedProject?.challenges_and_solutions?.map((challenge) => ({
+                        label: challenge,
+                        value: challenge,
+                        key: challenge.length,
+                    }))}
+                />
+                
+                <AdditionalInfoField
+                    header='Technical Details'
+                    methods={editMethods}
+                    name='technical_details'
+                    keyToRemoveName='technical_details_keys_to_remove'
+                    defaultFields={selectedProject?.technical_details ? Object.entries(selectedProject.technical_details).map(([key, value]) => ({
+                        key,
+                        value,
+                        id: key,
+                        first: key,
+                        second: value,
+                    })) : []}
                 />
             </FormModal>
 

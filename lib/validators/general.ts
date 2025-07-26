@@ -15,3 +15,8 @@ export const richTextSchema = z.string()
     const strippedText = sanitizedHtml.replace(/<[^>]*>/g, '').trim();
     return strippedText.length > 0;
 });
+
+export const additionalInfoSchema = z.array(z.object({
+  key: z.string(),
+  value: z.string(),
+}))

@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { additionalInfoSchema } from "./general";
 
 const urlSchema = z.string().optional().nullable().transform(e => e === '' ? null : e);
 
@@ -16,6 +17,10 @@ export const projectBaseSchema = z.object({
   live_link: urlSchema,
   google_drive_link: urlSchema,
   figma_link: urlSchema,
+  features: z.array(z.string()).optional().nullable(),
+  results: z.array(z.string()).optional().nullable(),
+  challenges_and_solutions: z.array(z.string()).optional().nullable(),
+  technical_details: additionalInfoSchema.optional().nullable(),
 });
 
 export const updateProjectSchema = projectBaseSchema.extend({
@@ -32,6 +37,11 @@ export const updateProjectSchema = projectBaseSchema.extend({
   live_link: urlSchema,
   google_drive_link: urlSchema,
   figma_link: urlSchema,
+  features: z.array(z.string()).optional().nullable(),
+  results: z.array(z.string()).optional().nullable(),
+  challenges_and_solutions: z.array(z.string()).optional().nullable(),
+  technical_details_keys_to_remove: z.array(z.string()).optional().nullable(),
+  technical_details: additionalInfoSchema.optional().nullable(),
   position: z.number().int().optional(),
 }).partial();
 
