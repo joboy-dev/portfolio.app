@@ -35,6 +35,7 @@ import TiptapField from '@/components/shared/form/TiptapField'
 import Badge from '@/components/shared/Badge'
 import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
 import AdditionalInfoField from '@/components/shared/form/AdditionalInfoField'
+import DateInput from '@/components/shared/form/DateInput'
 
 export default function ProjectsPage() {
     const projectDomain: Option[] = [
@@ -69,14 +70,29 @@ export default function ProjectsPage() {
             key: 5,
         },
         {
-            label: "AI/ML",
-            value: "Ai & ML",
+            label: "AI & ML",
+            value: "AI & ML",
             key: 6,
+        },
+        {
+            label: "Blockchain",
+            value: "Blockchain",
+            key: 7,
+        },
+        {
+            label: "DevOps",
+            value: "DevOps",
+            key: 8,
+        },
+        {
+            label: "Cybersecurity",
+            value: "Cybersecurity",
+            key: 9,
         },
         {
             label: "Other",
             value: "Other",
-            key: 7,
+            key: 10,
         }
     ]
 
@@ -106,6 +122,44 @@ export default function ProjectsPage() {
             value: "Other",
             key: 3,
         }
+    ]
+
+    const projectStatus: Option[] = [
+        {
+            label: "Active",
+            value: "Active",
+            key: 0,
+        },
+        {
+            label: "Inactive",
+            value: "Inactive",
+            key: 1,
+        },
+        {
+            label: "Completed",
+            value: "Completed",
+            key: 2,
+        },
+        {
+            label: "Ongoing",
+            value: "Ongoing",
+            key: 3,
+        },
+        {
+            label: "On Hold",
+            value: "On Hold",
+            key: 4,
+        },
+        {
+            label: "Cancelled",
+            value: "Cancelled",
+            key: 5,
+        },
+        {
+            label: "Other",
+            value: "Other",
+            key: 6,
+        },
     ]
 
     const dispatch = useAppDispatch()
@@ -189,6 +243,7 @@ export default function ProjectsPage() {
                 title="Add Project"
                 subtitle="Add a new project to your portfolio"
                 isSubmitting={isLoading}
+                size='lg'
             >
                 <FormInput
                     name="name"
@@ -208,63 +263,92 @@ export default function ProjectsPage() {
                     placeholder="Enter the description of the project"
                 />
 
-                <SearchableSelectField
-                    control={createMethods.control}
-                    name="domain"
-                    label="Domain"
-                    placeholder="Select the domain of the project"
-                    options={projectDomain}
-                />
+                <div className='grid grid-cols-2 gap-4 max-sm:grid-cols-1'>
+                    <SearchableSelectField
+                        control={createMethods.control}
+                        name="domain"
+                        label="Domain"
+                        placeholder="Select the domain of the project"
+                        options={projectDomain}
+                    />
 
-                <SearchableSelectField
-                    control={createMethods.control}
-                    name="project_type"
-                    label="Project Type"
-                    placeholder="Select the project type of the project" 
-                    options={projectType}
-                />
+                    <SearchableSelectField
+                        control={createMethods.control}
+                        name="project_type"
+                        label="Project Type"
+                        placeholder="Select the project type of the project" 
+                        options={projectType}
+                    />
 
-                <FormInput
-                    name="role"
-                    label="Role"
-                    placeholder="Enter the role of the project"
-                />  
+                    <FormInput
+                        name="role"
+                        label="Role"
+                        placeholder="Enter the role of the project"
+                    />  
 
-                <FormInput
-                    name="client"
-                    label="Client"
-                    placeholder="Enter the client of the project"
-                />
+                    <FormInput
+                        name="client"
+                        label="Client"
+                        placeholder="Enter the client of the project"
+                    />
 
-                <FormInput
-                    name="github_link"
-                    label="Github Link"
-                    placeholder="Enter the github link of the project"
-                />
+                    <FormInput
+                        name="sector"
+                        label="Sector"
+                        placeholder="Enter the sector of the project"
+                    />
 
-                <FormInput
-                    name="postman_link"
-                    label="Postman Link"
-                    placeholder="Enter the postman link of the project"
-                />
+                    <DateInput
+                        name="start_date"
+                        label="Start Date"
+                        placeholder="Enter the start date of the project"
+                    />
 
-                <FormInput
-                    name="live_link"
-                    label="Live Link"
-                    placeholder="Enter the live link of the project"
-                />
+                    <DateInput
+                        name="end_date"
+                        label="End Date"
+                        placeholder="Enter the end date of the project"
+                    />
 
-                <FormInput
-                    name="google_drive_link"
-                    label="Google Drive Link"
-                    placeholder="Enter the google drive link of the project"
-                />
+                    <SearchableSelectField
+                        control={createMethods.control}
+                        name="status"
+                        label="Status"
+                        placeholder="Select the status of the project"
+                        options={projectStatus}
+                    />
 
-                <FormInput
-                    name="figma_link"
-                    label="Figma Link"
-                    placeholder="Enter the figma link of the project"
-                />
+                    <FormInput
+                        name="github_link"
+                        label="Github Link"
+                        placeholder="Enter the github link of the project"
+                    />
+
+                    <FormInput
+                        name="postman_link"
+                        label="Postman Link"
+                        placeholder="Enter the postman link of the project"
+                    />
+
+                    <FormInput
+                        name="live_link"
+                        label="Live Link"
+                        placeholder="Enter the live link of the project"
+                    />
+
+                    <FormInput
+                        name="google_drive_link"
+                        label="Google Drive Link"
+                        placeholder="Enter the google drive link of the project"
+                    />
+
+                    <FormInput
+                        name="figma_link"
+                        label="Figma Link"
+                        placeholder="Enter the figma link of the project"
+                    />
+                </div>
+
 
                 <CreatableMultiSelectField
                     methods={createMethods}
@@ -290,12 +374,10 @@ export default function ProjectsPage() {
                     options={[]}
                 />
 
-                <CreatableMultiSelectField
+                <AdditionalInfoField
+                    header='Challenges and Solutions'
                     methods={createMethods}
-                    name="challenges_and_solutions"
-                    label="Challenges and Solutions"
-                    placeholder="Enter the challenges and solutions of the project"
-                    options={[]}
+                    name='challenges_and_solutions'
                 />
 
                 <AdditionalInfoField
@@ -314,6 +396,7 @@ export default function ProjectsPage() {
                 title="Edit Project"
                 subtitle="Edit the project"
                 isSubmitting={isLoading}
+                size='lg'
             >
                 <FormInput
                     name="name"
@@ -333,70 +416,98 @@ export default function ProjectsPage() {
                     placeholder="Enter the description of the project"
                 />
 
-                <SearchableSelectField
-                    control={editMethods.control}
-                    name="domain"
-                    label="Domain"
-                    placeholder="Select the domain of the project"
-                    options={projectDomain}
-                />
+                <div className='grid grid-cols-2 gap-4 max-sm:grid-cols-1'>
+                    <SearchableSelectField
+                        control={editMethods.control}
+                        name="domain"
+                        label="Domain"
+                        placeholder="Select the domain of the project"
+                        options={projectDomain}
+                    />
 
-                <SearchableSelectField
-                    control={editMethods.control}
-                    name="project_type"
-                    label="Project Type"
-                    placeholder="Select the project type of the project" 
-                    options={projectType}
-                />
+                    <SearchableSelectField
+                        control={editMethods.control}
+                        name="project_type"
+                        label="Project Type"
+                        placeholder="Select the project type of the project" 
+                        options={projectType}
+                    />
 
-                <FormInput
-                    name="role"
-                    label="Role"
-                    placeholder="Enter the role of the project"
-                />
+                    <FormInput
+                        name="role"
+                        label="Role"
+                        placeholder="Enter the role of the project"
+                    />
 
-                <FormInput
-                    name="client"
-                    label="Client"
-                    placeholder="Enter the client of the project"
-                />
+                    <FormInput
+                        name="client"
+                        label="Client"
+                        placeholder="Enter the client of the project"
+                    />
 
-                <FormInput
-                    name="position"
-                    label="Position"
-                    placeholder="Enter the position of the project"
-                    type="number"
-                />
+                    <FormInput
+                        name="sector"
+                        label="Sector"
+                        placeholder="Enter the sector of the project"
+                    />
 
-                <FormInput
-                    name="github_link"
-                    label="Github Link"
-                    placeholder="Enter the github link of the project"
-                />
+                    <DateInput
+                        name="start_date"
+                        label="Start Date"
+                        placeholder="Enter the start date of the project"
+                    />
 
-                <FormInput
-                    name="postman_link"
-                    label="Postman Link"
-                    placeholder="Enter the postman link of the project"
-                />
+                    <DateInput
+                        name="end_date"
+                        label="End Date"
+                        placeholder="Enter the end date of the project"
+                    />
 
-                <FormInput
-                    name="live_link"
-                    label="Live Link"
-                    placeholder="Enter the live link of the project"
-                />
+                    <SearchableSelectField
+                        control={editMethods.control}
+                        name="status"
+                        label="Status"
+                        placeholder="Select the status of the project"
+                        options={projectStatus}
+                    />
 
-                <FormInput
-                    name="google_drive_link"
-                    label="Google Drive Link"
-                    placeholder="Enter the google drive link of the project"
-                />
+                    <FormInput
+                        name="position"
+                        label="Position"
+                        placeholder="Enter the position of the project"
+                        type="number"
+                    />
 
-                <FormInput
-                    name="figma_link"
-                    label="Figma Link"
-                    placeholder="Enter the figma link of the project"
-                />
+                    <FormInput
+                        name="github_link"
+                        label="Github Link"
+                        placeholder="Enter the github link of the project"
+                    />
+
+                    <FormInput
+                        name="postman_link"
+                        label="Postman Link"
+                        placeholder="Enter the postman link of the project"
+                    />
+
+                    <FormInput
+                        name="live_link"
+                        label="Live Link"
+                        placeholder="Enter the live link of the project"
+                    />
+
+                    <FormInput
+                        name="google_drive_link"
+                        label="Google Drive Link"
+                        placeholder="Enter the google drive link of the project"
+                    />
+
+                    <FormInput
+                        name="figma_link"
+                        label="Figma Link"
+                        placeholder="Enter the figma link of the project"
+                    />
+                </div>
 
                 <CreatableMultiSelectField
                     methods={editMethods}
@@ -437,19 +548,20 @@ export default function ProjectsPage() {
                     }))}
                 />
 
-                <CreatableMultiSelectField
+                <AdditionalInfoField
+                    header='Challenges and Solutions'
                     methods={editMethods}
-                    name="challenges_and_solutions"
-                    label="Challenges and Solutions"
-                    placeholder="Enter the challenges and solutions of the project"
-                    options={[]}
-                    defaultValue={selectedProject?.challenges_and_solutions?.map((challenge) => ({
-                        label: challenge,
-                        value: challenge,
-                        key: challenge.length,
-                    }))}
+                    name='challenges_and_solutions'
+                    keyToRemoveName='challenges_and_solutions_keys_to_remove'
+                    defaultFields={selectedProject?.challenges_and_solutions ? Object.entries(selectedProject.challenges_and_solutions).map(([key, value]) => ({
+                        key,
+                        value,
+                        id: key,
+                        first: key,
+                        second: value,
+                    })) : []}
                 />
-                
+
                 <AdditionalInfoField
                     header='Technical Details'
                     methods={editMethods}
@@ -550,6 +662,10 @@ export default function ProjectsPage() {
                                                     google_drive_link: project.google_drive_link,
                                                     figma_link: project.figma_link,
                                                     position: project.position ?? 0,
+                                                    sector: project.sector,
+                                                    start_date: project.start_date ? new Date(project.start_date) : null,
+                                                    end_date: project.end_date ? new Date(project.end_date) : null,
+                                                    status: project.status,
                                                 });
                                             },
                                             icon: <Pencil className='w-4 h-4' />

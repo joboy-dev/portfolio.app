@@ -11,6 +11,8 @@ import { getFeaturedProjects, getProjects } from '@/lib/redux/slices/project/pro
 import { GetProjectsParams } from '@/lib/redux/slices/project/project.service'
 import { Filter, Star, User2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { Option } from '@/lib/interfaces/general'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function ProjectsPage() {
     const { projects, featuredProjects, isLoading } = useAppSelector(state => state.project)
@@ -30,6 +32,64 @@ export default function ProjectsPage() {
         }
         dispatch(getProjects({...filterState}))
     }, [dispatch, filterState])
+
+    const projectDomain: Option[] = [
+        {
+            label: "Web Development",
+            value: "Web Development",
+            key: 0,
+        },
+        {
+            label: "Mobile Development",
+            value: "Mobile Development",
+            key: 1,
+        },
+        {
+            label: "Backend Development",
+            value: "Backend Development",
+            key: 2,
+        },
+        {
+            label: "Frontend Development",
+            value: "Frontend Development",
+            key: 3,
+        },
+        {
+            label: "Full Stack Development",
+            value: "Full Stack Development",
+            key: 4,
+        },
+        {
+            label: "Data Science",
+            value: "Data Science",
+            key: 5,
+        },
+        {
+            label: "AI & ML",
+            value: "AI & ML",
+            key: 6,
+        },
+        {
+            label: "Blockchain",
+            value: "Blockchain",
+            key: 7,
+        },
+        {
+            label: "DevOps",
+            value: "DevOps",
+            key: 8,
+        },
+        {
+            label: "Cybersecurity",
+            value: "Cybersecurity",
+            key: 9,
+        },
+        {
+            label: "Other",
+            value: "Other",
+            key: 10,
+        }
+    ]
 
     return (
         <div>
@@ -64,7 +124,10 @@ export default function ProjectsPage() {
                     buttonIcon={<Filter className='ml-3'/>}
                     buttonText='Filters'
                     size='sm'
-                    items={[]}
+                    items={projectDomain.map(domain => ({
+                        text: domain.label,
+                        onSelect: () => setFilterState({...filterState, domain: domain.value, page: 1})
+                    }))}
                 />
             </section>
 
@@ -73,6 +136,8 @@ export default function ProjectsPage() {
                 <Loading />
             ) : (
                 <>
+                    {projects.length === 0 && <ListEmpty title='projects'/>}
+                    {/* Featured Projects */}
                     {(projects.length > 4 || searchQuery !== '') && (
                         <section className='page-padding bg-secondary/50'>
                             <div className='flex items-center gap-4 mb-8'>
@@ -88,10 +153,10 @@ export default function ProjectsPage() {
                     )}
 
                     {/* All Projects */}
-                    {<section className='page-padding bg-secondary/50'>
+                    {projects.length > 0 && <section className='page-padding bg-secondary/50'>
                         <h2 className='text-3xl max-md:text-2xl max-sm:text-xl font-bold mb-8'>All Projects</h2>
 
-                        {projects.length < 4 
+                        {(projects.length < 4 )
                             ? <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
                                 {projects.map((project) => (
                                     <ProjectCard key={project.id} project={project} />

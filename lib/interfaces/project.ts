@@ -10,12 +10,16 @@ export interface ProjectInterface extends BaseModelInterface {
   tools?: string[]
   features?: string[]
   results?: string[]
-  challenges_and_solutions?: string[]
+  challenges_and_solutions?: Record<string, string>
   technical_details?: Record<string, string>
   domain: string
   project_type: string
   role: string
   client?: string
+  sector?: string
+  start_date?: string
+  end_date?: string
+  status?: string
   github_link?: string
   postman_link?: string
   live_link?: string

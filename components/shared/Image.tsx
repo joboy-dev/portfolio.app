@@ -16,6 +16,7 @@ type ImageProps = {
   sizes?: string;
   showLoader?: boolean;
   showImageInModalOnClick?: boolean
+  onClick?: () => void
 };
 
 function ImageComponent({
@@ -33,6 +34,7 @@ function ImageComponent({
   sizes,
   showLoader = false,
   showImageInModalOnClick = false,
+  onClick,
 }: ImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -86,6 +88,10 @@ function ImageComponent({
         srcSet={srcSet}
         sizes={sizes}
         onClick={() => {
+          if (onClick) {
+            onClick();
+            return;
+          }
           if (!showImageInModalOnClick) return null;
           setOpenImageModal(true)
         }}

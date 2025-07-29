@@ -12,7 +12,6 @@ const navItems = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Projects', to: '/projects' },
-  { label: 'Contact', to: '/contact' },
   { label: 'Blog', to: '/blog' },
 ];
 
@@ -42,7 +41,7 @@ export default function PublicNavbar() {
         </nav>
         
         <div>
-          <LinkButton
+          {/* <LinkButton
             to="/contact"
             size='sm'
             variant='primary'
@@ -50,7 +49,7 @@ export default function PublicNavbar() {
           >
             Let's Talk
             <ArrowUpRight className='h-4 w-4 ml-5'/>
-          </LinkButton>
+          </LinkButton> */}
 
           {/* Mobile Toggle */}
           <button
@@ -81,14 +80,14 @@ export default function PublicNavbar() {
                   {item.label}
                 </Link>
             ))}
-            <LinkButton
+            {/* <LinkButton
               to="/contact"
               variant='outline'
               className='w-48 mb-5 font-bold'
             >
               Let's Talk
               <ArrowUpRight className='h-4 w-4 ml-5'/>
-            </LinkButton>
+            </LinkButton> */}
           </div>
         </div>
       )}

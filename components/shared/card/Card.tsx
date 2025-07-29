@@ -25,14 +25,18 @@ function Card({
       className={`${backgroundColor} rounded-lg p-6 hover:shadow-sm transition-all duration-300 border-2 border-border ${className}`}
     >
       {linkTo && <Link href={linkTo}>
-        {icon && <div className="text-primary text-3xl mb-4">{icon}</div>}
-        {title && <h3 className="text-xl font-semibold mb-2 text-foreground max-md:text-lg">{title}</h3>}
+        <div className="flex items-center gap-2">
+          {icon && <div className="text-primary text-3xl mb-4">{icon}</div>}
+          {title && <h3 className="text-2xl font-semibold mb-2 text-foreground max-md:text-lg">{title}</h3>}
+        </div>
         {description && <p className="text-sm text-muted-foreground max-md:text-xs">{description}</p>}
       </Link>}
 
       {!linkTo && <div>
-        {icon && <div className="text-primary text-3xl mb-4">{icon}</div>}
-        {title && <h3 className="text-xl font-semibold mb-2 text-foreground max-md:text-lg">{title}</h3>}
+        <div className="flex items-center gap-2">
+          {icon && <div className="text-primary text-3xl mb-4">{icon}</div>}
+          {title && <h3 className="text-xl font-semibold mb-2 text-foreground max-md:text-lg">{title}</h3>}
+        </div>
         {description && <p className="text-sm text-muted-foreground max-md:text-xs">{description}</p>}
         <div>
           {children}

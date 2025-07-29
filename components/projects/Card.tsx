@@ -13,8 +13,8 @@ import LinkButton from '../shared/button/LinkButton'
 
 export function ProjectCard({ project }: { project: ProjectInterface }) {
     return (
-        <Card key={project.id} className='px-0 py-0 h-fit' backgroundColor='background'>
-            <div className='w-full h-48 flex items-center justify-center'>
+        <Card key={project.id} className='px-0 py-0 h-full w-full' backgroundColor='bg-background'>
+            <div className='w-full h-full flex items-center justify-center'>
                 <ImageComponent
                     src={
                         (project.files && project.files.length > 0)
@@ -22,15 +22,15 @@ export function ProjectCard({ project }: { project: ProjectInterface }) {
                             : "/images/placeholder.png"
                     }
                     alt={project.name}
-                    className=''
-                    width={100}
-                    height={100}
+                    width={500}
+                    height={250}
                     objectFit='cover'
+                    className='rounded-t-lg'
                 />
             </div>
             <div className='flex flex-col gap-2 p-4 mt-4'>
                 <div className="flex items-center justify-between mb-4">
-                    <Badge variant='secondary'>{project.project_type}</Badge>
+                    <Badge variant='secondary'>{project.sector}</Badge>
                     <Badge variant='outlineSecondary'>{project.role}</Badge>
                 </div>
                 <h3 className='text-xl font-bold'>{project.name}</h3>

@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import React, { useState } from 'react'
 
-interface Tab {
+export interface Tab {
     id: string
     label: string
     content: React.ReactNode
