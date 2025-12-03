@@ -1,7 +1,6 @@
-import Badge from '@/components/shared/Badge'
 import Card from '@/components/shared/card/Card'
 import { useAppSelector } from '@/lib/hooks/redux'
-import { ChartBarIcon, CheckCircleIcon } from 'lucide-react'
+import { CheckCircleIcon } from 'lucide-react'
 import React from 'react'
 
 export default function Overview() {
@@ -13,8 +12,8 @@ export default function Overview() {
             backgroundColor='bg-background'
         >
             <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-                {selectedProject?.features?.map((feature) => (
-                    <div className='flex items-center gap-2'>
+                {selectedProject?.features?.map((feature, index) => (
+                    <div key={index} className='flex items-center gap-2'>
                         <CheckCircleIcon className='w-5 h-5 text-primary' />
                         <p className='text-lg text-muted-foreground'>{feature}</p>
                     </div>

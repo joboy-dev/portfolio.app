@@ -24,7 +24,7 @@ export const useAuth = () => {
     
     const loadUser = async () => {
       try {
-        let fetchPromise = userService.getCurrentUser();
+        const fetchPromise = userService.getCurrentUser();
         const currentUser = await fetchPromise;
         dispatch(setUser(currentUser));
         setIsAuthenticated(true);
@@ -38,7 +38,7 @@ export const useAuth = () => {
     };
 
     loadUser();
-  }, []);
+  }, [dispatch]);
 
   return { user, isAuthenticated, loading };
 };

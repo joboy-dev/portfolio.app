@@ -1,9 +1,9 @@
 import Logo from '../Logo';
-import LinkButton from '../button/LinkButton';
-import Avatar from '../Avatar';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
-import { LogOut, User } from 'lucide-react';
+// import LinkButton from '../button/LinkButton';
+// import Avatar from '../Avatar';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useEffect, useRef, useState } from 'react';
+// import { LogOut, User } from 'lucide-react';
 
 export default function AuthNavbar({isExternalPage=false}) {
   // const dispatch = useDispatch<AppDispatch>()

@@ -8,7 +8,6 @@ import { skillsService, type GetSkillsParams } from "../skill/skill.service"
 import type { SkillBaseFormData, UpdateSkillFormData } from "@/lib/validators/skill"
 
 
-interface UpdateSkillParams extends UpdateParams<UpdateSkillFormData> {}
 
 interface SkillState {
     skills: SkillInterface[]
@@ -91,7 +90,7 @@ export const deleteSkill = createAsyncThunk<SkillInterface | undefined, GetByIdP
     }
 )
 
-export const updateSkill = createAsyncThunk<SkillInterface | undefined, UpdateSkillParams>(
+export const updateSkill = createAsyncThunk<SkillInterface | undefined, UpdateParams<UpdateSkillFormData>>(
     "skills/update",
     async ({id, payload}): Promise<SkillInterface | undefined> => {
         try {

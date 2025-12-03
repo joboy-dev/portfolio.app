@@ -7,7 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { educationsService, type GetEducationsParams } from "../education/education.service"
 import type { EducationBaseFormData, UpdateEducationFormData } from "@/lib/validators/education"
 
-interface UpdateEducationParams extends UpdateParams<UpdateEducationFormData> {}
 
 interface EducationState {
     educations: EducationInterface[]
@@ -90,7 +89,7 @@ export const deleteEducation = createAsyncThunk<EducationInterface | undefined, 
     }
 )
 
-export const updateEducation = createAsyncThunk<EducationInterface | undefined, UpdateEducationParams>(
+export const updateEducation = createAsyncThunk<EducationInterface | undefined, UpdateParams<UpdateEducationFormData>>(
     "educations/update",
     async ({id, payload}): Promise<EducationInterface | undefined> => {
         try {

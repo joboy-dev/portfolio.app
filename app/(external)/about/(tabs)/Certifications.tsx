@@ -1,6 +1,5 @@
 import Loading from '@/app/loading'
 import Button from '@/components/shared/button/Button'
-import LinkButton from '@/components/shared/button/LinkButton'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
 import ListEmpty from '@/components/shared/ListEmpty'
@@ -9,8 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getCertifications } from '@/lib/redux/slices/certification/certification'
 import { GetCertificationsParams } from '@/lib/redux/slices/certification/certification.service'
 import { formatDate } from '@/lib/utils/formatter'
-import { renderWithLineBreaks } from '@/lib/utils/string'
-import { Building, Calendar, ExternalLink } from 'lucide-react'
+import { Calendar, ExternalLink } from 'lucide-react'
 import React, { useEffect, useState } from 'react' 
 
 export default function Certifications() {

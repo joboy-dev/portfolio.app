@@ -40,7 +40,7 @@ export function objectToFormData(
             } else if (value instanceof File || value instanceof Blob) {
                 formData.append(formKey, value, value instanceof File ? value.name : 'blob');
             } else if (Array.isArray(value)) {
-                value.forEach((element, index) => {
+                value.forEach((element) => {
                     if (
                         element === null ||
                         element === undefined ||

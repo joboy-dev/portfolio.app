@@ -1,7 +1,7 @@
 import React from "react";
 
 type JsonViewerProps = {
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   title?: string;
 };
 

@@ -42,8 +42,8 @@ const CreatableMultiSelectField: React.FC<CreatableMultiSelectFieldProps> = ({
                   isMulti
                   defaultValue={defaultValue}
                   onChange={(selected) => {
-                    let options = selected as Option[]
-                    let values = options.map((option) => option.value)
+                    const options = selected as Option[]
+                    const values = options.map((option) => option.value)
                     methods.setValue(name, values)
                     console.log(values)
                     if (onChange) {

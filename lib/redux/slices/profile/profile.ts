@@ -1,10 +1,8 @@
-import session from "../../../utils/session"
 import toaster from "../../../utils/toaster"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { profileService } from "./profile.service";
 import { ProcessError } from "../../../utils/Error";
 import type { ProfileInterface } from "../../../interfaces/profile";
-import type { ProfileFormData } from "../../../validators/profile";
 
 interface AuthState {
     profile?: ProfileInterface

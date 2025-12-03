@@ -9,7 +9,6 @@ import Button from './button/Button'
 import FormFileUpload from './form/FormFileUpload'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { fileBaseSchema, type FileBaseFormData } from '@/lib/validators/file'
-import CustomFileUploadField from './form/CustomFileUpload'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
 import { createFile } from '@/lib/redux/slices/file/file'
 import Loading from '@/app/loading'
@@ -33,7 +32,7 @@ export default function Gallery({
             model_id: model_id,
             model_name: model_name,
         }))
-    }, [])
+    }, [dispatch, model_id, model_name])
 
     const submitCreateForm = (data: FileBaseFormData) => {
         console.log(data)
@@ -83,8 +82,8 @@ export default function Gallery({
                         </Button>
                     </div>
                     <div className='flex items-center justify-start flex-wrap gap-4'>
-                        {files.map((file) => (
-                            <div className='relative'>
+                        {files.map((file, index) => (
+                            <div key={index} className='relative'>
                                 <ImageComponent
                                     src={file.url ?? ""}
                                     alt='image'

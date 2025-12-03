@@ -7,8 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { experiencesService, type GetExperiencesParams } from "../experience/experience.service"
 import type { ExperienceBaseFormData, UpdateExperienceFormData } from "@/lib/validators/experience"
 
-interface UpdateExperienceParams extends UpdateParams<UpdateExperienceFormData> {}
-
 interface ExperienceState {
     experiences: ExperienceInterface[]
     selectedExperience?: ExperienceInterface
@@ -90,7 +88,7 @@ export const deleteExperience = createAsyncThunk<ExperienceInterface | undefined
     }
 )
 
-export const updateExperience = createAsyncThunk<ExperienceInterface | undefined, UpdateExperienceParams>(
+export const updateExperience = createAsyncThunk<ExperienceInterface | undefined, UpdateParams<UpdateExperienceFormData>>(
     "experiences/update",
     async ({id, payload}): Promise<ExperienceInterface | undefined> => {
         try {

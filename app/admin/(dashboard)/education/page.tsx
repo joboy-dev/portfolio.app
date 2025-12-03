@@ -46,7 +46,7 @@ export default function EducationPage() {
             model_name: "others",
         }))
 
-    }, [filtersState])
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<EducationBaseFormData>(educationBaseSchema)
     const editMethods = useZodForm<UpdateEducationFormData>(updateEducationSchema)

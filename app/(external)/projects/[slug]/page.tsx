@@ -8,8 +8,7 @@ import ImageComponent from '@/components/shared/Image'
 import NavigationBar, { Tab } from '@/components/shared/NavigationBar'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { ProjectInterface } from '@/lib/interfaces/project'
-import { getProjectById, getProjects, setSelectedProject } from '@/lib/redux/slices/project/project'
-import { projectsService } from '@/lib/redux/slices/project/project.service'
+import { getProjectById, getProjects } from '@/lib/redux/slices/project/project'
 import { filterImageFiles } from '@/lib/utils/file'
 import { formatDate } from '@/lib/utils/formatter'
 import { renderWithLineBreaks } from '@/lib/utils/string'
@@ -56,7 +55,8 @@ export default function ProjectDetailPage() {
         setSimilarProjects(projectsWithoutCurrent ?? [])
 
         // getSimilarProjects()
-    }, [slug, dispatch])
+    }, [dispatch, slug])
+    // }, [slug, projects, project?.tags, dispatch])
 
     useEffect(() => {
         if (project && project.files) {
@@ -199,6 +199,7 @@ export default function ProjectDetailPage() {
                     <div className='w-full h-full flex items-center justify-center gap-2 flex-wrap'>
                         {images.map((image, index) => (
                             <ImageComponent 
+                                key={index}
                                 src={image} 
                                 alt={project?.name ?? ''} 
                                 width={75}

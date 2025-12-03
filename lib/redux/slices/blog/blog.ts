@@ -7,7 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { blogsService, type GetBlogsParams } from "../blog/blog.service"
 import type { BlogBaseFormData, UpdateBlogFormData } from "@/lib/validators/blog"
 
-interface UpdateBlogParams extends UpdateParams<UpdateBlogFormData> {}
 
 interface BlogState {
     blogs: BlogInterface[]
@@ -90,7 +89,7 @@ export const deleteBlog = createAsyncThunk<BlogInterface | undefined, GetByIdPar
     }
 )
 
-export const updateBlog = createAsyncThunk<BlogInterface | undefined, UpdateBlogParams>(
+export const updateBlog = createAsyncThunk<BlogInterface | undefined, UpdateParams<UpdateBlogFormData> >(
     "blogs/update",
     async ({id, payload}): Promise<BlogInterface | undefined> => {
         try {

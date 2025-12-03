@@ -7,7 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { projectsService, type GetProjectsParams } from "../project/project.service"
 import type { ProjectBaseFormData, UpdateProjectFormData } from "@/lib/validators/project"
 
-interface UpdateProjectParams extends UpdateParams<UpdateProjectFormData> {}
 
 interface ProjectState {
     projects: ProjectInterface[]
@@ -105,7 +104,7 @@ export const deleteProject = createAsyncThunk<ProjectInterface | undefined, GetB
     }
 )
 
-export const updateProject = createAsyncThunk<ProjectInterface | undefined, UpdateProjectParams>(
+export const updateProject = createAsyncThunk<ProjectInterface | undefined, UpdateParams<UpdateProjectFormData>>(
     "projects/update",
     async ({id, payload}): Promise<ProjectInterface | undefined> => {
         try {

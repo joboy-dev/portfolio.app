@@ -45,7 +45,7 @@ export default function AwardsPage() {
             model_name: "others",
         }))
 
-    }, [filtersState])
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<AwardBaseFormData>(awardBaseSchema)
     const editMethods = useZodForm<UpdateAwardFormData>(updateAwardSchema)

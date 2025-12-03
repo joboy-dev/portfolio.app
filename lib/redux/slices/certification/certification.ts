@@ -7,7 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { certificationsService, type GetCertificationsParams } from "../certification/certification.service"
 import type { CertificationBaseFormData, UpdateCertificationFormData } from "@/lib/validators/certification"
 
-interface UpdateCertificationParams extends UpdateParams<UpdateCertificationFormData> {}
 
 interface CertificationState {
     certifications: CertificationInterface[]
@@ -90,7 +89,7 @@ export const deleteCertification = createAsyncThunk<CertificationInterface | und
     }
 )
 
-export const updateCertification = createAsyncThunk<CertificationInterface | undefined, UpdateCertificationParams>(
+export const updateCertification = createAsyncThunk<CertificationInterface | undefined, UpdateParams<UpdateCertificationFormData> >(
     "certifications/update",
     async ({id, payload}): Promise<CertificationInterface | undefined> => {
         try {

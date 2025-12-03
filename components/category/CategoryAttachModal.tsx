@@ -6,7 +6,6 @@ import { useZodForm } from '@/lib/hooks/useZodForm'
 import { AttachOrDetatchCategorySchema, type AttachOrDetatchCategoryFormData } from '@/lib/validators/category'
 import CreatableMultiSelectField from '../shared/form/CreatableMultiSelect'
 import { capitalizeFirstLetter } from '@/lib/utils/string'
-import FormInput from '../shared/form/FormInput'
 import { getCategories } from '@/lib/redux/slices/category/category'
 import { categoryService } from '@/lib/redux/slices/category/category.service'
 import { useAppDispatch } from '@/lib/hooks/redux'
@@ -34,7 +33,7 @@ export default function CategoryAttachModal({
         dispatch(getCategories({
             model_type: model_type,
         }))
-    }, [])
+    }, [dispatch, model_type])
 
     const submitForm = async(data: AttachOrDetatchCategoryFormData) => {
         console.log(data)

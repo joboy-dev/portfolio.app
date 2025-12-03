@@ -1,5 +1,4 @@
 import Logo from "./Logo"
-import { FaFacebook, FaInstagram, FaLinkedin, FaXTwitter } from "react-icons/fa6"
 
 function Footer() {
   return (

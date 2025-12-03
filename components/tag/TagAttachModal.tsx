@@ -4,7 +4,6 @@ import { useZodForm } from '@/lib/hooks/useZodForm'
 import { AttachOrDetatchTagSchema, type AttachOrDetatchTagFormData } from '@/lib/validators/tag'
 import CreatableMultiSelectField from '../shared/form/CreatableMultiSelect'
 import { capitalizeFirstLetter } from '@/lib/utils/string'
-import FormInput from '../shared/form/FormInput'
 import { getTags } from '@/lib/redux/slices/tag/tag'
 import { tagService } from '@/lib/redux/slices/tag/tag.service'
 import { refetchSingleEntity } from '@/lib/utils/refetch'
@@ -32,7 +31,7 @@ export default function TagAttachModal({
         dispatch(getTags({
             model_type: model_type,
         }))
-    }, [])
+    }, [dispatch, model_type])
 
     const submitForm = async (data: AttachOrDetatchTagFormData) => {
         console.log(data)

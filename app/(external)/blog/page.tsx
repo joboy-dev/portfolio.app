@@ -14,7 +14,7 @@ export default function BlogsPage() {
                     Blogs Coming Soon
                 </h1>
                 <p className="text-lg md:text-xl text-foreground/70 text-center max-w-xl">
-                    I'm working on insightful articles, tutorials, and stories to share with you. Stay tuned for updates!
+                    I am working on insightful articles, tutorials, and stories to share with you. Stay tuned for updates!
                 </p>
                 <div className="mt-8">
                     <span className="inline-block px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold shadow-lg animate-bounce">

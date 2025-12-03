@@ -2,9 +2,8 @@
 
 import Button from '@/components/shared/button/Button'
 import Sidebar from '@/components/shared/Sidebar'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
+import { useAppDispatch } from '@/lib/hooks/redux'
 import { logout } from '@/lib/redux/slices/auth/auth'
-import { RootState } from '@/lib/redux/store'
 import type React from 'react'
 
 export default function Layout({ children }: { children: React.ReactNode }) {

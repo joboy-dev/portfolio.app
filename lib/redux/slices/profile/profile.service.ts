@@ -1,7 +1,6 @@
 import { ProfileInterface } from "@/lib/interfaces/profile"
 import { ApiResponse } from "@/lib/interfaces/response"
 import API from "@/lib/utils/API"
-import { ProfileFormData } from "@/lib/validators/profile"
 
 const updateProfile = async (payload: FormData) : Promise<ApiResponse<ProfileInterface>> => {
     const { data } = await API.patch("/profile", payload)

@@ -177,7 +177,7 @@ export default function ProjectsPage() {
                 <div className="max-w-4xl mx-auto text-center pb-12">
                     <h2 className="text-4xl font-bold text-primary-foreground mb-6 text-center">Interested in Working Together?</h2>
                     <p className="text-xl text-primary-foreground/80 mb-10 max-w-3xl max mx-auto leading-relaxed font-semibold text-center">
-                    I'm always excited to take on new challenges and create innovative solutions. Let's discuss your next project.
+                    I am always excited to take on new challenges and create innovative solutions. Let us discuss your next project.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <LinkButton 

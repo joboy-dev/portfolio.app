@@ -4,10 +4,10 @@ class Cookies {
     constructor() {
         if(document.cookie !== ""){
             const cookieArr = document.cookie.split("; ");
-            cookieArr.forEach((pair: string, i) => {
-                let pairs = pair.split("=");
-                let key = pairs[0];
-                let value = pairs[1];
+            cookieArr.forEach((pair: string) => {
+                const pairs = pair.split("=");
+                const key = pairs[0];
+                const value = pairs[1];
                 this.cookies[key] = value;
             });
         } else {

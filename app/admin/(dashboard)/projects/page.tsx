@@ -24,16 +24,14 @@ import { UpdateProjectFormData } from '@/lib/validators/project'
 import CreatableMultiSelectField from '@/components/shared/form/CreatableMultiSelect'
 import SearchableSelectField from '@/components/shared/form/SearchableSelect'
 import { Option } from '@/lib/interfaces/general'
-import { BulkUploadFileFormData, bulkUploadFileSchema, FileBaseFormData, fileBaseSchema } from '@/lib/validators/file'
+import { BulkUploadFileFormData, bulkUploadFileSchema } from '@/lib/validators/file'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
 import FormFileUpload from '@/components/shared/form/FormFileUpload'
 import toaster from '@/lib/utils/toaster'
 import FileCard from '@/components/file/FileCard'
 import TagAttachModal from '@/components/tag/TagAttachModal'
 import TagDetatchModal from '@/components/tag/TagDetatchModal'
-import TiptapField from '@/components/shared/form/TiptapField'
 import Badge from '@/components/shared/Badge'
-import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
 import AdditionalInfoField from '@/components/shared/form/AdditionalInfoField'
 import DateInput from '@/components/shared/form/DateInput'
 
@@ -194,7 +192,7 @@ export default function ProjectsPage() {
             })
         }
 
-    }, [filtersState, selectedProject])
+    }, [dispatch, filtersState, selectedProject])
 
     const createMethods = useZodForm<ProjectBaseFormData>(projectBaseSchema)
     const editMethods = useZodForm<UpdateProjectFormData>(updateProjectSchema)

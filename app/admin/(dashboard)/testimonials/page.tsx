@@ -11,12 +11,9 @@ import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { getFiles, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
-import FileSelectField from '@/components/shared/form/FileSelectField'
 import { Pencil, Trash, Wrench } from 'lucide-react'
 import ListSection from '@/components/shared/ListSection'
 import Pagination from '@/components/shared/Pagination'
-import DateInput from '@/components/shared/form/DateInput'
-import TiptapField from '@/components/shared/form/TiptapField'
 import { createTestimonial, deleteTestimonial, getTestimonials } from '@/lib/redux/slices/testimonial/testimonial'
 import { updateTestimonial } from '@/lib/redux/slices/testimonial/testimonial'
 import { setSelectedTestimonial } from '@/lib/redux/slices/testimonial/testimonial'
@@ -48,7 +45,7 @@ export default function TestimonialsPage() {
             model_name: "others",
         }))
 
-    }, [filtersState])
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<TestimonialBaseFormData>(testimonialBaseSchema)
     const editMethods = useZodForm<UpdateTestimonialFormData>(updateTestimonialSchema)

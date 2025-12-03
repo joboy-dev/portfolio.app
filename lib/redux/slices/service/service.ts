@@ -7,7 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { servicesService, type GetServicesParams } from "../service/service.service"
 import type { ServiceBaseFormData, UpdateServiceFormData } from "@/lib/validators/service"
 
-interface UpdateServiceParams extends UpdateParams<UpdateServiceFormData> {}
 
 interface ServiceState {
     services: ServiceInterface[]
@@ -90,7 +89,7 @@ export const deleteService = createAsyncThunk<ServiceInterface | undefined, GetB
     }
 )
 
-export const updateService = createAsyncThunk<ServiceInterface | undefined, UpdateServiceParams>(
+export const updateService = createAsyncThunk<ServiceInterface | undefined, UpdateParams<UpdateServiceFormData>>(
     "services/update",
     async ({id, payload}): Promise<ServiceInterface | undefined> => {
         try {

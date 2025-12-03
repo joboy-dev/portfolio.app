@@ -16,7 +16,7 @@ import ProgressBar from "@/components/shared/ProgressBar";
 
 export default function Home() {
   const { profile, isLoading:isProfileLoading } = useAppSelector(state => state.profile)
-  const { skills, total:totalSkills } = useAppSelector(state => state.skill)
+  const { skills } = useAppSelector(state => state.skill)
   const { services } = useAppSelector(state => state.service)
 
   const stats = [
@@ -99,8 +99,8 @@ export default function Home() {
               <span className="text-foreground">Experiences</span>
             </h1>
             <p className="text-xl text-foreground/60 font-bold leading-relaxed max-w-lg">
-              I'm a passionate software developer who transforms complex problems into elegant, scalable solutions.
-              Let's build something extraordinary together.
+              I am a passionate software developer who transforms complex problems into elegant, scalable solutions.
+              Let us build something extraordinary together.
             </p>
           </div>
 
@@ -225,7 +225,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center pb-12">
           <h2 className="text-4xl font-bold text-primary-foreground mb-6 text-center">Ready to Start Your Project?</h2>
           <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold text-center">
-            Let's discuss how we can bring your ideas to life with cutting-edge technology and thoughtful design.
+            Let us discuss how we can bring your ideas to life with cutting-edge technology and thoughtful design.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LinkButton 

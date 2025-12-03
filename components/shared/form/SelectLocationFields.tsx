@@ -41,7 +41,7 @@ function SelectLocationFields({
             placeholder='Select country'
             onChange={(option) => {
                 // field.onChange(option?.value)
-                let selectedCountryData = countries.find((country) => country.name === option?.value)
+                const selectedCountryData = countries.find((country) => country.name === option?.value)
                 setSelectedCountry(selectedCountryData?.shortName ?? "")
                 setStates(locationHandler.getStatesByShort(selectedCountryData?.shortName ?? "") ?? [])
                 setCities([])

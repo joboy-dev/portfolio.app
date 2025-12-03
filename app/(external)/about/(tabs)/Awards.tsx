@@ -1,6 +1,4 @@
 import Loading from '@/app/loading'
-import Button from '@/components/shared/button/Button'
-import LinkButton from '@/components/shared/button/LinkButton'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
 import ListEmpty from '@/components/shared/ListEmpty'

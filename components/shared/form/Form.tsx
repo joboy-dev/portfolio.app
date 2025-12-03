@@ -42,11 +42,15 @@ function FormWrapper({
 
         <Button
           type='submit'
-          children={isSubmitting ? submittingLabel : submitLabel}
           isLoading={isSubmitting}
           variant={buttonVariant}
           className={buttonWidth ? `w-[${buttonWidth}%]`: 'w-full'}
-        />
+        >
+          {isSubmitting 
+            ? <p>{submittingLabel}</p> 
+            : <p>{submitLabel}</p>
+          }
+        </Button>
 
         {afterButtonContent}
       </form>

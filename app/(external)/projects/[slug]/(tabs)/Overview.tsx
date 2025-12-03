@@ -41,8 +41,8 @@ export default function Overview() {
                 backgroundColor='bg-primary/10'
             >
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-                    {selectedProject?.results?.map((result) => (
-                        <div className='flex items-center gap-2'>
+                    {selectedProject?.results?.map((result, index) => (
+                        <div key={index} className='flex items-center gap-2'>
                             <CheckCircleIcon className='w-5 h-5 text-primary' />
                             <p className='text-lg text-muted-foreground'>{result}</p>
                         </div>

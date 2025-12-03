@@ -7,7 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { testimonialsService, type GetTestimonialsParams } from "../testimonial/testimonial.service"
 import type { TestimonialBaseFormData, UpdateTestimonialFormData } from "@/lib/validators/testimonial"
 
-interface UpdateTestimonialParams extends UpdateParams<UpdateTestimonialFormData> {}
 
 interface TestimonialState {
     testimonials: TestimonialInterface[]
@@ -90,7 +89,7 @@ export const deleteTestimonial = createAsyncThunk<TestimonialInterface | undefin
     }
 )
 
-export const updateTestimonial = createAsyncThunk<TestimonialInterface | undefined, UpdateTestimonialParams>(
+export const updateTestimonial = createAsyncThunk<TestimonialInterface | undefined, UpdateParams<UpdateTestimonialFormData>>(
     "testimonials/update",
     async ({id, payload}): Promise<TestimonialInterface | undefined> => {
         try {

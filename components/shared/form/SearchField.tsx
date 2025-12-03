@@ -84,7 +84,7 @@ export function SearchField({
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Searching for:</span>
           <Badge variant="primary" className="bg-primary/10 text-primary">
-            "{searchQuery}"
+            {`"${searchQuery}"` as string}
           </Badge>
         </div>
       )}

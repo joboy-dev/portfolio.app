@@ -5,7 +5,7 @@ import API from "@/lib/utils/API";
 import { BlogBaseFormData, UpdateBlogFormData } from "@/lib/validators/blog";
 
 export interface GetBlogsParams extends BaseGetParams {
-  // Add filter params here
+  title?: string
 };
 
 const getBlogs = async (params: GetBlogsParams): Promise<ApiResponse<BlogInterface[]>> => {

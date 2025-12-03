@@ -46,7 +46,7 @@ export default function ServicesPage() {
             model_name: "others",
         }))
 
-    }, [filtersState])
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<ServiceBaseFormData>(serviceBaseSchema)
     const editMethods = useZodForm<UpdateServiceFormData>(updateServiceSchema)

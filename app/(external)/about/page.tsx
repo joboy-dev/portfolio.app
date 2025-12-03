@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux';
 import ImageComponent from '@/components/shared/Image';
 import { getProfile } from '@/lib/redux/slices/profile/profile';
 import Loading from '@/app/loading';
-import { Sparkles, Download, Mail, User, Brain, Briefcase, GraduationCap, MessageCircle, ArrowUpRight } from 'lucide-react';
+import { Sparkles, Download, Mail, User, Brain, Briefcase, GraduationCap, MessageCircle } from 'lucide-react';
 import { Award } from 'lucide-react';
 import LinkButton from '@/components/shared/button/LinkButton';
 import Badge from '@/components/shared/Badge';
@@ -214,9 +214,9 @@ export default function AboutPage() {
       {/* Call to Action */}
       <section className="page-padding bg-gradient-primary">
         <div className="max-w-4xl mx-auto text-center pb-12">
-          <h2 className="text-4xl font-bold text-primary-foreground mb-6 text-center">Let's Work Together</h2>
+          <h2 className="text-4xl font-bold text-primary-foreground mb-6 text-center">Let us Work Together</h2>
           <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold text-center">
-          I'm always interested in new opportunities and exciting projects. Let's discuss how we can bring your ideas to life.
+          I am always interested in new opportunities and exciting projects. Let us discuss how we can bring your ideas to life.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LinkButton 

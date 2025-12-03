@@ -92,7 +92,7 @@ const menuItems = [
 
 export default function Sidebar() {
     const pathname = usePathname()
-    const router = useRouter()
+    // const router = useRouter()
 
     const isActive = (url: string) => pathname === url
     const [isOpen, setIsOpen] = useState(true)
@@ -101,7 +101,7 @@ export default function Sidebar() {
         if (window.innerWidth < 768) {
             setIsOpen(false)
         }
-    }, [window])
+    }, [])
 
     return (
         <div className={clsx(

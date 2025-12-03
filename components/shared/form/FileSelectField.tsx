@@ -24,13 +24,13 @@ export default function FileSelectField({
     file_type?: "image" | "document"
 }) {
     const dispatch = useAppDispatch()
-    const { files, selectedFile, isLoading:fileLoading } = useAppSelector((state: RootState) => state.file) 
+    const { files, selectedFile } = useAppSelector((state: RootState) => state.file) 
 
     useEffect(() => {
         dispatch(getFiles({
             model_name: model_name,
         }))
-    }, [])
+    }, [dispatch, model_name])
 
     return (
         <div>

@@ -7,7 +7,7 @@ import { FaExclamation } from 'react-icons/fa6'
 export default function Challenges() {
     const { selectedProject } = useAppSelector(state => state.project)
     return Object.entries(selectedProject?.challenges_and_solutions ?? {}).map(([challenge, solution]) => (
-            <div className='mb-4'>
+            <div key={challenge as string} className='mb-4'>
             <Card
                 backgroundColor='bg-background'
             >

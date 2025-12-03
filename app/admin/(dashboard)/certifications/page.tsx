@@ -69,7 +69,7 @@ export default function CertificationsPage() {
             })
         }
 
-    }, [filtersState, selectedCertification])
+    }, [dispatch, filtersState, selectedCertification])
 
     const onSubmit = (data: CertificationBaseFormData) => {
         console.log(data)

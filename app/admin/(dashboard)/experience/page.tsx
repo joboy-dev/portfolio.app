@@ -21,7 +21,6 @@ import DateInput from '@/components/shared/form/DateInput'
 import { createExperience, deleteExperience, getExperiences, setSelectedExperience, updateExperience } from '@/lib/redux/slices/experience/experience'
 import { ExperienceBaseFormData, experienceBaseSchema, UpdateExperienceFormData, updateExperienceSchema } from '@/lib/validators/experience'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
-import TiptapField from '@/components/shared/form/TiptapField'
 
 export default function ExperiencePage() {
     const dispatch = useAppDispatch()
@@ -46,7 +45,7 @@ export default function ExperiencePage() {
             model_name: "others",
         }))
 
-    }, [filtersState])
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<ExperienceBaseFormData>(experienceBaseSchema)
     const editMethods = useZodForm<UpdateExperienceFormData>(updateExperienceSchema)

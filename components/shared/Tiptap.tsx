@@ -3,7 +3,6 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import clsx from 'clsx'
-import { Undo2, X } from 'lucide-react'
 import { useEffect } from 'react'
 import Button from './button/Button'
 

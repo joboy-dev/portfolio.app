@@ -43,7 +43,7 @@ export default function SkillsPage() {
             model_name: "others",
         }))
 
-    }, [filtersState])
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<SkillBaseFormData>(skillBaseSchema)
     const editMethods = useZodForm<UpdateSkillFormData>(updateSkillSchema)

@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Logo from '../Logo';
-import LinkButton from '../button/LinkButton';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';

@@ -1,12 +1,10 @@
 "use client"
 
-import Breadcrumb from '@/components/shared/breadcrumb/Breadcrumb'
-import Button from '@/components/shared/button/Button'
 import FormModal from '@/components/shared/modal/FormModal'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { BulkUploadFileFormData, bulkUploadFileSchema } from '@/lib/validators/file'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
-import { ArrowLeftCircle, FolderClosed, FolderOpen, PlusIcon } from 'lucide-react'
+import { FolderClosed, FolderOpen } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { bulkUploadFile, getFiles } from '@/lib/redux/slices/file/file'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
@@ -53,7 +51,7 @@ export default function FilesPage() {
         } else {
             dispatch(getFiles({}))
         }
-    }, [model, filtersState])
+    }, [dispatch, model, filtersState])
 
     const onSubmit = (data: BulkUploadFileFormData) => {
         console.log(data)

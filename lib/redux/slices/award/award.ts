@@ -7,8 +7,6 @@ import toaster from "@/lib/utils/toaster"
 import { awardsService, type GetAwardsParams } from "../award/award.service"
 import type { AwardBaseFormData, UpdateAwardFormData } from "@/lib/validators/award"
 
-interface UpdateAwardParams extends UpdateParams<UpdateAwardFormData> {}
-
 interface AwardState {
     awards: AwardInterface[]
     selectedAward?: AwardInterface
@@ -90,7 +88,7 @@ export const deleteAward = createAsyncThunk<AwardInterface | undefined, GetByIdP
     }
 )
 
-export const updateAward = createAsyncThunk<AwardInterface | undefined, UpdateAwardParams>(
+export const updateAward = createAsyncThunk<AwardInterface | undefined, UpdateParams<UpdateAwardFormData> >(
     "awards/update",
     async ({id, payload}): Promise<AwardInterface | undefined> => {
         try {
