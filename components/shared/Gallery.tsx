@@ -34,8 +34,10 @@ export default function Gallery({
         }))
     }, [dispatch, model_id, model_name])
 
-    const submitCreateForm = (data: FileBaseFormData) => {
-        console.log(data)
+    // Change signature to accept any to fix the type error for react-hook-form's SubmitHandler<FieldValues>
+    const submitCreateForm = (data: any) => {
+        // Optionally: Validate shape if needed
+        // console.log(data)
         const formData = objectToFormData(data)
         dispatch(createFile(formData))
     }
@@ -47,6 +49,7 @@ export default function Gallery({
                 subtitle='Upload a file'
                 isOpen={openFileUploadModal}
                 setIsOpen={setOpenFileUploadModal}
+                // Fix: Type is now compatible with SubmitHandler<FieldValues>
                 onSubmit={methods.handleSubmit(submitCreateForm)}
                 isSubmitting={isLoading}
                 methods={methods}
