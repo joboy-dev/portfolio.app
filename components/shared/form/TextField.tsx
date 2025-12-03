@@ -1,4 +1,4 @@
-import type { InputProps } from '../../../../lib/interfaces/form'
+import { InputProps } from "@/lib/interfaces/form"
 
 function TextField({
   type,
