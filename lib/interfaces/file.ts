@@ -7,7 +7,9 @@ export interface FileInterface extends BaseModelInterface {
   model_id?: string
   model_name?: string
   url?: string
+  external_url?: string
   description?: string
   content?: string
   label?: string
+  position?: number
 }

@@ -123,12 +123,12 @@ export default function FileCard({ file }: { file: FileInterface }) {
             items={[
                 {
                     text: 'View',
-                    onSelect: () => window.open(file.url, "_blank"),
+                    onSelect: () => window.open(file.external_url ?? file.url ?? '', "_blank"),
                     icon: <Eye className="h-4 w-4 text-muted-foreground" />
                 },
                 {
                     text: 'Download',
-                    onSelect: () => window.open(file.url, "_blank"),
+                    onSelect: () => window.open(file.external_url ?? file.url ?? '', "_blank"),
                     icon: <Download className="h-4 w-4 text-muted-foreground" />
                 },
                 {
@@ -139,7 +139,7 @@ export default function FileCard({ file }: { file: FileInterface }) {
                 {
                     text: "Copy URL",
                     onSelect: () => {
-                        navigator.clipboard.writeText(file.url ?? '')
+                        navigator.clipboard.writeText(file.external_url ?? file.url ?? '')
                         toaster.success("URL copied to clipboard")
                     },
                     icon: <Copy className="h-4 w-4 text-muted-foreground" />
