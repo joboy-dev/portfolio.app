@@ -66,7 +66,7 @@ export default function DynamicFormGroup({
                         <TextField
                             type='text'
                             value={field.first}
-                            onChange={(e) => handleChange(index, "first", e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, "first", e.target.value)}
                             placeholder={label1}
                         />
                     </div>
@@ -75,7 +75,7 @@ export default function DynamicFormGroup({
                         <TextField
                             type='text'
                             value={field.second}
-                            onChange={(e) => handleChange(index, "second", e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, "second", e.target.value)}
                             placeholder={label2}
                         />
                     </div>

@@ -49,7 +49,7 @@ export function SearchField({
             placeholder={placeholder ?? "Search"}
             value={searchQuery ?? ""}
             // onChange={(e) => handleSearch(e.target.value)}
-            onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery && setSearchQuery(e.target.value)}
             className="pl-10 border-primary/20 focus:border-primary"
           />
         </div>
