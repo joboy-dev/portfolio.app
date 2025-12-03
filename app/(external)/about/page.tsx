@@ -53,7 +53,7 @@ export default function AboutPage() {
     {
       name: "Email",
       icon: <FaEnvelope className="h-5 w-5" />,
-      url: profile?.email,
+      url: `mailto:${profile?.email}`,
     },
     {
       name: "Instagram",
@@ -192,7 +192,7 @@ export default function AboutPage() {
               {socials.filter(social => social.url !== undefined).map((social, index) => (
                 <LinkButton 
                   key={index} 
-                  to={social.url || '#'} 
+                  to={social.url ?? '#'} 
                   size='lg' 
                   variant='ghost' 
                   className="font-bold text-foreground/70"
