@@ -70,7 +70,7 @@ export default function AboutPage() {
   const tabs = [
     {
       id: 'about-me',
-      label: 'About Me',
+      label: 'About',
       content: <AboutMe />,
       icon: User
     },
