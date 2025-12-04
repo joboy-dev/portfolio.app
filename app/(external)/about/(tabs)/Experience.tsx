@@ -31,7 +31,7 @@ export default function Experience() {
             )}
 
             {experiences?.map((experience) => (
-                <Card key={experience.id}>
+                <Card key={experience.id} className='flex flex-col gap-2 items-start justify-start'>
                     <div className='flex items-start gap-4 mb-2'>
                         <ImageComponent 
                             src={experience.company_logo?.url ?? ""} 
@@ -56,11 +56,11 @@ export default function Experience() {
                                     <p>{experience.location}</p>
                                 </div>
                             )}
-                            {experience.description && (
-                                <p className='text-lg text-foreground/60 mt-2'>{renderWithLineBreaks(experience.description)}</p>
-                            )}
                         </div>
                     </div>            
+                    {experience.description && (
+                        <p className='text-lg text-foreground/60 mt-2'>{renderWithLineBreaks(experience.description)}</p>
+                    )}
                 </Card>
             ))}
         </div>

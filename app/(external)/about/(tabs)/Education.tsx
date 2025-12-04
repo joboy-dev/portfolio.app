@@ -32,7 +32,7 @@ export default function Education() {
             )}
 
             {educations?.map((education) => (
-                <Card key={education.id}>
+                <Card key={education.id} className='flex flex-col gap-2 items-start justify-start'>
                     <div className='flex items-start gap-4 mb-2'>
                         <ImageComponent 
                             src={education.school_logo?.url ?? ""} 
@@ -60,11 +60,11 @@ export default function Education() {
                             {education.grade && (
                                 <Badge variant='outline'>{education.grade}</Badge>
                             )}
-                            {education.description && (
-                                <p className='text-lg text-foreground/60 mt-2'>{renderWithLineBreaks(education.description)}</p>
-                            )}
                         </div>
                     </div>            
+                    {education.description && (
+                        <p className='text-lg text-foreground/60 mt-2'>{renderWithLineBreaks(education.description)}</p>
+                    )}
                 </Card>
             ))}
         </div>
