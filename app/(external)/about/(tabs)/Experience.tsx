@@ -60,7 +60,7 @@ export default function Experience() {
                       <Building className='w-4 h-4' />
                       <p>{experience.company}</p>
                     </div>
-                    <p className='text-sm text-foreground/60 ml-3'>{formatDate(experience.start_date)} - {experience.end_date ? formatDate(experience.end_date) : 'Present'}</p>
+                    <p className='text-sm text-foreground/60'>{formatDate(experience.start_date)} - {experience.end_date ? formatDate(experience.end_date) : 'Present'}</p>
                   </div>
                   {experience.location && (
                     <div className='flex items-center gap-2 text-sm text-foreground/60'>
