@@ -95,7 +95,7 @@ export default function Education() {
                         {isOpen && (
                           <div
                             id={`desc-${education.id}`}
-                            className="animate-fade-in bg-muted rounded-lg px-4 py-2 mt-2 w-full"
+                            className="animate-fade-in"
                           >
                             <p className='text-lg text-foreground/60'>
                               {renderWithLineBreaks(education.description)}
