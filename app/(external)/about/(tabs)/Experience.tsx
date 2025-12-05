@@ -73,7 +73,7 @@ export default function Experience() {
               {experience.description && (
                 <div className="w-full">
                   <button
-                    className={`flex items-center gap-2 text-sm font-medium px-2 py-1 rounded transition-colors hover:bg-muted text-primary border border-transparent hover:border-muted-foreground mb-1`}
+                    className={`flex items-center gap-2 text-sm font-medium px-2 py-1 rounded transition-colors hover:bg-muted text-primary border border-transparent mb-1`}
                     onClick={() => handleToggleDesc(experience.id)}
                     aria-expanded={isOpen}
                   >
