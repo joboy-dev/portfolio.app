@@ -9,7 +9,7 @@ import { getEducations } from '@/lib/redux/slices/education/education'
 import { GetEducationsParams } from '@/lib/redux/slices/education/education.service'
 import { formatDate } from '@/lib/utils/formatter'
 import { renderWithLineBreaks } from '@/lib/utils/string'
-import { Building, MapPin } from 'lucide-react'
+import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 export default function Education() {
@@ -20,9 +20,19 @@ export default function Education() {
     per_page: 10,
   })
 
+  // Manage open description by education id
+  const [openDesc, setOpenDesc] = useState<Record<string | number, boolean>>({})
+
   useEffect(() => {
     dispatch(getEducations({...filterState}))
   }, [dispatch, filterState])
+
+  const handleToggleDesc = (id: string | number) => {
+    setOpenDesc(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
 
   return isLoading ? <Loading/> : (
     <div className='flex flex-col gap-4'>
@@ -31,7 +41,9 @@ export default function Education() {
                 <ListEmpty title='education' />
             )}
 
-            {educations?.map((education) => (
+            {educations?.map((education) => {
+              const isOpen = openDesc[education.id] || false
+              return (
                 <Card key={education.id} className='flex flex-col gap-2 items-start justify-start'>
                     <div className='flex items-start gap-4 mb-2'>
                         <ImageComponent 
@@ -63,10 +75,38 @@ export default function Education() {
                         </div>
                     </div>            
                     {education.description && (
-                        <p className='text-lg text-foreground/60 mt-2'>{renderWithLineBreaks(education.description)}</p>
+                      <div className="w-full">
+                        <button
+                          className={`flex items-center gap-2 text-sm font-medium px-2 py-1 rounded transition-colors hover:bg-muted text-primary border border-transparent hover:border-muted-foreground mb-1`}
+                          onClick={() => handleToggleDesc(education.id)}
+                          aria-expanded={isOpen}
+                          aria-controls={`desc-${education.id}`}
+                        >
+                          {isOpen ? (
+                            <>
+                              Hide Details <ChevronUp className="w-4 h-4" />
+                            </>
+                          ) : (
+                            <>
+                              Show Details <ChevronDown className="w-4 h-4" />
+                            </>
+                          )}
+                        </button>
+                        {isOpen && (
+                          <div
+                            id={`desc-${education.id}`}
+                            className="animate-fade-in bg-muted rounded-lg px-4 py-2 mt-2 w-full"
+                          >
+                            <p className='text-lg text-foreground/60'>
+                              {renderWithLineBreaks(education.description)}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     )}
                 </Card>
-            ))}
+              )
+            })}
         </div>
         
         <Pagination
