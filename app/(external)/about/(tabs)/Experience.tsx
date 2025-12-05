@@ -55,12 +55,12 @@ export default function Experience() {
                 />
                 <div className='w-full'>
                   <h3 className='text-2xl max-md:text-xl font-bold'>{experience.role}</h3>
-                  <div className="flex items-center justify-between max-md:flex-col max-md:items-start max-md:justify-start max-md:gap-0">
+                  <div className="flex flex-col items-start justify-start">
                     <div className='flex items-center gap-2 text-sm text-primary max-md:items-start'>
                       <Building className='w-4 h-4' />
                       <p>{experience.company}</p>
                     </div>
-                    <p className='text-sm text-foreground/60'>{formatDate(experience.start_date)} - {experience.end_date ? formatDate(experience.end_date) : 'Present'}</p>
+                    <p className='text-sm text-foreground/60 ml-3'>{formatDate(experience.start_date)} - {experience.end_date ? formatDate(experience.end_date) : 'Present'}</p>
                   </div>
                   {experience.location && (
                     <div className='flex items-center gap-2 text-sm text-foreground/60'>
