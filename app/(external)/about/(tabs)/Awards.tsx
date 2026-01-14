@@ -23,11 +23,10 @@ export default function Awards() {
 
   return isLoading ? <Loading/> : (
     <div className='flex flex-col gap-4'>
+        {awards?.length === 0 && (
+            <ListEmpty title='award' />
+        )}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {awards?.length === 0 && (
-                <ListEmpty title='award' />
-            )}
-
             {awards?.map((award) => (
                 <Card key={award.id} className='px-4 py-2'>
                     <div className='flex items-start gap-4'>

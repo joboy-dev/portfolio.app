@@ -204,9 +204,9 @@ export default function ProjectDetailPage() {
                                 alt={project?.name ?? ''} 
                                 width={75}
                                 height={75}
-                                objectFit='cover'
+                                objectFit='contain'
                                 className={clsx(
-                                    'rounded-lg',
+                                    'rounded-sm',
                                     currentImageIndex === index && 'border-3 border-primary'
                                 )}
                                 onClick={() => setCurrentImageIndex(index)}

@@ -14,19 +14,21 @@ import LinkButton from '../shared/button/LinkButton'
 export function ProjectCard({ project }: { project: ProjectInterface }) {
     return (
         <Card key={project.id} className='px-0 py-0 h-full w-full' backgroundColor='bg-background'>
-            <div className='w-full h-full flex items-center justify-center'>
-                <ImageComponent
-                    src={
-                        (project.files && project.files.length > 0)
-                            ? (project.files.find(file => file.position === 1)?.url ?? "")
-                            : "/images/placeholder.png"
-                    }
-                    alt={project.name}
-                    width={500}
-                    height={250}
-                    objectFit='cover'
-                    className='rounded-t-lg'
-                />
+            <div className='p-2 rounded-lg'>
+                <div className='w-full h-full flex items-center justify-center p-2 bg-accent/70'>
+                    <ImageComponent
+                        src={
+                            (project.files && project.files.length > 0)
+                                ? (project.files.find(file => file.position === 1)?.url ?? "")
+                                : "/images/placeholder.png"
+                        }
+                        alt={project.name}
+                        width={500}
+                        height={250}
+                        objectFit='contain'
+                        className='rounded-sm'
+                    />
+                </div>
             </div>
             <div className='flex flex-col gap-2 p-4 mt-4'>
                 <div className="flex items-center justify-between mb-4">

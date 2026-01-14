@@ -25,11 +25,10 @@ export default function Certifications() {
 
   return isLoading ? <Loading/> : (
     <div className='flex flex-col gap-4'>
+        {certifications?.length === 0 && (
+            <ListEmpty title='certification' />
+        )}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {certifications?.length === 0 && (
-                <ListEmpty title='certification' />
-            )}
-
             {certifications?.map((certification) => (
                 <Card key={certification.id}>
                     <div className='flex items-start gap-4 mb-2'>

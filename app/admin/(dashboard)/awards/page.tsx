@@ -207,6 +207,7 @@ export default function AwardsPage() {
                                         alt={award.name}
                                         size='lg'
                                         rounded='md'
+                                        objectFit='contain'
                                     />
                                     <div>
                                         <h3 className='text-xl text-foreground font-bold mb-2'>{award.name}</h3>

@@ -23,11 +23,10 @@ export default function Testimonials() {
 
   return isLoading ? <Loading/> : (
     <div className='flex flex-col gap-4'>
+        {testimonials?.length === 0 && (
+            <ListEmpty title='testimonial' />
+        )}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            {testimonials?.length === 0 && (
-                <ListEmpty title='testimonial' />
-            )}
-
             {testimonials?.map((testimonial) => (
                 <Card key={testimonial.id} className='px-6 py-2'>
                     <div className='w-full flex flex-col gap-1'>

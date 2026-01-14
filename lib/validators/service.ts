@@ -12,6 +12,7 @@ export const updateServiceSchema = z.object({
   description: z.string().optional().nullable(),
   file_id: z.string().optional().nullable(),
   skills: z.array(z.string()).optional().nullable(),
+  position: z.number().int().optional(),
 })
 
 export type ServiceBaseFormData = z.infer<typeof serviceBaseSchema>

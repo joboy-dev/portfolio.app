@@ -151,6 +151,13 @@ export default function ServicesPage() {
                     placeholder="Select service image"
                     model_name="others"
                 />
+
+                <FormInput
+                    name="position"
+                    label="Position"
+                    placeholder="Enter the position of the service"
+                    type="number"
+                />
             </FormModal>
 
             <ActionBreadcrumb

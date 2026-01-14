@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux';
 import ImageComponent from '@/components/shared/Image';
 import { getProfile } from '@/lib/redux/slices/profile/profile';
 import Loading from '@/app/loading';
-import { Sparkles, Download, Mail, User, Brain, Briefcase, GraduationCap, MessageCircle } from 'lucide-react';
+import { Sparkles, Mail, User, Brain, Briefcase, GraduationCap, MessageCircle, Eye } from 'lucide-react';
 import { Award } from 'lucide-react';
 import LinkButton from '@/components/shared/button/LinkButton';
 import Badge from '@/components/shared/Badge';
@@ -126,7 +126,7 @@ export default function AboutPage() {
       <section className='page-padding bg-secondary/50 min-h-screen flex max-md:flex-col items-center justify-between gap-10'>
           <div className="relative w-[45%] h-[80%] max-md:w-full max-md:mt-10 bg-background rounded-lg border-primary/20 border-2 flex items-center justify-center">
               <ImageComponent
-                  src={profile?.image_url ?? ''} 
+                  src={profile?.image_url ?? "#"} 
                   alt="Profile Picture" 
                   width="100%"
                   height="100%" 
@@ -152,7 +152,7 @@ export default function AboutPage() {
             </div>
 
             <div>
-              <h1 className="text-6xl max-md:text-5xl max-sm:text-3xl font-bold mb-6 leading-tight" >
+              <h1 className="text-6xl max-md:text-5xl max-sm:text-3xl font-bold leading-tight" >
                 <span className="text-foreground">{profile?.first_name}</span>
                 <br />
                 <span className="bg-gradient-primary bg-clip-text text-transparent">{profile?.last_name}</span>
@@ -160,7 +160,7 @@ export default function AboutPage() {
               <p className="text-xl max-md:text-lg text-foreground/60 font-normal leading-relaxed max-w-lg">
                 {profile?.title ?? "Software Engineer"}
               </p>
-              <p className="text-lg max-md:text-base text-foreground/60 font-bold leading-relaxed max-w-lg">
+              <p className="text-lg max-md:text-base text-foreground/60 font-bold leading-relaxed max-w-lg mt-4">
                 {profile?.short_bio ?? "I'm a passionate software developer who transforms complex problems into elegant, scalable solutions. Let's build something extraordinary together."}
               </p>
             </div>
@@ -172,15 +172,15 @@ export default function AboutPage() {
                 variant='primary'
                 className="font-bold max-md:w-full max-sm:text-sm"
               >
-                <Download className='h-6 w-6 mr-4 max-sm:h-4 max-sm:w-4'/>
-                Download Resume
+                <Eye className='h-6 w-6 mr-4 max-sm:h-4 max-sm:w-4'/>
+                View Resume
               </LinkButton>
 
               <LinkButton
                 to="#"
                 onClick={() => setIsOpen(true)}
                 size='lg'
-                variant='ghost'
+                variant='ghostPrimary'
                 className="font-bold border-2 border-foreground/20 max-md:w-full max-sm:text-sm"
               >
                 <Mail className='h-6 w-6 mr-4 max-sm:h-4 max-sm:w-4'/>

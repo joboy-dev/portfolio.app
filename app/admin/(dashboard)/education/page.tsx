@@ -260,6 +260,7 @@ export default function EducationPage() {
                                         alt={education.school}
                                         size='lg'
                                         rounded='md'
+                                        objectFit='contain'
                                     />
                                     <div>
                                         <h3 className='text-xl text-foreground font-bold mb-2'>{education.school}</h3>

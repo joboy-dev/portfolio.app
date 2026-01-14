@@ -20,7 +20,7 @@ const sizeClasses = {
   xl: "w-20 h-20 text-lg",
 };
 
-const Avatar: React.FC<AvatarProps> = ({
+const Avatar: React.FC<AvatarProps & { objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down' }> = ({
   src,
   alt,
   name = "",
@@ -29,6 +29,7 @@ const Avatar: React.FC<AvatarProps> = ({
   className = "",
   showBadge = false,
   badgeColor = "bg-green-500",
+  objectFit = "cover",
   onClick
 }) => {
   const initials = name
@@ -52,7 +53,11 @@ const Avatar: React.FC<AvatarProps> = ({
           <img
             src={src}
             alt={alt || name}
-            className={clsx("object-cover w-full h-full", rounded === "full" ? "rounded-full" : rounded === "md" ? "rounded-md" : "")}
+            className={clsx(
+              "w-full h-full",
+              rounded === "full" ? "rounded-full" : rounded === "md" ? "rounded-md" : ""
+            )}
+            style={{ objectFit }}
           />
         ) : (
           <span>{initials}</span>

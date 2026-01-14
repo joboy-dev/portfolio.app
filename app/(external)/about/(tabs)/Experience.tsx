@@ -35,11 +35,10 @@ export default function Experience() {
 
   return isLoading ? <Loading /> : (
     <div className='flex flex-col gap-4'>
+      {experiences?.length === 0 && (
+        <ListEmpty title='experience' />
+      )}
       <div className='grid grid-cols-1 gap-4'>
-        {experiences?.length === 0 && (
-          <ListEmpty title='experience' />
-        )}
-
         {experiences?.map((experience) => {
           const isOpen = openDesc[experience.id] || false
           return (

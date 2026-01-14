@@ -22,8 +22,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div></div>
             <div className='flex items-center gap-2'>
               <Button 
-                variant='dangerOutline' 
-                size='sm'
+                variant='ghostDanger' 
+                size='none'
                 onClick={handleLogout}
               >
                 Logout
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </nav>
-        <div className="px-10 w-full">
+        <div className="px-10 max-md:px-7 max-sm:px-4 w-full">
           {children}
         </div>
       </div>

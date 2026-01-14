@@ -8,7 +8,7 @@ interface LinkButtonProps extends HTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
   className?: string;
   variant?: keyof typeof variantStyles;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'none';
   disabled?: boolean;
 };
 
@@ -20,6 +20,7 @@ const sizeStyles = {
   md: 'px-5 py-2.5',
   lg: 'px-6 py-3 text-lg',
   full: 'w-full px-5 py-3',
+  none: 'p-0',
 }
 
 // const sizeStyles = {

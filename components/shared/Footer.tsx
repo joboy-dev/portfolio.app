@@ -6,7 +6,7 @@ function Footer() {
         <div className="md:px-[120px] md:flex-row px-12 py-8 flex flex-col gap-5 items-center justify-between">
             <Logo />
             <p className="text-muted-foreground text-center">
-                &copy; {new Date().getFullYear()} Joboy-Dev. All rights reserved.
+                &copy; {new Date().getFullYear()} Adegbehingbe Oluwakorede. All rights reserved.
             </p>
         </div>
     </footer>

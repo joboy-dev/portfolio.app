@@ -22,8 +22,8 @@ export default function AuthPage() {
         <div className='flex flex-col min-h-screen w-full items-center justify-center'>
             <div className='flex flex-col items-center justify-center gap-4 text-center'>
                 <Logo isCollapsed/>
-                <h1 className='text-5xl font-bold text-foreground'>Admin Portal</h1>
-                <p className='text-muted-foreground text-lg'>Manage your portfolio content with ease</p>
+                <h1 className='text-5xl max-md:text-3xl font-bold text-foreground'>Admin Portal</h1>
+                <p className='text-muted-foreground text-lg max-md:text-sm'>Manage your portfolio content with ease</p>
             </div>
 
             <div className='px-10 py-4 bg-background w-full'>

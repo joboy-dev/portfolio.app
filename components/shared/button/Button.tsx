@@ -3,7 +3,7 @@ import { clsx } from 'clsx'
 import { Loader2 } from 'lucide-react'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'full'
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'full' | 'none'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
@@ -33,6 +33,7 @@ export default function Button({
     md: 'px-5 py-2.5',
     lg: 'px-6 py-3 text-lg',
     full: 'w-full px-5 py-3',
+    none: 'p-0',
   }
 
   const disabledStyles = disabled || isLoading ? 'opacity-60 cursor-not-allowed' : ''

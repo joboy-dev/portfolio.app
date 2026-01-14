@@ -470,13 +470,6 @@ export default function ProjectsPage() {
                     />
 
                     <FormInput
-                        name="position"
-                        label="Position"
-                        placeholder="Enter the position of the project"
-                        type="number"
-                    />
-
-                    <FormInput
                         name="github_link"
                         label="Github Link"
                         placeholder="Enter the github link of the project"
@@ -504,6 +497,13 @@ export default function ProjectsPage() {
                         name="figma_link"
                         label="Figma Link"
                         placeholder="Enter the figma link of the project"
+                    />
+
+                    <FormInput
+                        name="position"
+                        label="Position"
+                        placeholder="Enter the position of the project"
+                        type="number"
                     />
                 </div>
 
@@ -717,6 +717,7 @@ export default function ProjectsPage() {
                                             alt={project.name}
                                             size='lg'
                                             rounded='md'
+                                            objectFit='contain'
                                         />
                                         <div>
                                             <h3 className='text-xl text-foreground font-bold mb-2'>{project.name}</h3>

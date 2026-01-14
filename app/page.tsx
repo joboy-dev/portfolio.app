@@ -5,7 +5,7 @@ import Badge from "@/components/shared/Badge";
 import LinkButton from "@/components/shared/button/LinkButton";
 import Footer from "@/components/shared/Footer";
 import PublicNavbar from "@/components/shared/navbar/PublicNavbar";
-import { ArrowUpRight, Cpu, Download, Play, Rocket, Shield, Sparkles, Zap } from "lucide-react";
+import { ArrowUpRight, Cpu, Eye, Play, Rocket, Shield, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
 import { FaEnvelope, FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaWhatsapp, FaX } from "react-icons/fa6";
 import { useAppSelector } from "@/lib/hooks/redux";
@@ -99,8 +99,7 @@ export default function Home() {
               <span className="text-foreground">Experiences</span>
             </h1>
             <p className="text-xl text-foreground/60 font-bold leading-relaxed max-w-lg">
-              I am a passionate software developer who transforms complex problems into elegant, scalable solutions.
-              Let us build something extraordinary together.
+              {profile?.short_bio || "I am a passionate software developer who transforms complex problems into elegant, scalable solutions. Let us build something extraordinary together."}
             </p>
           </div>
 
@@ -118,11 +117,11 @@ export default function Home() {
             <LinkButton
               to={profile?.resume_url ?? '#'}
               size='lg'
-              variant='ghost'
+              variant='ghostPrimary'
               className="font-bold max-md:w-full"
             >
-              <Download className='h-6 w-6 mr-5'/>
-              Download Resume
+              <Eye className='h-6 w-6 mr-5'/>
+              View Resume
             </LinkButton>
           </div>
 

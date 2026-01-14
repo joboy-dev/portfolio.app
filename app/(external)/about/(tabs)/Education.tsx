@@ -36,11 +36,10 @@ export default function Education() {
 
   return isLoading ? <Loading/> : (
     <div className='flex flex-col gap-4'>
+        {educations?.length === 0 && (
+            <ListEmpty title='education' />
+        )}
         <div className='grid grid-cols-1 gap-4'>
-            {educations?.length === 0 && (
-                <ListEmpty title='education' />
-            )}
-
             {educations?.map((education) => {
               const isOpen = openDesc[education.id] || false
               return (

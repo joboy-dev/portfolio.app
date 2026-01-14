@@ -246,6 +246,7 @@ export default function ExperiencePage() {
                                         alt={experience.company}
                                         size='lg'
                                         rounded='md'
+                                        objectFit='contain'
                                     />
                                     <div>
                                         <h3 className='text-xl text-foreground font-bold mb-2'>{experience.company}</h3>

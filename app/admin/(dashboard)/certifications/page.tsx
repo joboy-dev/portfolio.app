@@ -324,6 +324,7 @@ export default function CertificationsPage() {
                                             alt={certification.name}
                                             size='lg'
                                             rounded='md'
+                                            objectFit='contain'
                                         />
                                         <div>
                                             <h3 className='text-xl text-foreground font-bold'>{certification.name}</h3>

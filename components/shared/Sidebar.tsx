@@ -117,7 +117,7 @@ export default function Sidebar() {
                 {isOpen && (
                     <div className='max-md:hidden'>
                         <div className="font-bold text-lg text-foreground">
-                            Admin Panel
+                            Joboy.dev
                         </div>
                         <div className="text-xs text-primary font-medium">
                             Portfolio Manager
