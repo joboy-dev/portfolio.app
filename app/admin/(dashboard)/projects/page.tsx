@@ -34,6 +34,7 @@ import TagDetatchModal from '@/components/tag/TagDetatchModal'
 import Badge from '@/components/shared/Badge'
 import AdditionalInfoField from '@/components/shared/form/AdditionalInfoField'
 import DateInput from '@/components/shared/form/DateInput'
+import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
 
 export default function ProjectsPage() {
     const projectDomain: Option[] = [
@@ -733,6 +734,7 @@ export default function ProjectsPage() {
                                                             className="bg-primary/10 text-primary"
                                                             onClick={() => {
                                                                 dispatch(setSelectedProject(project));
+                                                                dispatch(setSelectedTag(tag));
                                                                 setIsDetatchTagOpen(true);
                                                             }}
                                                         >
