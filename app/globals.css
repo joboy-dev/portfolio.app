@@ -157,8 +157,14 @@ body {
 
 .page-padding {
   @apply max-md:px-12 max-sm:px-8 px-[120px] pt-24 pb-4;
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .nav-padding {
   @apply px-12 md:px-[120px] py-4;
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
 }
