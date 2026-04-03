@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getExperiences } from '@/lib/redux/slices/experience/experience'
 import { GetExperiencesParams } from '@/lib/redux/slices/experience/experience.service'
 import { formatDate } from '@/lib/utils/formatter'
-import { renderWithLineBreaks } from '@/lib/utils/string'
+import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -87,10 +87,8 @@ export default function Experience() {
                     )}
                   </button>
                   {isOpen && (
-                    <div className="animate-fade-in">
-                      <p className='text-lg text-foreground/60 mt-2'>
-                        {renderWithLineBreaks(experience.description)}
-                      </p>
+                    <div className="animate-fade-in mt-2">
+                      <MarkdownRenderer content={experience.description} className='text-lg text-foreground/60' />
                     </div>
                   )}
                 </div>

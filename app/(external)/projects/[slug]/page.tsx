@@ -11,7 +11,7 @@ import { ProjectInterface } from '@/lib/interfaces/project'
 import { getProjectById, getProjects } from '@/lib/redux/slices/project/project'
 import { filterImageFiles } from '@/lib/utils/file'
 import { formatDate } from '@/lib/utils/formatter'
-import { renderWithLineBreaks } from '@/lib/utils/string'
+import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import clsx from 'clsx'
 import { AlertCircleIcon, ArrowLeftIcon, ArrowRightIcon, Code2, CodeIcon, ExternalLink, GithubIcon, InfoIcon, ListIcon } from 'lucide-react'
 import { useParams } from 'next/navigation'
@@ -105,9 +105,7 @@ export default function ProjectDetailPage() {
                     </div>
                     <h1 className="text-4xl max-md:text-2xl font-bold leading-tight" >{project?.name}</h1>
                     <p className='text-lg max-md:text-base text-primary'>{project?.tagline}</p>
-                    <p className='text-lg max-md:text-base text-muted-foreground'>
-                        {renderWithLineBreaks(project?.description ?? '')}
-                    </p>
+                    <MarkdownRenderer content={project?.description ?? ''} className='text-lg max-md:text-base text-muted-foreground' />
                     <div className='grid grid-cols-2 gap-4 max-sm:grid-cols-1'>
                         <div className='flex flex-col gap-2'>
                             <h2 className='text-lg font-bold'>Project Type</h2>

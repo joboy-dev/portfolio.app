@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getEducations } from '@/lib/redux/slices/education/education'
 import { GetEducationsParams } from '@/lib/redux/slices/education/education.service'
 import { formatDate } from '@/lib/utils/formatter'
-import { renderWithLineBreaks } from '@/lib/utils/string'
+import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -96,9 +96,7 @@ export default function Education() {
                             id={`desc-${education.id}`}
                             className="animate-fade-in"
                           >
-                            <p className='text-lg text-foreground/60'>
-                              {renderWithLineBreaks(education.description)}
-                            </p>
+                            <MarkdownRenderer content={education.description} className='text-lg text-foreground/60' />
                           </div>
                         )}
                       </div>

@@ -10,6 +10,7 @@ import { Code2, Eye } from 'lucide-react'
 import Button from '../shared/button/Button'
 import { FaFigma, FaGithub, FaGlobe, FaGoogleDrive } from 'react-icons/fa6'
 import LinkButton from '../shared/button/LinkButton'
+import MarkdownRenderer from '../shared/MarkdownRenderer'
 
 export function ProjectCard({ project }: { project: ProjectInterface }) {
     return (
@@ -38,8 +39,9 @@ export function ProjectCard({ project }: { project: ProjectInterface }) {
                 <h3 className='text-xl font-bold'>{project.name}</h3>
                 <p className='text-base text-primary'>{project.tagline ?? "No tagline"}</p>
                 <p className='text-base text-foreground/60 line-clamp-2 break-words'>
-                    {renderWithLineBreaks(project.description ?? 'No description')}
+                    <MarkdownRenderer content={project.description ?? 'No description'} className='text-base text-foreground/60 line-clamp-2 break-words' />
                 </p>
+
                 <div className="flex flex-wrap gap-2 mt-2">
                     {Array.isArray(project.tools) && project.tools.slice(0, 4).map((tool, idx) => (
                         <Badge key={tool + idx} variant="outlineSecondary">{tool}</Badge>
