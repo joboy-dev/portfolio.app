@@ -1,85 +1,80 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import StoreProvider from "./StoreProvider";
-import { Toaster } from "react-hot-toast";
+import './globals.css'
+import type { Metadata, Viewport } from 'next'
+import { Toaster } from 'react-hot-toast'
+import { DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE, DEFAULT_TITLE, SITE_NAME, SITE_URL } from '@/lib/constants/seo'
+import StoreProvider from './StoreProvider'
 
 export const metadata: Metadata = {
-  title: "Joboy-Dev Portfolio",
-  description: "Portfolio for Adegbehingbe Oluwakorede Joseph",
-  // // You can add more metadata for SEO, social sharing, and browser configuration.
-  // // Here are some useful examples:
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: {
+    canonical: '/',
+  },
+  category: 'technology',
+  icons: {
+    icon: '/favicon/favicon.ico',
+    shortcut: '/favicon/favicon-16x16.png',
+    apple: '/favicon/apple-touch-icon.png',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: SITE_NAME,
+    url: SITE_URL,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  },
+}
 
-  // // The canonical URL for the site
-  // // canonical: "https://joboy-dev.com",
-
-  // // Open Graph metadata for social sharing
-  // openGraph: {
-  //   title: "Joboy-Dev Portfolio",
-  //   description: "Portfolio for Adegbehingbe Oluwakorede Joseph",
-  //   url: "https://joboy-dev.com",
-  //   siteName: "Joboy-Dev Portfolio",
-  //   images: [
-  //     {
-  //       url: "https://joboy-dev.com/og-image.png",
-  //       width: 1200,
-  //       height: 630,
-  //       alt: "Joboy-Dev Portfolio",
-  //     },
-  //   ],
-  //   locale: "en_US",
-  //   type: "website",
-  // },
-
-  // // Twitter Card metadata
-  // twitter: {
-  //   card: "summary_large_image",
-  //   title: "Joboy-Dev Portfolio",
-  //   description: "Portfolio for Adegbehingbe Oluwakorede Joseph",
-  //   site: "@joboydev",
-  //   creator: "@joboydev",
-  //   images: ["https://joboy-dev.com/og-image.png"],
-  // },
-
-  // // Theme color for browsers
-  // themeColor: "#0f172a",
-
-  // // Favicon and icons (these are usually set in the <head> via <link> tags, but can be referenced here for completeness)
-  // // icons: {
-  // //   icon: "/favicon.ico",
-  // //   shortcut: "/favicon-16x16.png",
-  // //   apple: "/apple-touch-icon.png",
-  // // },
-
-  // // Robots meta tag for search engines
-  // robots: {
-  //   index: true,
-  //   follow: true,
-  //   googleBot: {
-  //     index: true,
-  //     follow: true,
-  //     "max-snippet": -1,
-  //     "max-image-preview": "large",
-  //     "max-video-preview": -1,
-  //   },
-  // },
-
-  // Manifest for PWA support (if applicable)
-  // manifest: "/site.webmanifest",
-};
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#10b981',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <StoreProvider>
-      <Toaster position="top-center" reverseOrder={false} />
-      <html lang="en">
-        <body className="bg-background">
+    <html lang='en'>
+      <body className='bg-background'>
+        <StoreProvider>
+          <Toaster position='top-center' reverseOrder={false} />
           {children}
-        </body>
-      </html>
-    </StoreProvider>
-  );
+        </StoreProvider>
+      </body>
+    </html>
+  )
 }

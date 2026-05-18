@@ -13,6 +13,7 @@ import Loading from "./loading";
 import ImageComponent from "@/components/shared/Image";
 import Card from "@/components/shared/card/Card";
 import ProgressBar from "@/components/shared/ProgressBar";
+import { SITE_URL } from "@/lib/constants/seo";
 
 export default function Home() {
   const { profile, isLoading:isProfileLoading } = useAppSelector(state => state.profile)
@@ -66,8 +67,45 @@ export default function Home() {
 
   const [isContactFormOpen, setIsContactFormOpen] = useState(false)
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Joboy Dev Portfolio",
+    url: SITE_URL,
+    description:
+      "Portfolio of Adegbehingbe Oluwakorede Joseph, a full stack developer building scalable web products.",
+    inLanguage: "en-US",
+  }
+
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: (profile?.full_name ?? `${profile?.first_name ?? ""} ${profile?.last_name ?? ""}`.trim()) || "Adegbehingbe Oluwakorede Joseph",
+    url: SITE_URL,
+    jobTitle: profile?.title ?? "Software Engineer",
+    email: profile?.email ? `mailto:${profile.email}` : undefined,
+    image: profile?.image_url,
+    sameAs: [
+      profile?.github_url,
+      profile?.linkedin_url,
+      profile?.twitter_url,
+      profile?.instagram_url,
+      profile?.facebook_url,
+      profile?.website_url,
+    ].filter(Boolean),
+  }
+
   return isProfileLoading ? <Loading /> : (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
+
       <ContactForm
         isOpen={isContactFormOpen}
         setIsOpen={setIsContactFormOpen}
@@ -159,8 +197,8 @@ export default function Home() {
           </div>
 
           {/* Floating Elements */}
-          <div className="absolute -top-6 -right-6 w-24 h-24 max-md:w-16 max-md:h-16 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-2xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-6 -left-6 w-32 h-32 max-md:w-24 max-md:h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-10 animate-pulse delay-1000"></div>
+          <div className="absolute -top-6 -right-6 w-24 h-24 max-md:w-16 max-md:h-16 bg-linear-to-br from-teal-400 to-emerald-500 rounded-2xl opacity-20 animate-pulse"></div>
+          <div className="absolute -bottom-6 -left-6 w-32 h-32 max-md:w-24 max-md:h-24 bg-linear-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-10 animate-pulse delay-1000"></div>
         </div>
       </section>
 
