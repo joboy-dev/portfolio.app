@@ -14,6 +14,8 @@ interface SearchableSelectFieldProps {
   control?: any
   disabled?: boolean
   defaultValue?: string
+  isLoading?: boolean
+  onMenuScrollToBottom?: () => void
 }
 
 const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
@@ -26,6 +28,8 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
   onChange,
   className = "",
   placeholder = "Select an option",
+  isLoading = false,
+  onMenuScrollToBottom,
 }) => {
   return (
     <div className={`w-full space-y-1 mb-4 ${className}`}>
@@ -49,6 +53,8 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
                   options={options}
                   placeholder={placeholder}
                   isSearchable
+                  isLoading={isLoading}
+                  onMenuScrollToBottom={onMenuScrollToBottom}
                   classNames={{
                     control: () => `h-[40px] ${fieldState.error ? 'border-red-500' : 'border-gray-300'}`,
                   }}

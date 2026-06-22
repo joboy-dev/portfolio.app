@@ -23,6 +23,7 @@ import FileCard from '@/components/file/FileCard'
 import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
 import BackButton from '@/components/shared/button/BackButton'
 import ListSection from '@/components/shared/ListSection'
+import Pagination from '@/components/shared/Pagination'
 
 export default function FilesPage() {
     const router = useRouter()
@@ -30,7 +31,7 @@ export default function FilesPage() {
     const model = searchParams.get("model")
 
     const dispatch = useAppDispatch()
-    const { files, total, isLoading } = useAppSelector((state: RootState) => state.file)
+    const { files, total, totalPages, isLoading } = useAppSelector((state: RootState) => state.file)
 
     const methods = useZodForm<BulkUploadFileFormData>(bulkUploadFileSchema)
     const [isOpen, setIsOpen] = useState(false)
@@ -150,6 +151,12 @@ export default function FilesPage() {
                                 <FileCard key={file.id} file={file} />
                             ))}
                         </ListSection>
+
+                        <Pagination
+                            currentPage={filtersState.page ?? 1}
+                            totalPages={totalPages ?? 1}
+                            onPageChange={(page) => setFiltersState({...filtersState, page})}
+                        />
                     </div>
 
                     : <ListSection
