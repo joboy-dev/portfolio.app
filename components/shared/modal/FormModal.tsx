@@ -183,7 +183,7 @@ export default function FormModal({
                   : ""
                 : "Submitting"
             }
-            backgroundColor="white"
+            backgroundColor="background"
             isSubmitting={isSubmitting}
             className="shadow-none m-0 w-full"
           >

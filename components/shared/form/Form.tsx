@@ -14,7 +14,7 @@ function FormWrapper({
   children,
   className = '',
   buttonVariant = 'primary',
-  backgroundColor = "transaparent",
+  backgroundColor = "transparent",
   width,
   buttonWidth,
   afterButtonContent,
