@@ -14,20 +14,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: `${articleTitle} Blog`,
-    description: `Article by Joboy Dev: ${articleTitle}. Practical software engineering insights and implementation notes.`,
+    description: `Article by Adegbehingbe Oluwakorede Joseph (joboy.dev): ${articleTitle}. Practical software engineering insights and implementation notes.`,
     alternates: {
       canonical: `/blog/${slug}`,
     },
     openGraph: {
       title: `${articleTitle} | ${SITE_NAME}`,
-      description: `Article by Joboy Dev: ${articleTitle}.`,
+      description: `Article by Adegbehingbe Oluwakorede Joseph (joboy.dev): ${articleTitle}.`,
       url: `${SITE_URL}/blog/${slug}`,
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: `${articleTitle} | ${SITE_NAME}`,
-      description: `Article by Joboy Dev: ${articleTitle}.`,
+      description: `Article by Adegbehingbe Oluwakorede Joseph (joboy.dev): ${articleTitle}.`,
     },
   }
 }
