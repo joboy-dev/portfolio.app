@@ -25,7 +25,7 @@ import TextAreaInput from '@/components/shared/form/TextAreaInput'
 
 export default function EducationPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, educations, isLoading, selectedEducation } = useAppSelector((state: RootState) => state.education)    
+    const { total, totalPages, educations, isLoading, isSubmitting, selectedEducation } = useAppSelector((state: RootState) => state.education)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -51,17 +51,15 @@ export default function EducationPage() {
     const createMethods = useZodForm<EducationBaseFormData>(educationBaseSchema)
     const editMethods = useZodForm<UpdateEducationFormData>(updateEducationSchema)
 
-    const onSubmit = (data: EducationBaseFormData) => {
-        console.log(data)
-        dispatch(createEducation(data))
+    const onSubmit = async (data: EducationBaseFormData) => {
+        await dispatch(createEducation(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateEducationFormData) => {
-        console.log(data)
-        dispatch(updateEducation({
+    const onEditSubmit = async (data: UpdateEducationFormData) => {
+        await dispatch(updateEducation({
             id: selectedEducation?.id ?? "",
             payload: data,
         }))
@@ -79,7 +77,7 @@ export default function EducationPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Education"
                 subtitle="Add a new education to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="school"
@@ -139,7 +137,7 @@ export default function EducationPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Education"
                 subtitle="Edit the education"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="school"

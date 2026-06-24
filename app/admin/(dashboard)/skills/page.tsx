@@ -22,7 +22,7 @@ import ProgressBar from '@/components/shared/ProgressBar'
 
 export default function SkillsPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, skills, isLoading, selectedSkill } = useAppSelector((state: RootState) => state.skill)    
+    const { total, totalPages, skills, isLoading, isSubmitting, selectedSkill } = useAppSelector((state: RootState) => state.skill)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -48,17 +48,15 @@ export default function SkillsPage() {
     const createMethods = useZodForm<SkillBaseFormData>(skillBaseSchema)
     const editMethods = useZodForm<UpdateSkillFormData>(updateSkillSchema)
 
-    const onSubmit = (data: SkillBaseFormData) => {
-        console.log(data)
-        dispatch(createSkill(data))
+    const onSubmit = async (data: SkillBaseFormData) => {
+        await dispatch(createSkill(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateSkillFormData) => {
-        console.log(data)
-        dispatch(updateSkill({
+    const onEditSubmit = async (data: UpdateSkillFormData) => {
+        await dispatch(updateSkill({
             id: selectedSkill?.id ?? "",
             payload: data,
         }))
@@ -76,7 +74,7 @@ export default function SkillsPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Skill"
                 subtitle="Add a new skill to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"
@@ -107,7 +105,7 @@ export default function SkillsPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Skill"
                 subtitle="Edit the skill"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"

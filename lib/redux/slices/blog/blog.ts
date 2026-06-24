@@ -94,10 +94,24 @@ export const updateBlog = createAsyncThunk<BlogInterface | undefined, UpdatePara
     async ({id, payload}): Promise<BlogInterface | undefined> => {
         try {
             const data = await blogsService.updateBlog({
-                id: id, 
+                id: id,
                 payload: payload
             })
             toaster.success("Blog updated successfully")
+            return data.data
+        } catch (error) {
+            ProcessError(error)
+            return
+        }
+    }
+)
+
+export const uploadBlogCoverImage = createAsyncThunk<BlogInterface | undefined, UpdateParams<FormData>>(
+    "blogs/uploadCoverImage",
+    async ({id, payload}): Promise<BlogInterface | undefined> => {
+        try {
+            const data = await blogsService.uploadBlogCoverImage({id, payload})
+            toaster.success("Blog cover image uploaded successfully")
             return data.data
         } catch (error) {
             ProcessError(error)
@@ -174,6 +188,23 @@ export const blogSlice = createSlice({
             state.isSubmitting = true;
         })
         .addCase(updateBlog.fulfilled, (state, {payload}) => {
+            state.isSubmitting = false;
+
+            if (payload && state.blogs) {
+                const index = state.blogs.findIndex(blog => blog.id === payload.id);
+                if (index !== -1) {
+                    state.blogs[index] = payload;
+                }
+            }
+
+            if (payload) {
+                state.selectedBlog = payload;
+            }
+        })
+        .addCase(uploadBlogCoverImage.pending, (state) => {
+            state.isSubmitting = true;
+        })
+        .addCase(uploadBlogCoverImage.fulfilled, (state, {payload}) => {
             state.isSubmitting = false;
 
             if (payload && state.blogs) {

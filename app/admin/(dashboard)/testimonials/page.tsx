@@ -23,7 +23,7 @@ import FormCheckbox from '@/components/shared/form/FormCheckbox'
 
 export default function TestimonialsPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, testimonials, isLoading, selectedTestimonial } = useAppSelector((state: RootState) => state.testimonial)    
+    const { total, totalPages, testimonials, isLoading, isSubmitting, selectedTestimonial } = useAppSelector((state: RootState) => state.testimonial)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -50,17 +50,15 @@ export default function TestimonialsPage() {
     const createMethods = useZodForm<TestimonialBaseFormData>(testimonialBaseSchema)
     const editMethods = useZodForm<UpdateTestimonialFormData>(updateTestimonialSchema)
 
-    const onSubmit = (data: TestimonialBaseFormData) => {
-        console.log(data)
-        dispatch(createTestimonial(data))
+    const onSubmit = async (data: TestimonialBaseFormData) => {
+        await dispatch(createTestimonial(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateTestimonialFormData) => {
-        console.log(data)
-        dispatch(updateTestimonial({
+    const onEditSubmit = async (data: UpdateTestimonialFormData) => {
+        await dispatch(updateTestimonial({
             id: selectedTestimonial?.id ?? "",
             payload: data,
         }))
@@ -78,7 +76,7 @@ export default function TestimonialsPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Testimonial"
                 subtitle="Add a new testimonial to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"
@@ -115,7 +113,7 @@ export default function TestimonialsPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Testimonial"
                 subtitle="Edit the testimonial"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"

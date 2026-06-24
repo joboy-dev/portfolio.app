@@ -28,7 +28,7 @@ import FileCard from '@/components/file/FileCard'
 
 export default function CertificationsPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, certifications, isLoading, selectedCertification } = useAppSelector((state: RootState) => state.certification)    
+    const { total, totalPages, certifications, isLoading, isSubmitting, selectedCertification } = useAppSelector((state: RootState) => state.certification)
     const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -71,17 +71,15 @@ export default function CertificationsPage() {
 
     }, [dispatch, filtersState, selectedCertification])
 
-    const onSubmit = (data: CertificationBaseFormData) => {
-        console.log(data)
-        dispatch(createCertification(data))
+    const onSubmit = async (data: CertificationBaseFormData) => {
+        await dispatch(createCertification(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateCertificationFormData) => {
-        console.log(data)
-        dispatch(updateCertification({
+    const onEditSubmit = async (data: UpdateCertificationFormData) => {
+        await dispatch(updateCertification({
             id: selectedCertification?.id ?? "",
             payload: data,
         }))
@@ -90,13 +88,11 @@ export default function CertificationsPage() {
         setIsEditOpen(false)
     }
 
-    const onUploadSubmit = (data: FileBaseFormData) => {
-        console.log(data)
+    const onUploadSubmit = async (data: FileBaseFormData) => {
         const formData = objectToFormData(data)
-        dispatch(createFile(formData)).then(() => {
-            // Refetch certifications after upload completes
-            dispatch(getCertifications({ ...filtersState }))
-        })
+        await dispatch(createFile(formData))
+        // Refetch certifications after upload completes
+        dispatch(getCertifications({ ...filtersState }))
         uploadMethods.reset()
         setIsUploadOpen(false)
     }
@@ -110,7 +106,7 @@ export default function CertificationsPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Certification"
                 subtitle="Add a new certification to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"
@@ -158,7 +154,7 @@ export default function CertificationsPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Certification"
                 subtitle="Edit the certification"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"

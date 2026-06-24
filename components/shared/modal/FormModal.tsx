@@ -109,6 +109,7 @@ export default function FormModal({
               <Button
                 variant="danger"
                 size="sm"
+                disabled={isSubmitting}
                 onClick={() => {
                   methods.reset();
                   if (setCurrentStep) setCurrentStep(0);

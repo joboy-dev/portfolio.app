@@ -5,7 +5,9 @@ import API from "@/lib/utils/API";
 import { BlogBaseFormData, UpdateBlogFormData } from "@/lib/validators/blog";
 
 export interface GetBlogsParams extends BaseGetParams {
-  title?: string
+  search?: string
+  is_published?: boolean
+  tags?: string
 };
 
 const getBlogs = async (params: GetBlogsParams): Promise<ApiResponse<BlogInterface[]>> => {
@@ -37,10 +39,20 @@ const updateBlog = async ({
     return data
 }
 
+const uploadBlogCoverImage = async ({
+    id,
+    payload,
+}: {id: string, payload: FormData}
+): Promise<ApiResponse<BlogInterface>> => {
+    const { data } = await API.post(`/blogs/${id}/cover-image`, payload)
+    return data
+}
+
 export const blogsService = {
     getBlogs,
     getBlogById,
     deleteBlog,
     createBlog,
-    updateBlog
+    updateBlog,
+    uploadBlogCoverImage,
 }

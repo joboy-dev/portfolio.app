@@ -24,7 +24,7 @@ import DateInput from '@/components/shared/form/DateInput'
 
 export default function AwardsPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, awards, isLoading, selectedAward } = useAppSelector((state: RootState) => state.award)    
+    const { total, totalPages, awards, isLoading, isSubmitting, selectedAward } = useAppSelector((state: RootState) => state.award)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -50,17 +50,15 @@ export default function AwardsPage() {
     const createMethods = useZodForm<AwardBaseFormData>(awardBaseSchema)
     const editMethods = useZodForm<UpdateAwardFormData>(updateAwardSchema)
 
-    const onSubmit = (data: AwardBaseFormData) => {
-        console.log(data)
-        dispatch(createAward(data))
+    const onSubmit = async (data: AwardBaseFormData) => {
+        await dispatch(createAward(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateAwardFormData) => {
-        console.log(data)
-        dispatch(updateAward({
+    const onEditSubmit = async (data: UpdateAwardFormData) => {
+        await dispatch(updateAward({
             id: selectedAward?.id ?? "",
             payload: data,
         }))
@@ -78,7 +76,7 @@ export default function AwardsPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Award"
                 subtitle="Add a new award to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"
@@ -114,7 +112,7 @@ export default function AwardsPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Award"
                 subtitle="Edit the award"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"

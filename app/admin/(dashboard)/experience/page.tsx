@@ -24,7 +24,7 @@ import TextAreaInput from '@/components/shared/form/TextAreaInput'
 
 export default function ExperiencePage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, experiences, isLoading, selectedExperience } = useAppSelector((state: RootState) => state.experience)    
+    const { total, totalPages, experiences, isLoading, isSubmitting, selectedExperience } = useAppSelector((state: RootState) => state.experience)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -50,17 +50,15 @@ export default function ExperiencePage() {
     const createMethods = useZodForm<ExperienceBaseFormData>(experienceBaseSchema)
     const editMethods = useZodForm<UpdateExperienceFormData>(updateExperienceSchema)
 
-    const onSubmit = (data: ExperienceBaseFormData) => {
-        console.log(data)
-        dispatch(createExperience(data))
+    const onSubmit = async (data: ExperienceBaseFormData) => {
+        await dispatch(createExperience(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateExperienceFormData) => {
-        console.log(data)
-        dispatch(updateExperience({
+    const onEditSubmit = async (data: UpdateExperienceFormData) => {
+        await dispatch(updateExperience({
             id: selectedExperience?.id ?? "",
             payload: data,
         }))
@@ -78,7 +76,7 @@ export default function ExperiencePage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Experience"
                 subtitle="Add a new experience to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="company"
@@ -132,7 +130,7 @@ export default function ExperiencePage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Experience"
                 subtitle="Edit the experience"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="company"

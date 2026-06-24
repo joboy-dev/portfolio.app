@@ -162,7 +162,7 @@ export default function ProjectsPage() {
     ]
 
     const dispatch = useAppDispatch()
-    const { total, totalPages, projects, isLoading, selectedProject } = useAppSelector((state: RootState) => state.project)    
+    const { total, totalPages, projects, isLoading, isSubmitting, selectedProject } = useAppSelector((state: RootState) => state.project)
     const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -202,17 +202,15 @@ export default function ProjectsPage() {
         model_name: "projects",
     })
 
-    const onSubmit = (data: ProjectBaseFormData) => {
-        console.log(data)
-        dispatch(createProject(data))
+    const onSubmit = async (data: ProjectBaseFormData) => {
+        await dispatch(createProject(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateProjectFormData) => {
-        console.log(data)
-        dispatch(updateProject({
+    const onEditSubmit = async (data: UpdateProjectFormData) => {
+        await dispatch(updateProject({
             id: selectedProject?.id ?? "",
             payload: data,
         }))
@@ -221,13 +219,11 @@ export default function ProjectsPage() {
         setIsEditOpen(false)
     }
 
-    const onUploadSubmit = (data: BulkUploadFileFormData) => {
-        console.log(data)
+    const onUploadSubmit = async (data: BulkUploadFileFormData) => {
         const formData = objectToFormData(data)
-        dispatch(bulkUploadFile(formData)).then(() => {
-            // Refetch certifications after upload completes
-            dispatch(getProjects({ ...filtersState }))
-        })
+        await dispatch(bulkUploadFile(formData))
+        // Refetch projects after upload completes
+        dispatch(getProjects({ ...filtersState }))
         uploadMethods.reset()
         setIsUploadOpen(false)
     }
@@ -241,7 +237,7 @@ export default function ProjectsPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Project"
                 subtitle="Add a new project to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
                 size='lg'
             >
                 <FormInput
@@ -394,7 +390,7 @@ export default function ProjectsPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Project"
                 subtitle="Edit the project"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
                 size='lg'
             >
                 <FormInput

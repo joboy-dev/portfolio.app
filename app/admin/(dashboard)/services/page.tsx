@@ -25,7 +25,7 @@ import TextAreaInput from '@/components/shared/form/TextAreaInput'
 
 export default function ServicesPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, services, isLoading, selectedService } = useAppSelector((state: RootState) => state.service)    
+    const { total, totalPages, services, isLoading, isSubmitting, selectedService } = useAppSelector((state: RootState) => state.service)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -51,17 +51,15 @@ export default function ServicesPage() {
     const createMethods = useZodForm<ServiceBaseFormData>(serviceBaseSchema)
     const editMethods = useZodForm<UpdateServiceFormData>(updateServiceSchema)
 
-    const onSubmit = (data: ServiceBaseFormData) => {
-        console.log(data)
-        dispatch(createService(data))
+    const onSubmit = async (data: ServiceBaseFormData) => {
+        await dispatch(createService(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    const onEditSubmit = (data: UpdateServiceFormData) => {
-        console.log(data)
-        dispatch(updateService({
+    const onEditSubmit = async (data: UpdateServiceFormData) => {
+        await dispatch(updateService({
             id: selectedService?.id ?? "",
             payload: data,
         }))
@@ -79,7 +77,7 @@ export default function ServicesPage() {
                 onSubmit={createMethods.handleSubmit(onSubmit)}
                 title="Add Service"
                 subtitle="Add a new service to your portfolio"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"
@@ -117,7 +115,7 @@ export default function ServicesPage() {
                 onSubmit={editMethods.handleSubmit(onEditSubmit)}
                 title="Edit Service"
                 subtitle="Edit the service"
-                isSubmitting={isLoading}
+                isSubmitting={isSubmitting}
             >
                 <FormInput
                     name="name"

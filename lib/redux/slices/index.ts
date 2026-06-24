@@ -13,6 +13,7 @@ import tagReducer from "./tag/tag";
 import categoryReducer from "./category/category";
 import testimonialReducer from "./testimonial/testimonial";
 import messageReducer from "./message/message";
+import blogReducer from "./blog/blog";
 
 export const rootReducer = {
     general: generalReducer,
@@ -30,4 +31,5 @@ export const rootReducer = {
     category: categoryReducer,
     testimonial: testimonialReducer,
     message: messageReducer,
+    blog: blogReducer,
 }

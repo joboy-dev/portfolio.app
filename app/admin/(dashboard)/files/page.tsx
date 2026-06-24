@@ -54,10 +54,9 @@ export default function FilesPage() {
         }
     }, [dispatch, model, filtersState])
 
-    const onSubmit = (data: BulkUploadFileFormData) => {
-        console.log(data)
+    const onSubmit = async (data: BulkUploadFileFormData) => {
         const formData = objectToFormData(data)
-        dispatch(bulkUploadFile(formData))
+        await dispatch(bulkUploadFile(formData))
         setIsOpen(false)
         methods.reset()
     }

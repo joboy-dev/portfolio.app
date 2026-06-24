@@ -47,7 +47,8 @@ export default function AuthPage() {
                     {/* Form */}
                     <div className='flex flex-col items-center justify-center gap-4 w-full'>
                         {selectedTab === "login" && <LoginForm />}
-                        {selectedTab === "register" && <RegisterForm />}
+                        {/* {selectedTab === "register" && <RegisterForm />} */}
+                        {selectedTab === "register" && <div className='text-muted-foreground text-sm'>Registration is currently disabled. Please contact the administrator for access.</div>}
                     </div>
                 </div>
 
