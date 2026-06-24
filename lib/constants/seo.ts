@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const SITE_URL = 'https://joboydev.vercel.app'
-export const SITE_NAME = 'Joboy Dev Portfolio'
-export const DEFAULT_TITLE = 'Joboy Dev | Full Stack Developer'
+export const SITE_NAME = 'Oluwakorede Joseph Adegbehingbe Portfolio'
+export const DEFAULT_TITLE = 'Oluwakorede Joseph Adegbehingbe | Full Stack Developer'
 export const DEFAULT_DESCRIPTION =
   'Portfolio of Adegbehingbe Oluwakorede Joseph, a full stack developer building scalable web applications, APIs, and product-focused digital experiences.'
 export const DEFAULT_OG_IMAGE = '/favicon/favicon.ico'
