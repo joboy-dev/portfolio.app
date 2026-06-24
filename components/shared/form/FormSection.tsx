@@ -18,7 +18,7 @@ export default function FormSection({
         className
     )}>
         <h2 className="text-2xl max-md:text-xl font-bold text-foreground mb-2">{title}</h2>
-        {description && <p className="text-md max-md:text-sm text-gray-500 mb-4">{description}</p>}
+        {description && <p className="text-md max-md:text-sm text-muted-foreground mb-4">{description}</p>}
         {children}
     </div>
   )

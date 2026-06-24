@@ -42,7 +42,7 @@ const FormToggle: React.FC<FormToggleProps> = ({
             field.onChange({ target: { value: !value, name } })
           }}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-            value ? "bg-primary" : "bg-gray-300"
+            value ? "bg-primary" : "bg-muted"
           }`}
         >
           <span

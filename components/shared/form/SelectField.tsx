@@ -24,7 +24,7 @@ const SelectField: React.FC<FormSelectProps> = ({
       {label && <label className="block text-sm font-medium text-foreground">{label}</label>}
       <select
         {...register}
-        className={`w-full h-[40px] p-2 border bg-transparent rounded-lg outline-none focus:ring-1 focus:ring-primary text-[14px] ${error ? 'border-red-500' : 'border-gray-300'} ${className}`}
+        className={`w-full h-[40px] p-2 border bg-transparent rounded-lg outline-none focus:ring-1 focus:ring-primary text-[14px] ${error ? 'border-red-500' : 'border-border'} ${className}`}
         {...props}
       >
         <option value="" disabled>Select an option</option>

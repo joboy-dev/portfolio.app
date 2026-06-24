@@ -24,6 +24,7 @@ import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
 import BackButton from '@/components/shared/button/BackButton'
 import ListSection from '@/components/shared/ListSection'
 import Pagination from '@/components/shared/Pagination'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function FilesPage() {
     const router = useRouter()
@@ -146,6 +147,9 @@ export default function FilesPage() {
                             subtitle={`${total} file(s) total`}
                             icon={FolderOpen}
                         >
+                            {files.length === 0 && (
+                                <ListEmpty title='files' subtitle='Click "Add File" to upload your first one.' />
+                            )}
                             {files.map((file) => (
                                 <FileCard key={file.id} file={file} />
                             ))}

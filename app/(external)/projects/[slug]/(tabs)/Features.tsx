@@ -11,7 +11,7 @@ export default function Overview() {
             title='Project Features'
             backgroundColor='bg-background'
         >
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                 {selectedProject?.features?.map((feature, index) => (
                     <div key={index} className='flex items-center gap-2'>
                         <CheckCircleIcon className='w-5 h-5 text-primary' />

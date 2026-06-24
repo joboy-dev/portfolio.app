@@ -26,23 +26,23 @@ export default function Skills() {
         {skills?.length === 0 && (
           <ListEmpty title='skills' />
         )}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {skills?.map((skill) => (
               <Card key={skill.id}>
                   <div className='flex items-center gap-4 mb-2'>
-                      <ImageComponent 
-                          src={skill.skill_logo?.url ?? ""} 
-                          alt={skill.name} 
-                          width={50} 
+                      <ImageComponent
+                          src={skill.skill_logo?.url ?? ""}
+                          alt={skill.name}
+                          width={50}
                           height={50}
                           className='rounded-lg'
                           objectFit='contain'
                       />
                       <div className='w-full'>
-                          <h3 className='text-lg font-bold'>{skill.name}</h3>
-                          <p className='text-sm text-foreground/60'>{skill.proficiency}% Proficiency</p>
+                          <h3 className='text-lg font-semibold'>{skill.name}</h3>
+                          <p className='text-sm text-muted-foreground'>{skill.proficiency}% Proficiency</p>
                       </div>
-                  </div>            
+                  </div>
                   <ProgressBar value={skill.proficiency ?? 0} max={100} width='full'/>
               </Card>
             ))}

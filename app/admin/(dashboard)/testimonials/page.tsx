@@ -20,6 +20,7 @@ import { setSelectedTestimonial } from '@/lib/redux/slices/testimonial/testimoni
 import { TestimonialBaseFormData, testimonialBaseSchema, UpdateTestimonialFormData, updateTestimonialSchema } from '@/lib/validators/testimonial'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
 import FormCheckbox from '@/components/shared/form/FormCheckbox'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function TestimonialsPage() {
     const dispatch = useAppDispatch()
@@ -169,9 +170,7 @@ export default function TestimonialsPage() {
                 icon={Wrench}
             >
                 {testimonials.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No testimonial found</p>
-                    </div>
+                    <ListEmpty title='testimonials' subtitle='Click "Add Testimonial" to create your first one.' />
                 )}
 
                 {testimonials.length > 0 && (
@@ -179,9 +178,9 @@ export default function TestimonialsPage() {
                         {testimonials.map((testimonial) => (
                             <ListCard
                                 key={testimonial.id}
-                                actions={[
+                                primaryActions={[
                                     {
-                                        text: "Edit",
+                                        label: "Edit",
                                         onSelect: () => {
                                             dispatch(setSelectedTestimonial(testimonial))
                                             setIsEditOpen(true)
@@ -196,13 +195,14 @@ export default function TestimonialsPage() {
                                         icon: <Pencil className='w-4 h-4' />
                                     },
                                     {
-                                        text: "Delete",
+                                        label: "Delete",
+                                        variant: "ghostDanger",
                                         onSelect: () => {
                                             dispatch(deleteTestimonial({
                                                 id: testimonial?.id ?? "",
                                             }))
                                         },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
                             >

@@ -15,13 +15,13 @@ export default function NavigationBar({ tabs, defaultTab }: { tabs: Tab[], defau
   return (
     <div className='w-full min-h-screen'>
         {tabs.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1 mt-4 p-1 bg-muted rounded-lg w-full">
+            <div className="flex flex-nowrap md:flex-wrap items-center gap-1 mt-4 p-1 bg-muted rounded-lg w-full overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={clsx(
-                    "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors flex-1 justify-center",
+                    "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors flex-none md:flex-1 justify-center whitespace-nowrap",
                     activeTab === tab.id
                       ? "bg-background text-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",

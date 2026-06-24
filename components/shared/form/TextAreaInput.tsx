@@ -25,7 +25,7 @@ const TextAreaInput: React.FC<FormTextAreaProps> = ({
     <div className="w-full space-y-1 mb-4">
       {label && <label className="block text-sm font-medium text-foreground">{label}</label>}
       <div
-        className={`w-full flex items-start gap-2 text-xs p-2 border rounded-lg ${activeField && "ring-1 ring-primary"} ${errors[name] ? 'border-red-500' : 'border-gray-300'} ${className}`}
+        className={`w-full flex items-start gap-2 text-xs p-2 border rounded-lg ${activeField && "ring-1 ring-primary"} ${errors[name] ? 'border-red-500' : 'border-border'} ${className}`}
         onClick={() => setActiveField(true)}
       >
         <textarea

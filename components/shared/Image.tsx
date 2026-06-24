@@ -43,16 +43,20 @@ function ImageComponent({
   const handleError = () => setError(true);
   const handleLoad = () => setLoaded(true);
 
+  const hasIntrinsicSize = typeof width === 'number' && typeof height === 'number';
+
   const style = {
     objectFit,
-    width,
-    height,
+    width: hasIntrinsicSize ? '100%' : width,
+    height: hasIntrinsicSize ? 'auto' : height,
+    maxWidth: hasIntrinsicSize ? width : undefined,
+    aspectRatio: hasIntrinsicSize ? `${width} / ${height}` : undefined,
   } as React.CSSProperties;
 
   const combinedClass = `
     ${className}
     ${rounded ? 'rounded-xl' : ''}
-    ${border ? 'border border-gray-300' : ''}
+    ${border ? 'border border-border' : ''}
     ${!loaded && showLoader ? 'animate-pulse bg-gray-200' : ''}
   `.trim();
 

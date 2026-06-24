@@ -6,6 +6,7 @@ import Logo from '../Logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import ThemeToggle from '../ThemeToggle';
 
 const navItems = [
   { label: 'Home', to: '/' },
@@ -30,8 +31,9 @@ export default function PublicNavbar() {
               key={item.to}
               href={item.to}
               className={clsx(
-                "hover:text-primary text-lg",
-                location===item.to ? "text-primary" : ""
+                "relative text-lg pb-1 transition-colors hover:text-primary",
+                "after:absolute after:left-0 after:-bottom-0.5 after:h-[1.5px] after:bg-primary after:transition-transform after:duration-300 after:origin-left",
+                location === item.to ? "text-primary after:w-full after:scale-x-100" : "after:w-full after:scale-x-0 hover:after:scale-x-100"
               )}
             >
               {item.label}
@@ -39,7 +41,7 @@ export default function PublicNavbar() {
           ))}
         </nav>
         
-        <div>
+        <div className="flex items-center gap-2">
           {/* <LinkButton
             to="/contact"
             size='sm'
@@ -49,6 +51,8 @@ export default function PublicNavbar() {
             Let's Talk
             <ArrowUpRight className='h-4 w-4 ml-5'/>
           </LinkButton> */}
+
+          <ThemeToggle />
 
           {/* Mobile Toggle */}
           <button

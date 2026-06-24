@@ -26,9 +26,9 @@ export default function Testimonials() {
         {testimonials?.length === 0 && (
             <ListEmpty title='testimonial' />
         )}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             {testimonials?.map((testimonial) => (
-                <Card key={testimonial.id} className='px-6 py-2'>
+                <Card key={testimonial.id}>
                     <div className='w-full flex flex-col gap-1'>
                         <div className='mb-1'>
                             {testimonial.rating && (
@@ -37,7 +37,7 @@ export default function Testimonials() {
                                         <span key={i} className="text-yellow-400 text-xl">&#9733;</span>
                                     ))}
                                     {Array.from({ length: 5 - testimonial.rating }).map((_, i) => (
-                                        <span key={i} className="text-gray-300 text-xl">&#9733;</span>
+                                        <span key={i} className="text-muted-foreground/30 text-xl">&#9733;</span>
                                     ))}
                                 </div>
                             )}
@@ -48,14 +48,14 @@ export default function Testimonials() {
                                 <FaQuoteRight className='text-primary/10 text-4xl'/>
                             </div>
                             <div className='pl-4'>
-                                <p className='text-sm text-foreground/60'>{testimonial.message}</p>
+                                <p className='text-sm text-muted-foreground'>{testimonial.message}</p>
                             </div>
                         </div>
 
-                        <div className='pt-2 border-t border-foreground/10'>
-                            <p className='text-sm font-bold'>{testimonial.name}</p>
+                        <div className='pt-2 border-t border-border'>
+                            <p className='text-base font-semibold'>{testimonial.name}</p>
                             {testimonial.title && (
-                                <p className='text-sm text-foreground/60'>{testimonial.title}</p>
+                                <p className='text-sm text-muted-foreground'>{testimonial.title}</p>
                             )}
                         </div>
                     </div>

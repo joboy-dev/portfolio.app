@@ -66,7 +66,7 @@ export function SlidePanel({
       {/* Panel */}
       <div
         className={clsx(
-          "fixed top-0 right-0 h-full bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-in-out",
+          "fixed top-0 right-0 h-full bg-background shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-in-out",
           widthClasses[width],
           isOpen ? "translate-x-0" : "translate-x-full",
           "max-sm:w-[90%]"
@@ -101,7 +101,7 @@ export function SlidePanel({
                   className={clsx(
                     "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors flex-1 justify-center",
                     activeTab === tab.id
-                      ? "bg-white text-foreground shadow-sm"
+                      ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground",
                   )}
                 >

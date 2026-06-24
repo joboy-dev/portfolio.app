@@ -22,6 +22,7 @@ import Badge from '@/components/shared/Badge'
 import { formatDate } from '@/lib/utils/formatter'
 import Pagination from '@/components/shared/Pagination'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function ServicesPage() {
     const dispatch = useAppDispatch()
@@ -179,9 +180,7 @@ export default function ServicesPage() {
                 icon={Wrench}
             >
                 {services.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No services found</p>
-                    </div>
+                    <ListEmpty title='services' subtitle='Click "Add Service" to create your first one.' />
                 )}
 
                 {services.length > 0 && (
@@ -189,9 +188,9 @@ export default function ServicesPage() {
                         {services.map((service) => (
                             <ListCard
                                 key={service.id}
-                                actions={[
+                                primaryActions={[
                                     {
-                                        text: "Edit",
+                                        label: "Edit",
                                         onSelect: () => {
                                             dispatch(setSelectedService(service))
                                             setIsEditOpen(true)
@@ -200,13 +199,14 @@ export default function ServicesPage() {
                                         icon: <Pencil className='w-4 h-4' />
                                     },
                                     {
-                                        text: "Delete",
+                                        label: "Delete",
+                                        variant: "ghostDanger",
                                         onSelect: () => {
                                             dispatch(deleteService({
                                                 id: service?.id ?? "",
                                             }))
                                         },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
                             >

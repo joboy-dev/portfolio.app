@@ -38,6 +38,7 @@ import TagDetatchModal from '@/components/tag/TagDetatchModal'
 import Badge from '@/components/shared/Badge'
 import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
 import type { BlogInterface } from '@/lib/interfaces/blog'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function BlogPage() {
     const dispatch = useAppDispatch()
@@ -289,9 +290,7 @@ export default function BlogPage() {
                 icon={BookOpen}
             >
                 {blogs.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No blog post found</p>
-                    </div>
+                    <ListEmpty title='blog posts' subtitle='Click "Add Blog Post" to write your first one.' />
                 )}
 
                 {blogs.length > 0 && (
@@ -302,9 +301,9 @@ export default function BlogPage() {
                                 className='mb-2 flex flex-col gap-2'
                             >
                                 <ListCard
-                                    actions={[
+                                    primaryActions={[
                                         {
-                                            text: "Edit",
+                                            label: "Edit",
                                             onSelect: () => {
                                                 dispatch(setSelectedBlog(blog));
                                                 setIsEditOpen(true);
@@ -318,6 +317,17 @@ export default function BlogPage() {
                                             },
                                             icon: <Pencil className='w-4 h-4' />
                                         },
+                                        {
+                                            label: "Delete",
+                                            variant: "ghostDanger",
+                                            onSelect: () => {
+                                                setBlogToDelete(blog);
+                                                setIsDeleteOpen(true);
+                                            },
+                                            icon: <Trash className='w-4 h-4' />
+                                        }
+                                    ]}
+                                    actions={[
                                         {
                                             text: blog.is_published ? "Unpublish" : "Publish",
                                             onSelect: () => togglePublish(blog),
@@ -362,14 +372,6 @@ export default function BlogPage() {
                                             },
                                             icon: <Tag className='w-4 h-4' />
                                         },
-                                        {
-                                            text: "Delete",
-                                            onSelect: () => {
-                                                setBlogToDelete(blog);
-                                                setIsDeleteOpen(true);
-                                            },
-                                            icon: <Trash className='w-4 h-4 text-red-500' />
-                                        }
                                     ]}
                                 >
                                     <div className='flex items-start gap-8 max-md:flex-col max-md:items-start max-md:gap-4 max-md:justify-between'>

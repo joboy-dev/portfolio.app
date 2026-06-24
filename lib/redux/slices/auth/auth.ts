@@ -61,7 +61,7 @@ export const logout = createAsyncThunk(
             const response = await authService.logout();
             session.remove("access_token");
             toaster.success(response.message);
-            window.location.href = "/admin";
+            window.location.href = "/admin/login";
         } catch (error) {
             ProcessError(error);
         }

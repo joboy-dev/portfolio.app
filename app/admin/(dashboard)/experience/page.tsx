@@ -21,6 +21,7 @@ import DateInput from '@/components/shared/form/DateInput'
 import { createExperience, deleteExperience, getExperiences, setSelectedExperience, updateExperience } from '@/lib/redux/slices/experience/experience'
 import { ExperienceBaseFormData, experienceBaseSchema, UpdateExperienceFormData, updateExperienceSchema } from '@/lib/validators/experience'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function ExperiencePage() {
     const dispatch = useAppDispatch()
@@ -199,9 +200,7 @@ export default function ExperiencePage() {
                 icon={Wrench}
             >
                 {experiences.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No experience found</p>
-                    </div>
+                    <ListEmpty title='experience' subtitle='Click "Add Experience" to create your first one.' />
                 )}
 
                 {experiences.length > 0 && (
@@ -209,15 +208,15 @@ export default function ExperiencePage() {
                         {experiences.map((experience) => (
                             <ListCard
                                 key={experience.id}
-                                actions={[
+                                primaryActions={[
                                     {
-                                        text: "Edit",
+                                        label: "Edit",
                                         onSelect: () => {
                                             dispatch(setSelectedExperience(experience))
                                             setIsEditOpen(true)
                                             editMethods.reset({
                                                 company: experience.company,
-                                                location: experience.location,      
+                                                location: experience.location,
                                                 role: experience.role,
                                                 description: experience.description,
                                                 start_date: experience.start_date ? new Date(experience.start_date) : undefined,
@@ -228,13 +227,14 @@ export default function ExperiencePage() {
                                         icon: <Pencil className='w-4 h-4' />
                                     },
                                     {
-                                        text: "Delete",
+                                        label: "Delete",
+                                        variant: "ghostDanger",
                                         onSelect: () => {
                                             dispatch(deleteExperience({
                                                 id: experience?.id ?? "",
                                             }))
                                         },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
                             >

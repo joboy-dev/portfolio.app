@@ -1,98 +1,56 @@
 "use client"
 
-import { 
-    Award, Briefcase, BookOpen, 
-    FileText, FolderOpen, GraduationCap, 
-    MessageSquare, Star, Trophy, 
-    User, Wrench 
+import {
+    Award, Briefcase, BookOpen,
+    FileText, FolderOpen, GraduationCap,
+    LayoutDashboard, MessageSquare, Star, Trophy,
+    Wrench
 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import Logo from './Logo'
 import Button from './button/Button'
 import { FaGreaterThan, FaLessThan } from 'react-icons/fa6'
 import clsx from 'clsx'
-import LinkButton from './button/LinkButton'
+import Link from 'next/link'
 
-const menuItems = [
+const menuGroups = [
     {
-        title: "Profile",
-        url: "/admin/profile",
-        icon: User,
-        description: "Personal information and settings",
+        label: "Overview",
+        items: [
+            { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
+        ],
     },
     {
-        title: "Projects",
-        url: "/admin/projects",
-        icon: FolderOpen,
-        description: "Manage your portfolio projects",
+        label: "Portfolio",
+        items: [
+            { title: "Projects", url: "/admin/projects", icon: FolderOpen },
+            { title: "Services", url: "/admin/services", icon: Wrench },
+            { title: "Skills", url: "/admin/skills", icon: Award },
+            { title: "Certifications", url: "/admin/certifications", icon: Award },
+            { title: "Awards", url: "/admin/awards", icon: Trophy },
+            { title: "Education", url: "/admin/education", icon: GraduationCap },
+            { title: "Experience", url: "/admin/experience", icon: Briefcase },
+        ],
     },
     {
-        title: "Services",
-        url: "/admin/services",
-        icon: Wrench,
-        description: "Services you offer",
+        label: "Content",
+        items: [
+            { title: "Blog", url: "/admin/blog", icon: BookOpen },
+            { title: "Testimonials", url: "/admin/testimonials", icon: Star },
+        ],
     },
     {
-        title: "Skills",
-        url: "/admin/skills",
-        icon: Award,
-        description: "Technical and soft skills",
-    },
-    {
-        title: "Certifications",
-        url: "/admin/certifications",
-        icon: Award,
-        description: "Professional certifications",
-    },
-    {
-        title: "Blog",
-        url: "/admin/blog",
-        icon: BookOpen,
-        description: "Blog posts and articles",
-    },
-    {
-        title: "Messages",
-        url: "/admin/messages",
-        icon: MessageSquare,
-        description: "Contact form submissions",
-    },
-    {
-        title: "Files",
-        url: "/admin/files",
-        icon: FileText,
-        description: "Media and document management",
-    },
-    {
-        title: "Testimonials",
-        url: "/admin/testimonials",
-        icon: Star,
-        description: "Client testimonials and reviews",
-    },
-    {
-        title: "Awards",
-        url: "/admin/awards",
-        icon: Trophy,
-        description: "Awards and recognitions",
-    },
-    {
-        title: "Education",
-        url: "/admin/education",
-        icon: GraduationCap,
-        description: "Educational background",
-    },
-    {
-        title: "Experience",
-        url: "/admin/experience",
-        icon: Briefcase,
-        description: "Work experience and history",
+        label: "Inbox",
+        items: [
+            { title: "Messages", url: "/admin/messages", icon: MessageSquare },
+            { title: "Files", url: "/admin/files", icon: FileText },
+        ],
     },
 ]
-  
 
 export default function Sidebar() {
     const pathname = usePathname()
-    // const router = useRouter()
 
     const isActive = (url: string) => pathname === url
     const [isOpen, setIsOpen] = useState(true)
@@ -134,20 +92,31 @@ export default function Sidebar() {
                 </Button>
             </div>
 
-            <div className='flex flex-col gap-2 items-start justify-start mt-5'>
-                {menuItems.map((item) => (
-                    <LinkButton 
-                        to={item.url} 
-                        key={item.url}
-                        variant='ghost'
-                        className={clsx(
-                            "w-full flex items-center justify-start gap-2",
-                            isActive(item.url) && "text-primary"
+            <div className='flex flex-col gap-6 mt-6'>
+                {menuGroups.map((group) => (
+                    <div key={group.label} className='flex flex-col gap-1'>
+                        {isOpen && (
+                            <p className='eyebrow text-muted-foreground/70 px-3 mb-1 max-md:hidden'>
+                                {group.label}
+                            </p>
                         )}
-                    >
-                        <item.icon className='w-5 h-5 max-md:w-[18px] max-md:h-[18px]'/>
-                        {isOpen && <p className='text-sm max-md:hidden'>{item.title}</p>}
-                    </LinkButton>
+                        {group.items.map((item) => (
+                            <Link
+                                href={item.url}
+                                key={item.url}
+                                title={item.title}
+                                className={clsx(
+                                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                    isActive(item.url)
+                                        ? "bg-primary/10 text-primary"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                                )}
+                            >
+                                <item.icon className='w-5 h-5 shrink-0 max-md:w-[18px] max-md:h-[18px]'/>
+                                {isOpen && <p className='max-md:hidden truncate'>{item.title}</p>}
+                            </Link>
+                        ))}
+                    </div>
                 ))}
             </div>
         </div>

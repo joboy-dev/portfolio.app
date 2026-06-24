@@ -8,13 +8,13 @@ export default function Overview() {
     const { selectedProject } = useAppSelector(state => state.project)
     return (
         <div className='flex flex-col gap-4'>
-            <div className='flex max-sm:flex-col gap-2 items-center justify-between'>
+            <div className='flex max-sm:flex-col gap-6 items-stretch justify-between'>
                 <Card
                     className='w-full'
                     title='Technologies Used'
                     backgroundColor='bg-background'
                 >
-                    <div className='flex flex-wrap gap-4'>
+                    <div className='flex flex-wrap gap-3'>
                         {selectedProject?.tools?.map((tool, index) => (
                             <Badge variant='secondary' key={index}>{tool}</Badge>
                         ))}
@@ -33,14 +33,14 @@ export default function Overview() {
                     </div>
                 </Card>
             </div>
-           
+
             <Card
                 className='w-full'
                 title='Key Results'
                 icon={<ChartBarIcon className='w-8 h-8 text-primary' />}
                 backgroundColor='bg-primary/10'
             >
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                     {selectedProject?.results?.map((result, index) => (
                         <div key={index} className='flex items-center gap-2'>
                             <CheckCircleIcon className='w-5 h-5 text-primary' />

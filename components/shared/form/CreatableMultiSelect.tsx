@@ -2,6 +2,7 @@ import React from "react"
 import CreatableSelect from "react-select/creatable"
 import { Controller, type FieldError } from "react-hook-form"
 import type { Option } from '@/lib/interfaces/general'
+import { getSelectClassNames } from "./reactSelectClassNames"
 
 
 interface CreatableMultiSelectFieldProps {
@@ -52,9 +53,8 @@ const CreatableMultiSelectField: React.FC<CreatableMultiSelectFieldProps> = ({
                   }}
                   options={options}
                   placeholder={placeholder}
-                  classNames={{
-                    control: () => `min-h-[40px] ${error ? 'border-red-500' : 'border-gray-300'}`,
-                  }}
+                  unstyled
+                  classNames={getSelectClassNames(!!(error ?? fieldState.error))}
                   className="react-select-container"
                   classNamePrefix="react-select"
                 />

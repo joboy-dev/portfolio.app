@@ -22,8 +22,9 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`${backgroundColor} rounded-lg p-6 hover:shadow-sm transition-all duration-300 border-2 border-border ${className}`}
+      className={`group relative overflow-hidden ${backgroundColor} rounded-xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border/60 hover:border-primary/40 ${className}`}
     >
+      <div className="absolute top-0 left-0 right-0 h-0.75 bg-gradient-primary opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
       {linkTo && <Link href={linkTo}>
         <div className="flex items-center gap-2">
           {icon && <div className="text-primary text-3xl mb-4">{icon}</div>}

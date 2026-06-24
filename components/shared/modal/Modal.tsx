@@ -26,11 +26,11 @@ export default function Modal({
 
   return (
     <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30 flex items-center justify-center p-4 max-h-screen">
-      <div className={`z-50 bg-white rounded-xl shadow-xl w-full ${sizeMap[size]} relative`}>
+      <div className={`z-50 bg-background rounded-xl shadow-xl w-full ${sizeMap[size]} relative`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <h2 className="text-xl max-md:text-lg font-bold text-foreground">{title}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <XIcon className="w-5 h-5" />
           </button>
         </div>

@@ -14,7 +14,7 @@ export default function AuthPage() {
 
     useEffect(() => {
         if (!loading && isAuthenticated) {
-            router.push("/admin/profile");
+            router.push("/admin");
         }
     }, [isAuthenticated, router]);
 

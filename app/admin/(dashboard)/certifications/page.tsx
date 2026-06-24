@@ -25,6 +25,7 @@ import FormFileUpload from '@/components/shared/form/FormFileUpload'
 import { FileBaseFormData, fileBaseSchema } from '@/lib/validators/file'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
 import FileCard from '@/components/file/FileCard'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function CertificationsPage() {
     const dispatch = useAppDispatch()
@@ -239,9 +240,7 @@ export default function CertificationsPage() {
                 icon={Wrench}
             >
                 {certifications.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No certifications found</p>
-                    </div>
+                    <ListEmpty title='certifications' subtitle='Click "Add Certification" to create your first one.' />
                 )}
 
                 {certifications.length > 0 && (
@@ -252,9 +251,9 @@ export default function CertificationsPage() {
                                 className='mb-2 flex flex-col gap-2'
                             >
                                 <ListCard
-                                    actions={[
+                                    primaryActions={[
                                         {
-                                            text: "Edit",
+                                            label: "Edit",
                                             onSelect: () => {
                                                 dispatch(setSelectedCertification(certification))
                                                 setIsEditOpen(true)
@@ -266,10 +265,18 @@ export default function CertificationsPage() {
                                                     credential_url: certification.credential_url,
                                                     issuer_file_id: certification.issuer_file_id,
                                                     position: certification.position,
-                                                })    
+                                                })
                                             },
                                             icon: <Pencil className='w-4 h-4' />
                                         },
+                                        {
+                                            label: "Delete",
+                                            variant: "ghostDanger",
+                                            onSelect: () => dispatch(deleteCertification({id: certification.id})),
+                                            icon: <Trash className='w-4 h-4' />
+                                        }
+                                    ]}
+                                    actions={[
                                         {
                                             text: "View Credential",
                                             onSelect: () => {
@@ -307,11 +314,6 @@ export default function CertificationsPage() {
                                             },
                                             icon: <File className='w-4 h-4' />
                                         },
-                                        {
-                                            text: "Delete",
-                                            onSelect: () => dispatch(deleteCertification({id: certification.id})),
-                                            icon: <Trash className='w-4 h-4 text-red-500' />
-                                        }
                                     ]}
                                 >
                                     <div className='flex items-center gap-8 w-full max-md:flex-col max-md:items-start max-md:gap-4 max-md:justify-between'>

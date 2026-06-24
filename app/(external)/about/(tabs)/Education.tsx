@@ -11,6 +11,7 @@ import { formatDate } from '@/lib/utils/formatter'
 import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { Timeline, TimelineItem } from '@/components/shared/Timeline'
 
 export default function Education() {
   const { educations, isLoading, totalPages, currentPage } = useAppSelector(state => state.education)
@@ -39,31 +40,32 @@ export default function Education() {
         {educations?.length === 0 && (
             <ListEmpty title='education' />
         )}
-        <div className='grid grid-cols-1 gap-4'>
-            {educations?.map((education) => {
+        <Timeline>
+            {educations?.map((education, index) => {
               const isOpen = openDesc[education.id] || false
               return (
-                <Card key={education.id} className='flex flex-col gap-2 items-start justify-start'>
+                <TimelineItem key={education.id} isLast={index === educations.length - 1}>
+                <Card className='flex flex-col gap-2 items-start justify-start p-8 max-sm:p-5'>
                     <div className='flex items-start gap-4 mb-2'>
-                        <ImageComponent 
-                            src={education.school_logo?.url ?? ""} 
-                            alt={education.school} 
-                            width={60} 
+                        <ImageComponent
+                            src={education.school_logo?.url ?? ""}
+                            alt={education.school}
+                            width={60}
                             height={60}
                             className='rounded-lg'
                             objectFit='contain'
                         />
                         <div className='w-full'>
-                            <h3 className='text-2xl max-md:text-xl font-bold'>{education.degree}</h3>
+                            <h3 className='text-2xl font-semibold'>{education.degree}</h3>
                             <div className="flex flex-col items-start justify-start">
                                 <div className='flex items-center gap-2 text-sm text-primary max-md:items-start'>
                                     <Building className='w-4 h-4' />
                                     <p>{education.school}</p>
                                 </div>
-                                <p className='text-sm text-foreground/60'>{formatDate(education.start_date)} - {education.end_date ? formatDate(education.end_date) : 'Present'}</p>
+                                <p className='text-sm text-muted-foreground'>{formatDate(education.start_date)} - {education.end_date ? formatDate(education.end_date) : 'Present'}</p>
                             </div>
                             {education.location && (
-                                <div className='flex items-center gap-2 text-sm text-foreground/60'>
+                                <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                                     <MapPin className='w-4 h-4' />
                                     <p>{education.location}</p>
                                 </div>
@@ -72,7 +74,7 @@ export default function Education() {
                                 <Badge variant='outline'>{education.grade}</Badge>
                             )}
                         </div>
-                    </div>            
+                    </div>
                     {education.description && (
                       <div className="w-full">
                         <button
@@ -102,9 +104,10 @@ export default function Education() {
                       </div>
                     )}
                 </Card>
+                </TimelineItem>
               )
             })}
-        </div>
+        </Timeline>
         
         <Pagination
             currentPage={currentPage ?? 1}

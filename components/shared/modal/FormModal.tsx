@@ -87,7 +87,7 @@ export default function FormModal({
   return (
     <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30 flex items-center justify-center p-4">
       <div
-        className={`z-50 bg-white rounded-xl shadow-xl w-full max-h-screen overflow-hidden ${sizeMap[size]} relative`}
+        className={`z-50 bg-background rounded-xl shadow-xl w-full max-h-screen overflow-hidden ${sizeMap[size]} relative`}
       >
         {/* Header */}
         <div className="flex items-center justify-center px-6 py-4">

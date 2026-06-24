@@ -4,7 +4,6 @@ import Loading from '@/app/loading'
 import ContactForm from '@/components/messages/ContactForm'
 import { BlogCard } from '@/components/blog/Card'
 import Button from '@/components/shared/button/Button'
-import LinkButton from '@/components/shared/button/LinkButton'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { useAppDispatch } from '@/lib/hooks/redux'
 import { getBlogs } from '@/lib/redux/slices/blog/blog'
@@ -13,6 +12,9 @@ import { BlogInterface } from '@/lib/interfaces/blog'
 import { User2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import ListEmpty from '@/components/shared/ListEmpty'
+import Reveal from '@/components/shared/motion/Reveal'
+import Eyebrow from '@/components/shared/motion/Eyebrow'
+import CTASection from '@/components/shared/CTASection'
 
 const PER_PAGE = 9
 
@@ -61,18 +63,22 @@ export default function BlogsPage() {
                 subtitle='Send me a message and let us discuss your next project.'
             />
 
-            <section className='page-padding min-h-[80vh] flex flex-col items-center justify-center bg-secondary/50'>
-                <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight text-center" >
-                    <span className="text-foreground">My</span>
-                    <br />
-                    <span className="bg-gradient-primary bg-clip-text text-transparent">Blog</span>
-                </h1>
-                <p className='text-xl text-foreground/60 font-normal leading-relaxed text-center max-md:text-base max-w-3xl'>
-                Articles, tutorials, and notes on software engineering, frontend and backend development, and the occasional behind-the-scenes look at how I build things.
-                </p>
+            <section className='relative overflow-hidden page-padding min-h-[80vh] flex flex-col items-center justify-center bg-secondary/50'>
+                <div className="hero-texture absolute inset-0 pointer-events-none" aria-hidden="true" />
+                <Reveal className="relative flex flex-col items-center">
+                    <Eyebrow>writing</Eyebrow>
+                    <h1 className="text-5xl lg:text-7xl font-semibold mb-6 leading-tight tracking-tight text-center" >
+                        <span className="text-foreground">My</span>
+                        <br />
+                        <span className="bg-gradient-primary bg-clip-text text-transparent">Blog</span>
+                    </h1>
+                    <p className='text-xl text-foreground/60 font-normal leading-relaxed text-center max-md:text-base max-w-3xl'>
+                    Articles, tutorials, and notes on software engineering, frontend and backend development, and the occasional behind-the-scenes look at how I build things.
+                    </p>
+                </Reveal>
             </section>
 
-            <section className='py-8 px-[120px] max-md:px-8 min-h-[10vh] flex items-start justify-between gap-8 bg-background max-sm:flex-col max-sm:gap-4 max-sm:items-start'>
+            <section className='nav-padding min-h-[10vh] flex items-start justify-between gap-8 bg-background max-sm:flex-col max-sm:gap-4 max-sm:items-start'>
                 <SearchField
                     placeholder='Search blog posts'
                     searchQuery={searchQuery}
@@ -90,9 +96,11 @@ export default function BlogsPage() {
 
                     {posts.length > 0 && (
                         <>
-                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-                                {posts.map((post) => (
-                                    <BlogCard key={post.id} blog={post} />
+                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                                {posts.map((post, index) => (
+                                    <Reveal key={post.id} delay={Math.min((index % PER_PAGE) * 0.08, 0.4)}>
+                                        <BlogCard blog={post} />
+                                    </Reveal>
                                 ))}
                             </div>
 
@@ -112,35 +120,12 @@ export default function BlogsPage() {
                 </section>
             )}
 
-            <section className="page-padding bg-gradient-primary">
-                <div className="max-w-4xl mx-auto text-center pb-12">
-                    <h2 className="text-4xl font-bold text-primary-foreground mb-6 text-center">Enjoyed What You Read?</h2>
-                    <p className="text-xl text-primary-foreground/80 mb-10 max-w-3xl max mx-auto leading-relaxed font-semibold text-center">
-                    I am always excited to take on new challenges and create innovative solutions. Let us discuss your next project.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <LinkButton
-                            to="/about"
-                            size="lg"
-                            variant="ghost"
-                            className="bg-white text-lg font-bold text-primary"
-                        >
-                        <User2 className="mr-2 h-5 w-5" />
-                            Learn More About Me
-                        </LinkButton>
-
-                        <LinkButton
-                            to="#"
-                            onClick={() => setIsOpen(true)}
-                            variant="outline"
-                            size="lg"
-                            className="border-2 border-white text-white px-8 py-4 text-lg font-bold"
-                        >
-                            Get In Touch
-                        </LinkButton>
-                    </div>
-                </div>
-            </section>
+            <CTASection
+                heading="Enjoyed What You Read?"
+                subtitle="I am always excited to take on new challenges and create innovative solutions. Let us discuss your next project."
+                primaryAction={{ label: "Learn More About Me", icon: <User2 className="ml-2 h-5 w-5 inline" />, to: "/about" }}
+                secondaryAction={{ label: "Get In Touch", onClick: () => setIsOpen(true) }}
+            />
         </div>
     )
 }

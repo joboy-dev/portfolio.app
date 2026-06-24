@@ -55,7 +55,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
         {buttonIcon && buttonIcon}
       </Button>
       {open && (
-        <div className="absolute top-full mt-2 right-0 rounded-lg shadow-lg p-2 bg-white z-50 w-60">
+        <div className="absolute top-full mt-2 right-0 rounded-lg shadow-lg p-2 bg-background border border-border z-50 w-60">
           {items.map((item, idx) => (
             <div
               key={idx}

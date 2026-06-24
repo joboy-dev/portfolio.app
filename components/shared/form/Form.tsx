@@ -36,7 +36,7 @@ function FormWrapper({
         )}
       >
         {title && <h2 className="text-2xl max-md:text-lg text-center font-bold text-foreground mb-4">{title}</h2>}
-        {description && <p className="text-md max-md:text-sm text-gray-500 mb-4">{description}</p>}
+        {description && <p className="text-md max-md:text-sm text-muted-foreground mb-4">{description}</p>}
 
         <div className="space-y-4 mb-4">{children}</div>
 

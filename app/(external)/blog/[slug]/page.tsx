@@ -12,6 +12,8 @@ import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { CalendarIcon, Tag } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import Eyebrow from '@/components/shared/motion/Eyebrow'
+import Reveal from '@/components/shared/motion/Reveal'
 
 export default function BlogDetailPage() {
     const { slug } = useParams()
@@ -52,7 +54,8 @@ export default function BlogDetailPage() {
                             ))}
                         </div>
                     )}
-                    <h1 className="text-4xl max-md:text-2xl font-bold leading-tight">{post?.title}</h1>
+                    <Eyebrow>article</Eyebrow>
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">{post?.title}</h1>
                     {post?.published_at && (
                         <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                             <CalendarIcon className='w-4 h-4' />
@@ -81,17 +84,20 @@ export default function BlogDetailPage() {
 
             {relatedPosts.length > 0 && (
                 <section className='page-padding min-h-screen'>
-                    <div className='flex flex-col gap-4'>
-                        <h2 className='text-2xl font-bold'>Related Posts</h2>
+                    <Reveal className='flex flex-col gap-4'>
+                        <Eyebrow>related</Eyebrow>
+                        <h2 className='text-4xl font-semibold tracking-tight'>Related Posts</h2>
                         <p className='text-sm text-muted-foreground'>
                             More posts related to {post?.title}
                         </p>
-                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4'>
-                            {relatedPosts.map((relatedPost) => (
-                                <BlogCard key={relatedPost.id} blog={relatedPost} />
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
+                            {relatedPosts.map((relatedPost, index) => (
+                                <Reveal key={relatedPost.id} delay={Math.min(index * 0.08, 0.4)}>
+                                    <BlogCard blog={relatedPost} />
+                                </Reveal>
                             ))}
                         </div>
-                    </div>
+                    </Reveal>
                 </section>
             )}
         </div>

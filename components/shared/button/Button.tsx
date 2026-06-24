@@ -26,7 +26,7 @@ export default function Button({
   type="button",
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-xl transition-colors duration-200'
+  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 active:scale-[0.97] hover:scale-[1.02]'
 
   const sizeStyles = {
     sm: 'px-4 py-2 text-sm',

@@ -21,6 +21,7 @@ import { createAward, deleteAward, getAwards, setSelectedAward, updateAward } fr
 import { AwardBaseFormData, awardBaseSchema, UpdateAwardFormData } from '@/lib/validators/award'
 import { updateAwardSchema } from '@/lib/validators/award'
 import DateInput from '@/components/shared/form/DateInput'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function AwardsPage() {
     const dispatch = useAppDispatch()
@@ -163,9 +164,7 @@ export default function AwardsPage() {
                 icon={Wrench}
             >
                 {awards.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No awards found</p>
-                    </div>
+                    <ListEmpty title='awards' subtitle='Click "Add Award" to create your first one.' />
                 )}
 
                 {awards.length > 0 && (
@@ -173,9 +172,9 @@ export default function AwardsPage() {
                         {awards.map((award) => (
                             <ListCard
                                 key={award.id}
-                                actions={[
+                                primaryActions={[
                                     {
-                                        text: "Edit",
+                                        label: "Edit",
                                         onSelect: () => {
                                             dispatch(setSelectedAward(award))
                                             setIsEditOpen(true)
@@ -189,13 +188,14 @@ export default function AwardsPage() {
                                         icon: <Pencil className='w-4 h-4' />
                                     },
                                     {
-                                        text: "Delete",
+                                        label: "Delete",
+                                        variant: "ghostDanger",
                                         onSelect: () => {
                                             dispatch(deleteAward({
                                                 id: award?.id ?? "",
                                             }))
                                         },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
                             >

@@ -19,6 +19,7 @@ import { createSkill, deleteSkill, getSkills, setSelectedSkill, updateSkill } fr
 import { SkillBaseFormData, skillBaseSchema, UpdateSkillFormData, updateSkillSchema } from '@/lib/validators/skill'
 import Pagination from '@/components/shared/Pagination'
 import ProgressBar from '@/components/shared/ProgressBar'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function SkillsPage() {
     const dispatch = useAppDispatch()
@@ -157,9 +158,7 @@ export default function SkillsPage() {
                 icon={Wrench}
             >
                 {skills.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No skills found</p>
-                    </div>
+                    <ListEmpty title='skills' subtitle='Click "Add Skill" to create your first one.' />
                 )}
 
                 {skills.length > 0 && (
@@ -167,24 +166,25 @@ export default function SkillsPage() {
                         {skills.map((skill) => (
                             <ListCard
                                 key={skill.id}
-                                actions={[
+                                primaryActions={[
                                     {
-                                        text: "Edit",
+                                        label: "Edit",
                                         onSelect: () => {
                                             dispatch(setSelectedSkill(skill))
                                             setIsEditOpen(true)
-                                            editMethods.reset(skill)    
+                                            editMethods.reset(skill)
                                         },
                                         icon: <Pencil className='w-4 h-4' />
                                     },
                                     {
-                                        text: "Delete",
+                                        label: "Delete",
+                                        variant: "ghostDanger",
                                         onSelect: () => {
                                             dispatch(deleteSkill({
                                                 id: skill?.id ?? "",
                                             }))
                                         },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
                             >

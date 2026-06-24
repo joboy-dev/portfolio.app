@@ -28,31 +28,31 @@ export default function Certifications() {
         {certifications?.length === 0 && (
             <ListEmpty title='certification' />
         )}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {certifications?.map((certification) => (
                 <Card key={certification.id}>
                     <div className='flex items-start gap-4 mb-2'>
-                        <ImageComponent 
-                            src={certification.issuer_image?.url ?? ""} 
-                            alt={certification.name} 
-                            width={40} 
+                        <ImageComponent
+                            src={certification.issuer_image?.url ?? ""}
+                            alt={certification.name}
+                            width={40}
                             height={40}
                             className='rounded-lg'
                             objectFit='contain'
                         />
                         <div className='w-full'>
-                            <h3 className='text-xl max-md:text-lg font-bold'>{certification.name}</h3>
+                            <h3 className='text-lg font-semibold'>{certification.name}</h3>
                             <div className="">
                                 <p className='text-primary text-sm'>{certification.issuer}</p>
                                 <div className='flex items-center gap-2 max-md:items-start'>
                                     <Calendar className='w-4 h-4' />
-                                    <p className='text-sm text-foreground/60'>{formatDate(certification.issue_date ?? "")}</p>
+                                    <p className='text-sm text-muted-foreground'>{formatDate(certification.issue_date ?? "")}</p>
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     {certification.credential_id && (
-                        <p className='text-sm text-foreground/60 mb-2'><span className='font-bold'>Credential ID:</span> {certification.credential_id}</p>         
+                        <p className='text-sm text-muted-foreground mb-2'><span className='font-semibold'>Credential ID:</span> {certification.credential_id}</p>
                     )}
                     {certification.credential_url && (
                         <Button

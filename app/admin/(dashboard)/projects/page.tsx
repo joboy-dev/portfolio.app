@@ -35,6 +35,7 @@ import Badge from '@/components/shared/Badge'
 import AdditionalInfoField from '@/components/shared/form/AdditionalInfoField'
 import DateInput from '@/components/shared/form/DateInput'
 import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function ProjectsPage() {
     const projectDomain: Option[] = [
@@ -624,9 +625,7 @@ export default function ProjectsPage() {
                 icon={Wrench}
             >
                 {projects.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No project found</p>
-                    </div>
+                    <ListEmpty title='projects' subtitle='Click "Add Project" to create your first one.' />
                 )}
 
                 {projects.length > 0 && (
@@ -637,9 +636,9 @@ export default function ProjectsPage() {
                                 className='mb-2 flex flex-col gap-2'
                             >
                                 <ListCard
-                                    actions={[
+                                    primaryActions={[
                                         {
-                                            text: "Edit",
+                                            label: "Edit",
                                             onSelect: () => {
                                                 dispatch(setSelectedProject(project));
                                                 setIsEditOpen(true);
@@ -665,6 +664,18 @@ export default function ProjectsPage() {
                                             },
                                             icon: <Pencil className='w-4 h-4' />
                                         },
+                                        {
+                                            label: "Delete",
+                                            variant: "ghostDanger",
+                                            onSelect: () => {
+                                                dispatch(deleteProject({
+                                                    id: project?.id ?? "",
+                                                }));
+                                            },
+                                            icon: <Trash className='w-4 h-4' />
+                                        }
+                                    ]}
+                                    actions={[
                                         {
                                             text: "Upload Project Files",
                                             onSelect: () => {
@@ -694,15 +705,6 @@ export default function ProjectsPage() {
                                             },
                                             icon: <Tag className='w-4 h-4' />
                                         },
-                                        {
-                                            text: "Delete",
-                                            onSelect: () => {
-                                                dispatch(deleteProject({
-                                                    id: project?.id ?? "",
-                                                }));
-                                            },
-                                            icon: <Trash className='w-4 h-4 text-red-500' />
-                                        }
                                     ]}
                                 >
                                     <div className='flex items-start gap-8 max-md:flex-col max-md:items-start max-md:gap-4 max-md:justify-between'>

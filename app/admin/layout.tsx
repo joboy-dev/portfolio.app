@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log(isAuthenticated)
     if (!loading && !isAuthenticated) {
-      router.push("/admin");
+      router.push("/admin/login");
     }
   }, [isAuthenticated, loading, router]);
 

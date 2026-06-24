@@ -83,7 +83,7 @@ export default function MessagesPage() {
             >
                 {messages.length === 0 && (
                     <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No message found</p>
+                        <p className='text-muted-foreground'>No message found</p>
                     </div>
                 )}
 

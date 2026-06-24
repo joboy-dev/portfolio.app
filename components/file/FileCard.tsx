@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import Badge from '../shared/Badge'
 import { formatDate } from '@/lib/utils/formatter'
 import { DropdownButton } from '../shared/button/DropdownButton'
+import Button from '../shared/button/Button'
 import { Copy, Download, Eye, MoreVertical, Pencil, Trash } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { deleteFile, updateFile } from '@/lib/redux/slices/file/file'
@@ -117,41 +118,53 @@ export default function FileCard({ file }: { file: FileInterface }) {
             </div>
         </div>
 
-        <DropdownButton 
-            variant='ghost'
-            size='sm'
-            items={[
-                {
-                    text: 'View',
-                    onSelect: () => window.open(file.external_url ?? file.url ?? '', "_blank"),
-                    icon: <Eye className="h-4 w-4 text-muted-foreground" />
-                },
-                {
-                    text: 'Download',
-                    onSelect: () => window.open(file.external_url ?? file.url ?? '', "_blank"),
-                    icon: <Download className="h-4 w-4 text-muted-foreground" />
-                },
-                {
-                    text: 'Edit',
-                    onSelect: () => setIsOpen(true),
-                    icon: <Pencil className="h-4 w-4 text-muted-foreground" />
-                },
-                {
-                    text: "Copy URL",
-                    onSelect: () => {
-                        navigator.clipboard.writeText(file.external_url ?? file.url ?? '')
-                        toaster.success("URL copied to clipboard")
+        <div className="flex items-center gap-1 shrink-0">
+            <Button
+                variant="ghost"
+                size="sm"
+                aria-label="Edit"
+                title="Edit"
+                onClick={() => setIsOpen(true)}
+            >
+                <Pencil className="h-4 w-4 text-muted-foreground" />
+            </Button>
+
+            <Button
+                variant="ghostDanger"
+                size="sm"
+                aria-label="Delete"
+                title="Delete"
+                onClick={handleDelete}
+            >
+                <Trash className="h-4 w-4" />
+            </Button>
+
+            <DropdownButton
+                variant='ghost'
+                size='sm'
+                items={[
+                    {
+                        text: 'View',
+                        onSelect: () => window.open(file.external_url ?? file.url ?? '', "_blank"),
+                        icon: <Eye className="h-4 w-4 text-muted-foreground" />
                     },
-                    icon: <Copy className="h-4 w-4 text-muted-foreground" />
-                },
-                {
-                    text: 'Delete',
-                    onSelect: handleDelete,
-                    icon: <Trash className="h-4 w-4 text-red-500" />
-                }
-            ]}
-            buttonIcon={<MoreVertical className="h-4 w-4 text-muted-foreground" />}
-        />
+                    {
+                        text: 'Download',
+                        onSelect: () => window.open(file.external_url ?? file.url ?? '', "_blank"),
+                        icon: <Download className="h-4 w-4 text-muted-foreground" />
+                    },
+                    {
+                        text: "Copy URL",
+                        onSelect: () => {
+                            navigator.clipboard.writeText(file.external_url ?? file.url ?? '')
+                            toaster.success("URL copied to clipboard")
+                        },
+                        icon: <Copy className="h-4 w-4 text-muted-foreground" />
+                    },
+                ]}
+                buttonIcon={<MoreVertical className="h-4 w-4 text-muted-foreground" />}
+            />
+        </div>
     </div>
   )
 }

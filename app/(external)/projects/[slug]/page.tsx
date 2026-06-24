@@ -21,6 +21,8 @@ import Overview from './(tabs)/Overview'
 import Features from './(tabs)/Features'
 import Technical from './(tabs)/Technical'
 import Challenges from './(tabs)/Challenges'
+import Eyebrow from '@/components/shared/motion/Eyebrow'
+import Reveal from '@/components/shared/motion/Reveal'
 
 export default function ProjectDetailPage() {
     const { slug } = useParams()
@@ -99,36 +101,37 @@ export default function ProjectDetailPage() {
         <div>
             <section className='page-padding min-h-screen flex items-center justify-center max-md:flex-col-reverse max-md:items-start max-md:justify-start gap-10 bg-secondary/60'>
                 <div className='flex flex-col gap-4 w-full'>
+                    <Eyebrow>case-study</Eyebrow>
                     <div className="flex items-center gap-4 flex-wrap">
                         <Badge variant='secondary'>{project?.sector}</Badge>
                         <Badge variant='outlineSecondary'>{project?.role}</Badge>
                     </div>
-                    <h1 className="text-4xl max-md:text-2xl font-bold leading-tight" >{project?.name}</h1>
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight" >{project?.name}</h1>
                     <p className='text-lg max-md:text-base text-primary'>{project?.tagline}</p>
                     <MarkdownRenderer content={project?.description ?? ''} className='text-lg max-md:text-base text-muted-foreground' />
                     <div className='grid grid-cols-2 gap-4 max-sm:grid-cols-1'>
                         <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-bold'>Project Type</h2>
+                            <h2 className='text-lg font-semibold'>Project Type</h2>
                             <p className='text-sm text-muted-foreground'>{project?.project_type}</p>
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-bold'>Role</h2>
+                            <h2 className='text-lg font-semibold'>Role</h2>
                             <p className='text-sm text-muted-foreground'>{project?.role}</p>
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-bold'>Domain</h2>
+                            <h2 className='text-lg font-semibold'>Domain</h2>
                             <p className='text-sm text-muted-foreground'>{project?.domain}</p>
                         </div>
                         {project?.client && <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-bold'>Client</h2>
+                            <h2 className='text-lg font-semibold'>Client</h2>
                             <p className='text-sm text-muted-foreground'>{project?.client}</p>
                         </div>}
                         <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-bold'>Timeline</h2>
+                            <h2 className='text-lg font-semibold'>Timeline</h2>
                             <p className='text-sm text-muted-foreground'>{project?.start_date ? formatDate(project?.start_date) : 'N/A'} - {project?.end_date ? formatDate(project?.end_date) : 'Present'}</p>
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-bold'>Status</h2>
+                            <h2 className='text-lg font-semibold'>Status</h2>
                             <p className='text-sm text-muted-foreground'>{project?.status}</p>
                         </div>
                     </div>
@@ -219,17 +222,20 @@ export default function ProjectDetailPage() {
             </section>
 
            {similarProjects.length > 0 && <section className='page-padding min-h-screen'>
-                <div className='flex flex-col gap-4'>
-                    <h2 className='text-2xl font-bold'>Similar Projects</h2>
+                <Reveal className='flex flex-col gap-4'>
+                    <Eyebrow>related</Eyebrow>
+                    <h2 className='text-4xl font-semibold tracking-tight'>Similar Projects</h2>
                     <p className='text-sm text-muted-foreground'>
                         These are some projects that are similar to {project?.name}
                     </p>
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4'>
-                        {similarProjects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
+                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
+                        {similarProjects.map((project, index) => (
+                            <Reveal key={project.id} delay={Math.min(index * 0.08, 0.4)}>
+                                <ProjectCard project={project} />
+                            </Reveal>
                         ))}
                     </div>
-                </div>
+                </Reveal>
             </section>}
         </div>
     )

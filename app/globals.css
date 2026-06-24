@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* @custom-variant dark (&:where(.dark, .dark *)); */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
@@ -56,7 +56,9 @@
 }
 
 @theme {
-  --font-display: "Satoshi", "sans-serif";
+  --font-display: var(--font-display-raw), "sans-serif";
+  --font-sans: var(--font-sans-raw), "sans-serif";
+  --font-mono: var(--font-mono-raw), "monospace";
 
   --breakpoint-*: initial;
   --breakpoint-sm: 480px;
@@ -107,8 +109,32 @@ body {
 }
 
 body {
+  color: var(--foreground);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 * {
@@ -118,12 +144,6 @@ body {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-} */
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -156,17 +176,22 @@ body {
 }
 
 .page-padding {
-  @apply max-md:px-12 max-sm:px-8 px-[120px] pt-24 pb-4;
-  /* max-width: 1500px; */
+  @apply px-6 max-sm:px-6 sm:px-10 md:px-12 lg:px-40 py-28 max-w-420;
   margin-left: auto;
   margin-right: auto;
 }
 
 .nav-padding {
-  @apply px-12 md:px-[120px] py-4;
-  /* max-width: 1500px; */
+  @apply px-6 max-sm:px-6 sm:px-10 md:px-12 lg:px-40 py-4 max-w-420;
   margin-left: auto;
   margin-right: auto;
+}
+
+.hero-texture {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent);
+  mask-image: linear-gradient(to bottom, black, transparent);
 }
 
 /* Markdown content styles */
@@ -175,27 +200,27 @@ body {
 }
 
 .markdown-content h1 {
-  @apply text-3xl font-bold mt-6 mb-3;
+  @apply font-display text-3xl font-semibold mt-6 mb-3 tracking-tight;
 }
 
 .markdown-content h2 {
-  @apply text-2xl font-bold mt-5 mb-2;
+  @apply font-display text-2xl font-semibold mt-5 mb-2 tracking-tight;
 }
 
 .markdown-content h3 {
-  @apply text-xl font-semibold mt-4 mb-2;
+  @apply font-display text-xl font-semibold mt-4 mb-2;
 }
 
 .markdown-content h4 {
-  @apply text-lg font-semibold mt-3 mb-1;
+  @apply font-display text-lg font-semibold mt-3 mb-1;
 }
 
 .markdown-content h5 {
-  @apply text-base font-semibold mt-2 mb-1;
+  @apply font-display text-base font-semibold mt-2 mb-1;
 }
 
 .markdown-content h6 {
-  @apply text-sm font-semibold mt-2 mb-1;
+  @apply font-display text-sm font-semibold mt-2 mb-1;
 }
 
 .markdown-content p {

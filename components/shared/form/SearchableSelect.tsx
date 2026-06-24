@@ -2,6 +2,7 @@ import React from "react"
 import Select from "react-select"
 import { Controller } from "react-hook-form"
 import type { Option } from "@/lib/interfaces/general"
+import { getSelectClassNames } from "./reactSelectClassNames"
 
 
 interface SearchableSelectFieldProps {
@@ -55,9 +56,8 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
                   isSearchable
                   isLoading={isLoading}
                   onMenuScrollToBottom={onMenuScrollToBottom}
-                  classNames={{
-                    control: () => `h-[40px] ${fieldState.error ? 'border-red-500' : 'border-gray-300'}`,
-                  }}
+                  unstyled
+                  classNames={getSelectClassNames(!!fieldState.error)}
                   className="react-select-container"
                   classNamePrefix="react-select"
                 />

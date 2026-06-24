@@ -26,21 +26,21 @@ export default function Awards() {
         {awards?.length === 0 && (
             <ListEmpty title='award' />
         )}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {awards?.map((award) => (
-                <Card key={award.id} className='px-4 py-2'>
+                <Card key={award.id} className='p-4'>
                     <div className='flex items-start gap-4'>
-                        <ImageComponent 
-                            src={award.issuer_image?.url ?? ""} 
-                            alt={award.name} 
-                            width={40} 
+                        <ImageComponent
+                            src={award.issuer_image?.url ?? ""}
+                            alt={award.name}
+                            width={40}
                             height={40}
                             className='rounded-lg'
                             objectFit='contain'
                         />
                         <div className='w-full'>
-                            <h3 className='text-lg max-md:text-base font-bold'>{award.name}</h3>
-                            <p className='text-sm text-foreground/60'>{award.issuer} • {formatDate(award.issue_date ?? "")}</p>
+                            <h3 className='text-lg font-semibold'>{award.name}</h3>
+                            <p className='text-sm text-muted-foreground'>{award.issuer} • {formatDate(award.issue_date ?? "")}</p>
                         </div>
                     </div>
                 </Card>

@@ -22,6 +22,7 @@ import DateInput from '@/components/shared/form/DateInput'
 import { EducationBaseFormData, educationBaseSchema, UpdateEducationFormData } from '@/lib/validators/education'
 import { updateEducationSchema } from '@/lib/validators/education'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
+import ListEmpty from '@/components/shared/ListEmpty'
 
 export default function EducationPage() {
     const dispatch = useAppDispatch()
@@ -212,9 +213,7 @@ export default function EducationPage() {
                 icon={Wrench}
             >
                 {educations.length === 0 && (
-                    <div className='flex justify-center items-center h-full'>
-                        <p className='text-gray-500'>No education found</p>
-                    </div>
+                    <ListEmpty title='education' subtitle='Click "Add Education" to create your first one.' />
                 )}
 
                 {educations.length > 0 && (
@@ -222,9 +221,9 @@ export default function EducationPage() {
                         {educations.map((education) => (
                             <ListCard
                                 key={education.id}
-                                actions={[
+                                primaryActions={[
                                     {
-                                        text: "Edit",
+                                        label: "Edit",
                                         onSelect: () => {
                                             dispatch(setSelectedEducation(education))
                                             setIsEditOpen(true)
@@ -242,13 +241,14 @@ export default function EducationPage() {
                                         icon: <Pencil className='w-4 h-4' />
                                     },
                                     {
-                                        text: "Delete",
+                                        label: "Delete",
+                                        variant: "ghostDanger",
                                         onSelect: () => {
                                             dispatch(deleteEducation({
                                                 id: education?.id ?? "",
                                             }))
                                         },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
                             >
