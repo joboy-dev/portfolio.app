@@ -258,10 +258,10 @@ export default function Home() {
           <p className="text-foreground/80 text-lg">Comprehensive development services tailored to your needs</p>
         </Reveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
           {services.map((service, index) => (
             <Reveal key={index} delay={Math.min(index * 0.08, 0.4)}>
-              <Card backgroundColor="bg-background">
+              <Card backgroundColor="bg-background" className="h-full">
               <ImageComponent
                 className="mb-4"
                 src={service.service_logo?.url ?? ''}
