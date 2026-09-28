@@ -57,34 +57,6 @@ export const createFile = createAsyncThunk(
     }
 )
 
-export const createFileMinio = createAsyncThunk(
-    'files/createMinio',
-    async (payload: FormData): Promise<FileInterface | undefined> => {
-        try {
-            const data = await fileService.createFileMinio(payload)
-            toaster.success("File created successfully")
-            return data?.data
-        } catch (error) {
-            ProcessError(error)
-            return 
-        }
-    }
-)
-
-export const createFileFirebase = createAsyncThunk(
-    'files/createFirebase',
-    async (payload: FormData): Promise<FileInterface | undefined> => {
-        try {
-            const data = await fileService.createFileFirebase(payload)
-            toaster.success("File created successfully")
-            return data?.data
-        } catch (error) {
-            ProcessError(error)
-            return 
-        }
-    }
-)
-
 export const bulkUploadFile = createAsyncThunk(
     'files/bulkUpload',
     async (payload: FormData): Promise<FileInterface[] | undefined> => {
@@ -197,26 +169,6 @@ export const fileSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(createFile.fulfilled, (state, {payload}) => {
-            state.isLoading = false;
-            state.total = (state.total ?? 0) + 1
-            if (payload) {
-                state.files = [...state.files, payload]
-            }
-        })
-        .addCase(createFileMinio.pending, (state) => {
-            state.isLoading = true;
-        })
-        .addCase(createFileMinio.fulfilled, (state, {payload}) => {
-            state.isLoading = false;
-            state.total = (state.total ?? 0) + 1
-            if (payload) {
-                state.files = [...state.files, payload]
-            }
-        })
-        .addCase(createFileFirebase.pending, (state) => {
-            state.isLoading = true;
-        })
-        .addCase(createFileFirebase.fulfilled, (state, {payload}) => {
             state.isLoading = false;
             state.total = (state.total ?? 0) + 1
             if (payload) {

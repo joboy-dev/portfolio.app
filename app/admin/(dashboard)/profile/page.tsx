@@ -78,6 +78,7 @@ export default function ProfilePage() {
                 buttonVariant="primary"
                 buttonWidth={45}
                 className="shadow-none"
+                stickyFooter
             >
                 <FormSection
                     title="Profile Image" 

@@ -17,6 +17,10 @@ interface SearchableSelectFieldProps {
   defaultValue?: string
   isLoading?: boolean
   onMenuScrollToBottom?: () => void
+  /** Custom render per option (eg. a thumbnail + filename). Search still
+   *  filters against the plain `option.label` string — this only changes
+   *  what's drawn, not what's matched. */
+  formatOptionLabel?: (option: Option, meta: { context: 'menu' | 'value' }) => React.ReactNode
 }
 
 const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
@@ -31,6 +35,7 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
   placeholder = "Select an option",
   isLoading = false,
   onMenuScrollToBottom,
+  formatOptionLabel,
 }) => {
   return (
     <div className={`w-full space-y-1 mb-4 ${className}`}>
@@ -56,6 +61,7 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
                   isSearchable
                   isLoading={isLoading}
                   onMenuScrollToBottom={onMenuScrollToBottom}
+                  formatOptionLabel={formatOptionLabel}
                   unstyled
                   classNames={getSelectClassNames(!!fieldState.error)}
                   className="react-select-container"

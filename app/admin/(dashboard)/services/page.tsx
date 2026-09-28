@@ -5,7 +5,8 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import { ServiceBaseFormData, serviceBaseSchema, UpdateServiceFormData, updateServiceSchema } from '@/lib/validators/service'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import { createService, deleteService, getServices, setSelectedService, updateService } from '@/lib/redux/slices/service/service'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
@@ -34,6 +35,7 @@ export default function ServicesPage() {
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
+    const hasLoadedOnce = useRef(false)
 
     const [search, setSearch] = useState("")
     const [filtersState, setFiltersState] = useState<{
@@ -45,7 +47,7 @@ export default function ServicesPage() {
     useEffect(() => {
         dispatch(getServices({
             ...filtersState,
-        }))
+        })).finally(() => { hasLoadedOnce.current = true })
 
         dispatch(getFiles({
             model_name: "others",
@@ -199,12 +201,11 @@ export default function ServicesPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <AdminListSkeleton rows={5} />
             ) : (
-                <>
+                <div className={clsx('transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                 <ListSection
-                title="Service Management"
                 subtitle={`${total} service(s) total`}
                 icon={Wrench}
             >
@@ -293,7 +294,7 @@ export default function ServicesPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
-                </>
+                </div>
             )}
         </div>
     )

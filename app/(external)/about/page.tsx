@@ -140,10 +140,11 @@ export default function AboutPage() {
         subtitle="Let's build something extraordinary together."
       />
 
-      <section className='relative overflow-hidden page-padding bg-secondary/50 min-h-screen flex max-md:flex-col items-center justify-between gap-10'>
+      <section className='relative overflow-hidden page-padding bg-secondary/50 min-h-dvh flex max-md:flex-col items-center justify-between gap-10'>
           <div className="hero-texture absolute inset-0 pointer-events-none" aria-hidden="true" />
 
-          <div className="relative w-[40%] aspect-4/5 max-md:w-full max-md:aspect-square max-md:mt-10 bg-background rounded-lg border-primary/20 border-2 flex items-center justify-center overflow-hidden">
+          <div className="relative w-[40%] aspect-4/5 max-md:w-full max-md:aspect-square max-md:mt-10 ring-1 ring-primary/30 ring-offset-4 ring-offset-secondary rounded-lg">
+            <div className="relative w-full h-full bg-background rounded-lg flex items-center justify-center overflow-hidden">
               <ImageComponent
                   src={profile?.image_url ?? "#"}
                   alt="Profile Picture"
@@ -153,6 +154,7 @@ export default function AboutPage() {
                   className="rounded-lg overflow-clip"
                   showImageInModalOnClick={true}
               />
+            </div>
           </div>
 
           <div className="relative flex flex-col justify-center items-start gap-8 w-[60%] max-md:w-full">
@@ -200,7 +202,7 @@ export default function AboutPage() {
                 className="font-bold border-2 border-foreground/20 max-md:w-full max-sm:text-sm"
               >
                 <Mail className='h-6 w-6 mr-4 max-sm:h-4 max-sm:w-4'/>
-                Contact Me
+                Get in touch
               </LinkButton>
             </div>
 
@@ -234,7 +236,7 @@ export default function AboutPage() {
         heading="Let's Work Together"
         subtitle="I'm always interested in new opportunities. Let's discuss how we can bring your ideas to life."
         primaryAction={{
-          label: "Start a Conversation",
+          label: "Get in touch",
           icon: <Mail className="ml-2 h-5 w-5 inline" />,
           onClick: () => setIsOpen(true),
         }}

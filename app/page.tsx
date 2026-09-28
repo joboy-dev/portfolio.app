@@ -385,7 +385,7 @@ export default function Home() {
         heading="Ready to Start Your Project?"
         subtitle="Let's discuss how we can bring your ideas to life with the right technology and thoughtful design."
         primaryAction={{
-          label: "Start a Project",
+          label: "Get in touch",
           icon: <ArrowUpRight className="ml-2 h-5 w-5 inline" />,
           onClick: () => setIsContactFormOpen(true),
         }}

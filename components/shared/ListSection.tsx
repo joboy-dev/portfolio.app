@@ -1,8 +1,8 @@
 import React from 'react'
 
 export default function ListSection(
-    {title, subtitle, icon: Icon, children}: 
-    {title: string, subtitle: string, icon: React.ElementType, children: React.ReactNode}) {
+    {title, subtitle, icon: Icon, children}:
+    {title?: string, subtitle: string, icon: React.ElementType, children: React.ReactNode}) {
     return (
         <div className='bg-background rounded-lg p-4 mt-5 border border-border'>
             <div>
@@ -10,11 +10,21 @@ export default function ListSection(
                     <div className='flex items-center justify-center h-10 w-10 shrink-0 rounded-lg bg-primary/10'>
                         <Icon className='h-5 w-5 text-primary'/>
                     </div>
-                    <h2 className='text-2xl font-semibold'>{title}</h2>
+                    {/* The page's own breadcrumb already carries the title
+                        (eg. "Award Management") right above this section —
+                        repeating it here was pure duplication (A6). Only
+                        render an h2 when a caller explicitly wants one. */}
+                    {title ? (
+                        <h2 className='text-2xl font-semibold'>{title}</h2>
+                    ) : (
+                        <p className='text-muted-foreground'>{subtitle}</p>
+                    )}
                 </div>
-                <p className='text-muted-foreground mt-2'>
-                   {subtitle}
-                </p>
+                {title && (
+                    <p className='text-muted-foreground mt-2'>
+                       {subtitle}
+                    </p>
+                )}
             </div>
 
             <div className='mt-5'>

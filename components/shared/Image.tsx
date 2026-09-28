@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { ImageOff } from 'lucide-react';
 import Modal from './modal/Modal';
 import { dur } from '@/lib/motion';
 
 type ImageProps = {
   src: string;
   alt: string;
+  /** Only used if you explicitly want a real fallback image; otherwise a
+   *  built-in "image unavailable" placeholder renders (no /images/no-image.png
+   *  asset ships with the app, so a broken image used to fall back to
+   *  ANOTHER broken image — the browser's native broken-image icon). */
   fallbackSrc?: string;
   className?: string;
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
@@ -24,7 +29,7 @@ type ImageProps = {
 function ImageComponent({
   src,
   alt,
-  fallbackSrc = '/images/no-image.png', // provide a fallback image in public folder
+  fallbackSrc,
   className = '',
   objectFit = 'cover',
   rounded = false,
@@ -74,6 +79,27 @@ function ImageComponent({
     'transition-opacity ease-out',
     showLoader && (loaded ? 'opacity-100' : 'opacity-0'),
   );
+
+  // Broken and no explicit fallback image given: render an intentional
+  // "unavailable" placeholder instead of an <img src="..."> pointing at
+  // another URL that can 404 too (which used to be a nonexistent local
+  // asset — a broken image falling back to another broken image).
+  if (error && !fallbackSrc) {
+    return (
+      <div
+        role="img"
+        aria-label={`${alt || 'Image'} unavailable`}
+        style={style}
+        className={clsx(
+          combinedClass,
+          'flex flex-col items-center justify-center gap-1 bg-muted text-muted-foreground',
+        )}
+      >
+        <ImageOff className="h-5 w-5" />
+        <span className="text-[10px] leading-tight">Unavailable</span>
+      </div>
+    );
+  }
 
   return (
     <>

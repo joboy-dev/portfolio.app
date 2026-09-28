@@ -4,7 +4,8 @@ import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
@@ -25,9 +26,8 @@ import type { ProjectInterface } from '@/lib/interfaces/project'
 import CreatableMultiSelectField from '@/components/shared/form/CreatableMultiSelect'
 import SearchableSelectField from '@/components/shared/form/SearchableSelect'
 import { Option } from '@/lib/interfaces/general'
-import { BulkUploadFileFormData, bulkUploadFileSchema } from '@/lib/validators/file'
-import { objectToFormData } from '@/lib/utils/objectToFormData'
-import FormFileUpload from '@/components/shared/form/FormFileUpload'
+import Modal from '@/components/shared/modal/Modal'
+import FileDropzone from '@/components/shared/form/FileDropzone'
 import toaster from '@/lib/utils/toaster'
 import FileCard from '@/components/file/FileCard'
 import TagAttachModal from '@/components/tag/TagAttachModal'
@@ -167,7 +167,6 @@ export default function ProjectsPage() {
 
     const dispatch = useAppDispatch()
     const { total, totalPages, projects, isLoading, isSubmitting, selectedProject } = useAppSelector((state: RootState) => state.project)
-    const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
     const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -176,6 +175,7 @@ export default function ProjectsPage() {
     const [openProjectFilesId, setOpenProjectFilesId] = useState<string | null>(null);
     const [isAttachTagOpen, setIsAttachTagOpen] = useState(false)
     const [isDetatchTagOpen, setIsDetatchTagOpen] = useState(false)
+    const hasLoadedOnce = useRef(false)
 
     const [search, setSearch] = useState("")
     const [filtersState, setFiltersState] = useState<{
@@ -189,23 +189,11 @@ export default function ProjectsPage() {
     useEffect(() => {
         dispatch(getProjects({
             ...filtersState,
-        }))
-
-        if (selectedProject) {
-            uploadMethods.reset({
-                model_id: selectedProject.id,
-                model_name: "projects",
-            })
-        }
-
-    }, [dispatch, filtersState, selectedProject])
+        })).finally(() => { hasLoadedOnce.current = true })
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<ProjectBaseFormData>(projectBaseSchema)
     const editMethods = useZodForm<UpdateProjectFormData>(updateProjectSchema)
-    const uploadMethods = useZodForm<BulkUploadFileFormData>(bulkUploadFileSchema, {
-        model_id: selectedProject?.id ?? "",
-        model_name: "projects",
-    })
 
     const onSubmit = async (data: ProjectBaseFormData) => {
         await dispatch(createProject(data))
@@ -231,12 +219,9 @@ export default function ProjectsPage() {
         }))
     }
 
-    const onUploadSubmit = async (data: BulkUploadFileFormData) => {
-        const formData = objectToFormData(data)
-        await dispatch(bulkUploadFile(formData))
+    const onUploadSubmit = async () => {
         // Refetch projects after upload completes
         dispatch(getProjects({ ...filtersState }))
-        uploadMethods.reset()
         setIsUploadOpen(false)
     }
 
@@ -598,22 +583,25 @@ export default function ProjectsPage() {
                 />
             </FormModal>
 
-            <FormModal
-                methods={uploadMethods}
+            <Modal
                 isOpen={isUploadOpen}
-                setIsOpen={setIsUploadOpen}
-                onSubmit={uploadMethods.handleSubmit(onUploadSubmit)}
+                onClose={() => setIsUploadOpen(false)}
                 title="Upload Project Files"
-                subtitle="Upload project files to your project"
-                isSubmitting={fileLoading}
             >
-                <FormFileUpload
-                    name="files"
-                    label="Upload Project Files"
-                    required
+                <FileDropzone
                     multiple
+                    label="Drop project files here or click to browse"
+                    onUpload={async (file) => {
+                        const formData = new FormData()
+                        formData.append('files', file)
+                        formData.append('model_name', 'projects')
+                        formData.append('model_id', selectedProject?.id ?? '')
+                        const results = await dispatch(bulkUploadFile(formData)).unwrap()
+                        return results?.[0]
+                    }}
+                    onUploaded={onUploadSubmit}
                 />
-            </FormModal>
+            </Modal>
 
             <TagAttachModal
                 isOpen={isAttachTagOpen}
@@ -644,12 +632,11 @@ export default function ProjectsPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <AdminListSkeleton rows={5} />
             ) : (
-                <>
+                <div className={clsx('transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                 <ListSection
-                title="Project Management"
                 subtitle={`${total} project(s) total`}
                 icon={Wrench}
             >
@@ -806,7 +793,7 @@ export default function ProjectsPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
-                </>
+                </div>
             )}
         </div>
     )

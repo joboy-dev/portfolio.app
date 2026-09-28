@@ -8,6 +8,7 @@ export interface FileInterface extends BaseModelInterface {
   model_name?: string
   url?: string
   external_url?: string
+  storage_key?: string
   description?: string
   content?: string
   label?: string

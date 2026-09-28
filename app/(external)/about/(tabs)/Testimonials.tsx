@@ -4,6 +4,7 @@ import Pagination from '@/components/shared/Pagination'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getTestimonials } from '@/lib/redux/slices/testimonial/testimonial'
 import { GetTestimonialsParams } from '@/lib/redux/slices/testimonial/testimonial.service'
+import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { FaQuoteRight } from 'react-icons/fa6'
 import { SkeletonCard } from '@/components/shared/Skeleton'
@@ -16,6 +17,8 @@ export default function Testimonials() {
     per_page: 10,
     is_published: true,
   })
+
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     dispatch(getTestimonials({...filterState}))
@@ -42,7 +45,7 @@ export default function Testimonials() {
                             {testimonial.rating && (
                                 <div className="flex items-center">
                                     {Array.from({ length: testimonial.rating }).map((_, i) => (
-                                        <span key={i} className="text-yellow-400 text-xl">&#9733;</span>
+                                        <span key={i} className="text-warning text-xl">&#9733;</span>
                                     ))}
                                     {Array.from({ length: 5 - testimonial.rating }).map((_, i) => (
                                         <span key={i} className="text-muted-foreground/30 text-xl">&#9733;</span>
@@ -56,7 +59,18 @@ export default function Testimonials() {
                                 <FaQuoteRight className='text-primary/10 text-4xl'/>
                             </div>
                             <div className='pl-4'>
-                                <p className='text-sm text-muted-foreground line-clamp-3'>{testimonial.message}</p>
+                                <p className={clsx('text-sm text-muted-foreground', !expanded[testimonial.id] && 'line-clamp-3')}>
+                                    {testimonial.message}
+                                </p>
+                                {(testimonial.message?.length ?? 0) > 140 && (
+                                    <button
+                                        type='button'
+                                        onClick={() => setExpanded(prev => ({ ...prev, [testimonial.id]: !prev[testimonial.id] }))}
+                                        className='text-sm font-medium text-primary-strong hover:underline mt-1'
+                                    >
+                                        {expanded[testimonial.id] ? 'Show less' : 'Read more'}
+                                    </button>
+                                )}
                             </div>
                         </div>
 

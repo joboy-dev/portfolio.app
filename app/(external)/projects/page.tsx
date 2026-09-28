@@ -2,13 +2,13 @@
 
 import ContactForm from '@/components/messages/ContactForm'
 import { ProjectCard } from '@/components/projects/Card'
-import { DropdownButton } from '@/components/shared/button/DropdownButton'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getFeaturedProjects, getProjects } from '@/lib/redux/slices/project/project'
 import { GetProjectsParams } from '@/lib/redux/slices/project/project.service'
-import { Filter, Star, User2 } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { Star, User2 } from 'lucide-react'
+import clsx from 'clsx'
+import React, { useEffect, useRef, useState } from 'react'
 import { Option } from '@/lib/interfaces/general'
 import ListEmpty from '@/components/shared/ListEmpty'
 import { SkeletonProjectCard } from '@/components/shared/Skeleton'
@@ -22,7 +22,9 @@ export default function ProjectsPage() {
     const dispatch = useAppDispatch()
     const [isOpen, setIsOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
-    const [ filterState, setFilterState ] = useState<GetProjectsParams>({
+    const [activeDomain, setActiveDomain] = useState<string | undefined>(undefined)
+    const hasLoadedOnce = useRef(false)
+    const [filterState, setFilterState] = useState<GetProjectsParams>({
         page: 1,
         per_page: 10,
         name: searchQuery,
@@ -33,7 +35,7 @@ export default function ProjectsPage() {
         if (featuredProjects.length === 0) {
             dispatch(getFeaturedProjects())
         }
-        dispatch(getProjects({...filterState}))
+        dispatch(getProjects({...filterState})).finally(() => { hasLoadedOnce.current = true })
     }, [dispatch, filterState])
 
     const projectDomain: Option[] = [
@@ -103,21 +105,20 @@ export default function ProjectsPage() {
                 subtitle='Send me a message and let us discuss your next project.'
             />
 
-            <section className='relative overflow-hidden nav-padding min-h-[45vh] flex flex-col items-center justify-center bg-secondary/50'>
+            <section className='relative overflow-hidden nav-padding min-h-[50vh] flex flex-col justify-center bg-secondary/50'>
                 <div className="hero-texture absolute inset-0 pointer-events-none" aria-hidden="true" />
-                <Reveal className="relative flex flex-col items-center">
+                <Reveal className="relative max-w-2xl">
                     <Eyebrow>portfolio</Eyebrow>
-                    <h1 className="text-5xl md:text-6xl font-semibold mb-4 leading-tight tracking-tight text-center" >
-                        <span className="text-foreground">My </span>
-                        <span className="bg-gradient-primary bg-clip-text text-transparent">Projects</span>
+                    <h1 className="text-5xl md:text-6xl font-semibold mb-4 leading-tight tracking-tight text-foreground" >
+                        Projects
                     </h1>
-                    <p className='text-lg text-foreground/60 font-normal leading-relaxed text-center max-md:text-base max-w-2xl'>
+                    <p className='text-lg text-foreground/60 font-normal leading-relaxed max-md:text-base'>
                     A showcase of my work spanning full-stack development, mobile applications, and emerging technologies.
                     </p>
                 </Reveal>
             </section>
 
-            <section className='nav-padding min-h-[10vh] flex items-start justify-between gap-8 bg-background max-sm:flex-col max-sm:gap-4 max-sm:items-start'>
+            <section className='sticky top-16 z-30 nav-padding py-4 flex items-center justify-between gap-4 bg-background/95 backdrop-blur-sm border-b border-border max-sm:flex-col max-sm:items-stretch'>
                 <SearchField
                     placeholder='Search projects'
                     searchQuery={searchQuery}
@@ -126,19 +127,35 @@ export default function ProjectsPage() {
                     onSearchClear={() => setFilterState({...filterState, name: '', page: 1})}
                 />
 
-                <DropdownButton
-                    buttonIcon={<Filter className='ml-3'/>}
-                    buttonText='Filters'
-                    size='sm'
-                    items={projectDomain.map(domain => ({
-                        text: domain.label,
-                        onSelect: () => setFilterState({...filterState, domain: domain.value, page: 1})
-                    }))}
-                />
+                <div className='flex items-center gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 [scrollbar-width:none]'>
+                    <button
+                        type='button'
+                        onClick={() => { setActiveDomain(undefined); setFilterState({...filterState, domain: undefined, page: 1}) }}
+                        className={clsx(
+                            'shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-(--dur-fast)',
+                            activeDomain === undefined ? 'bg-primary-strong text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'
+                        )}
+                    >
+                        All
+                    </button>
+                    {projectDomain.map(domain => (
+                        <button
+                            key={domain.key}
+                            type='button'
+                            onClick={() => { setActiveDomain(domain.value); setFilterState({...filterState, domain: domain.value, page: 1}) }}
+                            className={clsx(
+                                'shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-(--dur-fast)',
+                                activeDomain === domain.value ? 'bg-primary-strong text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'
+                            )}
+                        >
+                            {domain.label}
+                        </button>
+                    ))}
+                </div>
             </section>
 
             {/* Projects */}
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <section className='page-padding bg-secondary/50'>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                         {Array.from({ length: 6 }).map((_, index) => (
@@ -147,7 +164,7 @@ export default function ProjectsPage() {
                     </div>
                 </section>
             ) : (
-                <>
+                <div className={clsx('transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                     {projects.length === 0 && <ListEmpty title='projects'/>}
                     {/* Featured Projects */}
                     {searchQuery === '' && projects.length > 4 && (
@@ -156,20 +173,36 @@ export default function ProjectsPage() {
                                 <Star className='w-6 h-6 text-primary'/>
                                 <h2 className='text-2xl font-semibold'>Featured Projects</h2>
                             </div>
-                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                                {featuredProjects.map((project, index) => (
-                                    <Reveal key={project.id} delay={Math.min(index * 0.08, 0.4)}>
-                                        <ProjectCard project={project} />
+                            {featuredProjects.length >= 3 ? (
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-6 md:auto-rows-[1fr]'>
+                                    <Reveal className='md:row-span-2'>
+                                        <ProjectCard project={featuredProjects[0]} />
                                     </Reveal>
-                                ))}
-                            </div>
+                                    {featuredProjects.slice(1).map((project, index) => (
+                                        <Reveal key={project.id} delay={Math.min((index + 1) * 0.08, 0.4)}>
+                                            <ProjectCard project={project} />
+                                        </Reveal>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                                    {featuredProjects.map((project, index) => (
+                                        <Reveal key={project.id} delay={Math.min(index * 0.08, 0.4)}>
+                                            <ProjectCard project={project} />
+                                        </Reveal>
+                                    ))}
+                                </div>
+                            )}
                         </section>
                     )}
 
                     {/* All Projects */}
                     {projects.length > 0 && <section className='page-padding bg-secondary/50'>
                         <Eyebrow>{searchQuery === '' ? 'all-projects' : 'search-results'}</Eyebrow>
-                        <h2 className='text-3xl max-md:text-2xl max-sm:text-xl font-semibold mb-8'>{searchQuery === '' ? 'All Projects' : 'Search Results'}</h2>
+                        <div className='flex items-baseline justify-between flex-wrap gap-2 mb-8'>
+                            <h2 className='text-3xl max-md:text-2xl max-sm:text-xl font-semibold'>{searchQuery === '' ? 'All Projects' : 'Search Results'}</h2>
+                            <p className='text-sm text-muted-foreground'>{projects.length} project{projects.length === 1 ? '' : 's'}</p>
+                        </div>
 
                         {(searchQuery !== '' || projects.length < 4)
                             ? <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
@@ -188,7 +221,7 @@ export default function ProjectsPage() {
                             </div>
                         }
                     </section>}
-                </>
+                </div>
             )}
 
             <CTASection

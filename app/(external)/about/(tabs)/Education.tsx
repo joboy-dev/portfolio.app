@@ -9,6 +9,7 @@ import { GetEducationsParams } from '@/lib/redux/slices/education/education.serv
 import { formatDate } from '@/lib/utils/formatter'
 import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
+import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { Timeline, TimelineItem } from '@/components/shared/Timeline'
 import { SkeletonTimelineItem } from '@/components/shared/Skeleton'
@@ -102,14 +103,17 @@ export default function Education() {
                             </>
                           )}
                         </button>
-                        {isOpen && (
-                          <div
-                            id={`desc-${education.id}`}
-                            className="animate-fade-in"
-                          >
+                        <div
+                          id={`desc-${education.id}`}
+                          className={clsx(
+                            'grid transition-[grid-template-rows] duration-(--dur-base) ease-out',
+                            isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                          )}
+                        >
+                          <div className='overflow-hidden'>
                             <MarkdownRenderer content={education.description} className='text-lg text-foreground/60' />
                           </div>
-                        )}
+                        </div>
                       </div>
                     )}
                 </Card>

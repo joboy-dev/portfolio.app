@@ -30,21 +30,6 @@ const createFile = async (payload: FormData): Promise<ApiResponse<FileInterface>
     return data
 }
 
-const createFileMinio = async (payload: FormData): Promise<ApiResponse<FileInterface>> => {
-    const { data } = await API.post("/files/minio-upload", payload)
-    return data
-}
-
-const createFileFirebase = async (payload: FormData): Promise<ApiResponse<FileInterface>> => {
-    const { data } = await API.post("/files/firebase-upload", payload)
-    return data
-}
-
-const createFileBackblaze = async (payload: FormData): Promise<ApiResponse<FileInterface>> => {
-    const { data } = await API.post("/files/backblaze-upload", payload)
-    return data
-}
-
 const bulkUploadFile = async (payload: FormData): Promise<ApiResponse<FileInterface[]>> => {
     const { data } = await API.post("/files/bulk-upload", payload)
     return data
@@ -60,9 +45,6 @@ export const fileService = {
     getFileById,
     deleteFile,
     createFile,
-    createFileMinio,
-    createFileFirebase,
-    createFileBackblaze,
     bulkUploadFile,
     updateFile,
 }

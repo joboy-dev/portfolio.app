@@ -8,7 +8,7 @@ function Logo({isCollapsed=false}: {isCollapsed?: boolean}) {
       </div>
       {!isCollapsed && <div>
         <p className="text-xl font-bold text-foreground leading-tight">Joboy.dev</p>
-        <p className="text-sm font-normal text-primary leading-tight">Software Developer</p>
+        <p className="text-sm font-normal text-primary leading-tight">Software Engineer</p>
       </div> }
     </Link>
   )

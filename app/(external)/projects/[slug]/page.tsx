@@ -3,7 +3,7 @@
 import Skeleton, { SkeletonText } from '@/components/shared/Skeleton'
 import { ProjectCard } from '@/components/projects/Card'
 import Badge from '@/components/shared/Badge'
-import Button from '@/components/shared/button/Button'
+import LinkButton from '@/components/shared/button/LinkButton'
 import ImageComponent from '@/components/shared/Image'
 import NavigationBar, { Tab } from '@/components/shared/NavigationBar'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
@@ -13,8 +13,9 @@ import { filterImageFiles } from '@/lib/utils/file'
 import { formatDate } from '@/lib/utils/formatter'
 import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import clsx from 'clsx'
-import { AlertCircleIcon, ArrowLeftIcon, ArrowRightIcon, Code2, CodeIcon, ExternalLink, GithubIcon, InfoIcon, ListIcon } from 'lucide-react'
+import { AlertCircleIcon, ArrowLeftIcon, ArrowRightIcon, Code2, CodeIcon, ExternalLink, InfoIcon, ListIcon } from 'lucide-react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { FaFigma, FaGithub, FaGoogleDrive } from 'react-icons/fa6'
 import Overview from './(tabs)/Overview'
@@ -125,8 +126,15 @@ export default function ProjectDetailPage() {
 
     return (
         <div>
-            <section className='page-padding min-h-screen flex items-center justify-center max-md:flex-col-reverse max-md:items-start max-md:justify-start gap-10 bg-secondary/60'>
+            <section className='page-padding py-16 flex items-center max-md:flex-col-reverse max-md:items-start gap-10 bg-secondary/60'>
                 <div className='flex flex-col gap-4 w-full'>
+                    <Link
+                        href='/projects'
+                        className='inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-(--dur-fast) w-fit mb-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring rounded-sm'
+                    >
+                        <ArrowLeftIcon className='w-4 h-4' aria-hidden='true' />
+                        Projects
+                    </Link>
                     <Eyebrow>case-study</Eyebrow>
                     <div className="flex items-center gap-4 flex-wrap">
                         <Badge variant='secondary'>{project?.sector}</Badge>
@@ -135,73 +143,60 @@ export default function ProjectDetailPage() {
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight" >{project?.name}</h1>
                     <p className='text-lg max-md:text-base text-primary'>{project?.tagline}</p>
                     <MarkdownRenderer content={project?.description ?? ''} className='text-lg max-md:text-base text-muted-foreground' />
-                    <div className='grid grid-cols-2 gap-4 max-sm:grid-cols-1'>
-                        <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-semibold'>Project Type</h2>
-                            <p className='text-sm text-muted-foreground'>{project?.project_type}</p>
-                        </div>
-                        <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-semibold'>Role</h2>
-                            <p className='text-sm text-muted-foreground'>{project?.role}</p>
-                        </div>
-                        <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-semibold'>Domain</h2>
-                            <p className='text-sm text-muted-foreground'>{project?.domain}</p>
-                        </div>
-                        {project?.client && <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-semibold'>Client</h2>
-                            <p className='text-sm text-muted-foreground'>{project?.client}</p>
-                        </div>}
-                        <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-semibold'>Timeline</h2>
-                            <p className='text-sm text-muted-foreground'>{project?.start_date ? formatDate(project?.start_date) : 'N/A'} - {project?.end_date ? formatDate(project?.end_date) : 'Present'}</p>
-                        </div>
-                        <div className='flex flex-col gap-2'>
-                            <h2 className='text-lg font-semibold'>Status</h2>
-                            <p className='text-sm text-muted-foreground'>{project?.status}</p>
-                        </div>
-                    </div>
-                    <div className='flex flex-wrap gap-2'>
-                        {project?.live_link && <Button
-                            variant='primary'
-                            className='max-sm:w-full'
-                            onClick={() => window.open(project?.live_link ?? '', '_blank')}
-                        >
-                            <ExternalLink className='w-4 h-4 mr-2' />
-                            Live Site
-                        </Button>}
 
-                        {project?.github_link && <Button
-                            variant='outlineSecondary'
-                            onClick={() => window.open(project?.github_link ?? '', '_blank')}
-                        >
-                            <FaGithub className='w-4 h-4 mr-2' />
-                            Visit Github
-                        </Button>}
+                    <dl className='flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground'>
+                        {[
+                            ['Type', project?.project_type],
+                            ['Domain', project?.domain],
+                            ['Client', project?.client],
+                            ['Timeline', `${project?.start_date ? formatDate(project?.start_date) : 'N/A'} – ${project?.end_date ? formatDate(project?.end_date) : 'Present'}`],
+                            ['Status', project?.status],
+                        ].filter(([, value]) => !!value).map(([label, value], index, arr) => (
+                            <React.Fragment key={label}>
+                                <span>
+                                    <dt className='inline font-medium text-foreground'>{label}: </dt>
+                                    <dd className='inline'>{value}</dd>
+                                </span>
+                                {index < arr.length - 1 && <span aria-hidden='true' className='text-border'>·</span>}
+                            </React.Fragment>
+                        ))}
+                    </dl>
 
-                        {project?.figma_link && <Button
-                            variant='outlineSecondary'
-                            onClick={() => window.open(project?.figma_link ?? '', '_blank')}
-                        >
-                            <FaFigma className='w-4 h-4 mr-2' />
-                            Figma
-                        </Button>}
+                    <div className='flex flex-wrap gap-2 mt-2'>
+                        {project?.live_link && (
+                            <LinkButton to={project.live_link} variant='primary' className='max-sm:w-full'>
+                                <ExternalLink className='w-4 h-4 mr-2' />
+                                Live Site
+                            </LinkButton>
+                        )}
 
-                        {project?.google_drive_link && <Button
-                            variant='outlineSecondary'
-                            onClick={() => window.open(project?.google_drive_link ?? '', '_blank')}
-                        >
-                            <FaGoogleDrive className='w-4 h-4 mr-2' />
-                            Google Drive
-                        </Button>}
+                        {project?.github_link && (
+                            <LinkButton to={project.github_link} variant='outlineSecondary'>
+                                <FaGithub className='w-4 h-4 mr-2' />
+                                Visit Github
+                            </LinkButton>
+                        )}
 
-                        {project?.postman_link && <Button
-                            variant='outlineSecondary'
-                            onClick={() => window.open(project?.postman_link ?? '', '_blank')}
-                        >
-                            <Code2 className='w-4 h-4 mr-2' />
-                            Postman
-                        </Button>}
+                        {project?.figma_link && (
+                            <LinkButton to={project.figma_link} variant='outlineSecondary'>
+                                <FaFigma className='w-4 h-4 mr-2' />
+                                Figma
+                            </LinkButton>
+                        )}
+
+                        {project?.google_drive_link && (
+                            <LinkButton to={project.google_drive_link} variant='outlineSecondary'>
+                                <FaGoogleDrive className='w-4 h-4 mr-2' />
+                                Google Drive
+                            </LinkButton>
+                        )}
+
+                        {project?.postman_link && (
+                            <LinkButton to={project.postman_link} variant='outlineSecondary'>
+                                <Code2 className='w-4 h-4 mr-2' />
+                                Postman
+                            </LinkButton>
+                        )}
                     </div>
                 </div>
                 <div

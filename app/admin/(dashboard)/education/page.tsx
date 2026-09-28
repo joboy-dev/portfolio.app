@@ -4,7 +4,8 @@ import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
@@ -35,6 +36,7 @@ export default function EducationPage() {
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
+    const hasLoadedOnce = useRef(false)
 
     const [search, setSearch] = useState("")
     const [filtersState, setFiltersState] = useState<{
@@ -46,7 +48,7 @@ export default function EducationPage() {
     useEffect(() => {
         dispatch(getEducations({
             ...filtersState,
-        }))
+        })).finally(() => { hasLoadedOnce.current = true })
 
         dispatch(getFiles({
             model_name: "others",
@@ -233,12 +235,11 @@ export default function EducationPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <AdminListSkeleton rows={5} />
             ) : (
-                <>
+                <div className={clsx('transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                 <ListSection
-                title="Education Management"
                 subtitle={`${total} education(s) total`}
                 icon={Wrench}
             >
@@ -325,7 +326,7 @@ export default function EducationPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
-                </>
+                </div>
             )}
         </div>
     )

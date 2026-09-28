@@ -9,7 +9,8 @@ import { getBlogs } from '@/lib/redux/slices/blog/blog'
 import { GetBlogsParams } from '@/lib/redux/slices/blog/blog.service'
 import { BlogInterface } from '@/lib/interfaces/blog'
 import { User2 } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import React, { useEffect, useRef, useState } from 'react'
 import ListEmpty from '@/components/shared/ListEmpty'
 import { SkeletonBlogCard } from '@/components/shared/Skeleton'
 import Reveal from '@/components/shared/motion/Reveal'
@@ -30,6 +31,7 @@ export default function BlogsPage() {
     const [filterState, setFilterState] = useState<GetBlogsParams>({
         per_page: PER_PAGE,
     })
+    const hasLoadedOnce = useRef(false)
 
     const loadPage = async (targetPage: number, replace: boolean) => {
         if (replace) setIsLoading(true)
@@ -47,6 +49,7 @@ export default function BlogsPage() {
 
         setIsLoading(false)
         setIsLoadingMore(false)
+        hasLoadedOnce.current = true
     }
 
     useEffect(() => {
@@ -63,21 +66,20 @@ export default function BlogsPage() {
                 subtitle='Send me a message and let us discuss your next project.'
             />
 
-            <section className='relative overflow-hidden nav-padding min-h-[45vh] flex flex-col items-center justify-center bg-secondary/50'>
+            <section className='relative overflow-hidden nav-padding min-h-[50vh] flex flex-col justify-center bg-secondary/50'>
                 <div className="hero-texture absolute inset-0 pointer-events-none" aria-hidden="true" />
-                <Reveal className="relative flex flex-col items-center">
+                <Reveal className="relative max-w-2xl">
                     <Eyebrow>writing</Eyebrow>
-                    <h1 className="text-5xl md:text-6xl font-semibold mb-4 leading-tight tracking-tight text-center" >
-                        <span className="text-foreground">My </span>
-                        <span className="bg-gradient-primary bg-clip-text text-transparent">Blog</span>
+                    <h1 className="text-5xl md:text-6xl font-semibold mb-4 leading-tight tracking-tight text-foreground" >
+                        Blog
                     </h1>
-                    <p className='text-lg text-foreground/60 font-normal leading-relaxed text-center max-md:text-base max-w-2xl'>
+                    <p className='text-lg text-foreground/60 font-normal leading-relaxed max-md:text-base'>
                     Articles and notes on software engineering, frontend and backend development, and how I build things.
                     </p>
                 </Reveal>
             </section>
 
-            <section className='nav-padding min-h-[10vh] flex items-start justify-between gap-8 bg-background max-sm:flex-col max-sm:gap-4 max-sm:items-start'>
+            <section className='sticky top-16 z-30 nav-padding py-4 bg-background/95 backdrop-blur-sm border-b border-border'>
                 <SearchField
                     placeholder='Search blog posts'
                     searchQuery={searchQuery}
@@ -87,7 +89,7 @@ export default function BlogsPage() {
                 />
             </section>
 
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <section className='page-padding bg-secondary/50'>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                         {Array.from({ length: 6 }).map((_, index) => (
@@ -96,13 +98,19 @@ export default function BlogsPage() {
                     </div>
                 </section>
             ) : (
-                <section className='page-padding bg-secondary/50'>
+                <section className={clsx('page-padding bg-secondary/50 transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                     {posts.length === 0 && <ListEmpty title='blog posts'/>}
 
                     {posts.length > 0 && (
                         <>
+                            {searchQuery === '' && page === 1 && (
+                                <Reveal className='mb-6'>
+                                    <BlogCard blog={posts[0]} featured />
+                                </Reveal>
+                            )}
+
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                                {posts.map((post, index) => (
+                                {(searchQuery === '' && page === 1 ? posts.slice(1) : posts).map((post, index) => (
                                     <Reveal key={post.id} delay={Math.min((index % PER_PAGE) * 0.08, 0.4)}>
                                         <BlogCard blog={post} />
                                     </Reveal>

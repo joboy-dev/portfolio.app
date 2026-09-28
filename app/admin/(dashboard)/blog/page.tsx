@@ -4,7 +4,8 @@ import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
@@ -26,10 +27,9 @@ import {
     createBlog,
     uploadBlogCoverImage,
 } from '@/lib/redux/slices/blog/blog'
-import { BlogBaseFormData, blogBaseSchema, blogCoverImageSchema, BlogCoverImageFormData, updateBlogSchema, UpdateBlogFormData } from '@/lib/validators/blog'
-import { BulkUploadFileFormData, bulkUploadFileSchema } from '@/lib/validators/file'
-import { objectToFormData } from '@/lib/utils/objectToFormData'
-import FormFileUpload from '@/components/shared/form/FormFileUpload'
+import { BlogBaseFormData, blogBaseSchema, updateBlogSchema, UpdateBlogFormData } from '@/lib/validators/blog'
+import Modal from '@/components/shared/modal/Modal'
+import FileDropzone from '@/components/shared/form/FileDropzone'
 import toaster from '@/lib/utils/toaster'
 import FileCard from '@/components/file/FileCard'
 import TagAttachModal from '@/components/tag/TagAttachModal'
@@ -43,7 +43,6 @@ import { AdminListSkeleton } from '@/components/shared/Skeleton'
 export default function BlogPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, blogs, isLoading, isSubmitting, selectedBlog } = useAppSelector((state: RootState) => state.blog)
-    const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -54,6 +53,7 @@ export default function BlogPage() {
     const [isDetatchTagOpen, setIsDetatchTagOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [blogToDelete, setBlogToDelete] = useState<BlogInterface | undefined>(undefined)
+    const hasLoadedOnce = useRef(false)
 
     const [search, setSearch] = useState("")
     const [filtersState, setFiltersState] = useState<{
@@ -65,24 +65,11 @@ export default function BlogPage() {
     useEffect(() => {
         dispatch(getBlogs({
             ...filtersState,
-        }))
-
-        if (selectedBlog) {
-            uploadMethods.reset({
-                model_id: selectedBlog.id,
-                model_name: "blogs",
-            })
-        }
-
-    }, [dispatch, filtersState, selectedBlog])
+        })).finally(() => { hasLoadedOnce.current = true })
+    }, [dispatch, filtersState])
 
     const createMethods = useZodForm<BlogBaseFormData>(blogBaseSchema)
     const editMethods = useZodForm<UpdateBlogFormData>(updateBlogSchema)
-    const coverImageMethods = useZodForm<BlogCoverImageFormData>(blogCoverImageSchema)
-    const uploadMethods = useZodForm<BulkUploadFileFormData>(bulkUploadFileSchema, {
-        model_id: selectedBlog?.id ?? "",
-        model_name: "blogs",
-    })
 
     const onSubmit = async (data: BlogBaseFormData) => {
         await dispatch(createBlog(data))
@@ -97,24 +84,6 @@ export default function BlogPage() {
         }))
         editMethods.reset()
         setIsEditOpen(false)
-    }
-
-    const onCoverImageSubmit = async (data: BlogCoverImageFormData) => {
-        const formData = objectToFormData(data)
-        await dispatch(uploadBlogCoverImage({
-            id: selectedBlog?.id ?? "",
-            payload: formData,
-        }))
-        coverImageMethods.reset()
-        setIsCoverImageOpen(false)
-    }
-
-    const onUploadSubmit = async (data: BulkUploadFileFormData) => {
-        const formData = objectToFormData(data)
-        await dispatch(bulkUploadFile(formData))
-        dispatch(getBlogs({ ...filtersState }))
-        uploadMethods.reset()
-        setIsUploadOpen(false)
     }
 
     const togglePublish = (blog: BlogInterface) => {
@@ -212,39 +181,50 @@ export default function BlogPage() {
                 />
             </FormModal>
 
-            <FormModal
-                methods={coverImageMethods}
+            <Modal
                 isOpen={isCoverImageOpen}
-                setIsOpen={setIsCoverImageOpen}
-                onSubmit={coverImageMethods.handleSubmit(onCoverImageSubmit)}
+                onClose={() => setIsCoverImageOpen(false)}
                 title="Upload Cover Image"
-                subtitle="Upload or replace this post's cover image"
-                isSubmitting={fileLoading}
             >
-                <FormFileUpload
-                    name="file"
-                    label="Cover Image"
+                <FileDropzone
                     accept="image/*"
-                    required
+                    multiple={false}
+                    label="Drop a cover image here or click to browse"
+                    onUpload={async (file) => {
+                        const formData = new FormData()
+                        formData.append('file', file)
+                        await dispatch(uploadBlogCoverImage({ id: selectedBlog?.id ?? "", payload: formData })).unwrap()
+                        return undefined
+                    }}
+                    onUploaded={() => setIsCoverImageOpen(false)}
                 />
-            </FormModal>
+            </Modal>
 
-            <FormModal
-                methods={uploadMethods}
+            <Modal
                 isOpen={isUploadOpen}
-                setIsOpen={setIsUploadOpen}
-                onSubmit={uploadMethods.handleSubmit(onUploadSubmit)}
+                onClose={() => setIsUploadOpen(false)}
                 title="Upload Blog Files"
-                subtitle="Upload images to reference inside this post's markdown content"
-                isSubmitting={fileLoading}
             >
-                <FormFileUpload
-                    name="files"
-                    label="Upload Blog Files"
-                    required
+                <p className="text-sm text-muted-foreground mb-4">
+                    Upload images to reference inside this post&apos;s markdown content.
+                </p>
+                <FileDropzone
                     multiple
+                    label="Drop blog files here or click to browse"
+                    onUpload={async (file) => {
+                        const formData = new FormData()
+                        formData.append('files', file)
+                        formData.append('model_name', 'blogs')
+                        formData.append('model_id', selectedBlog?.id ?? '')
+                        const results = await dispatch(bulkUploadFile(formData)).unwrap()
+                        return results?.[0]
+                    }}
+                    onUploaded={() => {
+                        dispatch(getBlogs({ ...filtersState }))
+                        setIsUploadOpen(false)
+                    }}
                 />
-            </FormModal>
+            </Modal>
 
             <TagAttachModal
                 isOpen={isAttachTagOpen}
@@ -284,12 +264,11 @@ export default function BlogPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <AdminListSkeleton rows={5} />
             ) : (
-                <>
+                <div className={clsx('transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                 <ListSection
-                title="Blog Management"
                 subtitle={`${total} post(s) total`}
                 icon={BookOpen}
             >
@@ -434,7 +413,7 @@ export default function BlogPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
-                </>
+                </div>
             )}
         </div>
     )

@@ -1,43 +1,52 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
 import Card from '../shared/card/Card'
 import { BlogInterface } from '@/lib/interfaces/blog'
 import ImageComponent from '../shared/Image'
 import Badge from '../shared/Badge'
-import LinkButton from '../shared/button/LinkButton'
-import { formatDate } from '@/lib/utils/formatter'
-import { CalendarIcon, Eye, Tag } from 'lucide-react'
+import { formatDate, getReadTime } from '@/lib/utils/formatter'
+import { CalendarIcon, Clock, Tag } from 'lucide-react'
 
-export function BlogCard({ blog }: { blog: BlogInterface }) {
+export function BlogCard({ blog, featured = false }: { blog: BlogInterface, featured?: boolean }) {
     return (
-        <Card key={blog.id} className='px-0 py-0 h-full w-full' backgroundColor='bg-background'>
-            <Link href={`/blog/${blog.slug}`} className='block'>
-                <div className='p-2 rounded-lg'>
-                    <div className='w-full h-full flex items-center justify-center p-2 bg-accent/70'>
-                        <ImageComponent
-                            src={blog.cover_image_url ?? '/images/placeholder.png'}
-                            alt={blog.title}
-                            width={500}
-                            height={250}
-                            objectFit='contain'
-                            className='rounded-sm'
-                        />
-                    </div>
+        <Card
+            key={blog.id}
+            linkTo={`/blog/${blog.slug}`}
+            className={`px-0 py-0 h-full w-full ${featured ? 'md:grid md:grid-cols-2 md:items-stretch' : ''}`}
+            backgroundColor='bg-background'
+        >
+            <div className={featured ? 'h-full' : 'p-2 rounded-lg'}>
+                <div className={`w-full h-full flex items-center justify-center bg-accent/70 ${featured ? '' : 'p-2'}`}>
+                    <ImageComponent
+                        src={blog.cover_image_url ?? '/images/placeholder.png'}
+                        alt={blog.title}
+                        width={500}
+                        height={featured ? 350 : 250}
+                        objectFit={featured ? 'cover' : 'contain'}
+                        className={featured ? 'h-full' : 'rounded-sm'}
+                    />
                 </div>
-            </Link>
-            <div className='flex flex-col gap-2 p-4 mt-4'>
-                {blog.published_at && (
-                    <div className='flex items-center gap-2 text-sm text-muted-foreground'>
-                        <CalendarIcon className='w-4 h-4' />
-                        {formatDate(blog.published_at)}
-                    </div>
-                )}
-                <Link href={`/blog/${blog.slug}`}>
-                    <h3 className='text-xl font-bold hover:text-primary-strong transition-colors duration-(--dur-fast)'>{blog.title}</h3>
-                </Link>
-                <p className='text-base text-foreground/60 line-clamp-3 break-words'>
+            </div>
+            <div className={`flex flex-col gap-2 p-4 ${featured ? 'md:p-8 md:justify-center' : 'mt-4'}`}>
+                <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                    {blog.published_at && (
+                        <span className='flex items-center gap-1.5'>
+                            <CalendarIcon className='w-4 h-4' />
+                            {formatDate(blog.published_at)}
+                        </span>
+                    )}
+                    <span className='flex items-center gap-1.5'>
+                        <Clock className='w-4 h-4' />
+                        {getReadTime(blog.content)}
+                    </span>
+                </div>
+
+                <h3 className={`font-bold group-hover:text-primary-strong transition-colors duration-(--dur-fast) ${featured ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
+                    {blog.title}
+                </h3>
+
+                <p className={`text-base text-foreground/60 break-words ${featured ? 'line-clamp-3' : 'line-clamp-3'}`}>
                     {blog.excerpt ?? 'No excerpt'}
                 </p>
 
@@ -51,16 +60,6 @@ export function BlogCard({ blog }: { blog: BlogInterface }) {
                         ))}
                     </div>
                 )}
-
-                <LinkButton
-                    variant='primary'
-                    size='sm'
-                    className='w-full mt-2'
-                    to={`/blog/${blog.slug}`}
-                >
-                    <Eye className='w-4 h-4 mr-2' />
-                    <span>Read Post</span>
-                </LinkButton>
             </div>
         </Card>
     )

@@ -1,58 +1,33 @@
 'use client'
 
 import Logo from '@/components/shared/Logo'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import LoginForm from './LoginForm'
-import RegisterForm from './RegisterForm'
 import { useAuth } from '@/lib/hooks/auth/useAuth'
 import { useRouter } from 'next/navigation'
 
 export default function AuthPage() {
     const { isAuthenticated, loading } = useAuth();
     const router = useRouter();
-    const [selectedTab, setSelectedTab] = useState<'login' | 'register'>('login')
 
     useEffect(() => {
         if (!loading && isAuthenticated) {
             router.push("/admin");
         }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, loading, router]);
 
     return (
-        <div className='flex flex-col min-h-screen w-full items-center justify-center'>
-            <div className='flex flex-col items-center justify-center gap-4 text-center'>
-                <Logo isCollapsed/>
-                <h1 className='text-5xl max-md:text-3xl font-bold text-foreground'>Admin Portal</h1>
-                <p className='text-muted-foreground text-lg max-md:text-sm'>Manage your portfolio content with ease</p>
+        <div className='relative min-h-screen w-full flex flex-col items-center justify-center bg-secondary/50 px-4 overflow-hidden'>
+            <div className="hero-texture absolute inset-0 pointer-events-none" aria-hidden="true" />
+
+            <div className='relative flex flex-col items-center gap-2 mb-8'>
+                <Logo isCollapsed />
+                <p className='text-sm text-muted-foreground'>Portfolio Manager</p>
             </div>
 
-            <div className='px-10 py-4 bg-background w-full'>
-                {/* Tabs */}
-                <div className='flex flex-col items-center justify-center gap-4 text-center'>
-                    <div className='flex items-center justify-center gap-4 text-center'>
-                        <button
-                            className={`w-full py-2 ${selectedTab === "login" ? "font-bold border-b-2 border-primary" : ""}`}
-                            onClick={() => setSelectedTab("login")}
-                        >
-                            Login
-                        </button>
-                        <button
-                            className={`w-full py-2 ${selectedTab === "register" ? "font-bold border-b-2 border-primary" : ""}`}
-                            onClick={() => setSelectedTab("register")}
-                        >
-                            Register
-                        </button>
-                    </div>
-
-                    {/* Form */}
-                    <div className='flex flex-col items-center justify-center gap-4 w-full'>
-                        {selectedTab === "login" && <LoginForm />}
-                        {/* {selectedTab === "register" && <RegisterForm />} */}
-                        {selectedTab === "register" && <div className='text-muted-foreground text-sm'>Registration is currently disabled. Please contact the administrator for access.</div>}
-                    </div>
-                </div>
-
+            <div className='relative w-full max-w-sm'>
+                <LoginForm />
             </div>
         </div>
-  )
+    )
 }

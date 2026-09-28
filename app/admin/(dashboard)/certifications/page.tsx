@@ -4,7 +4,8 @@ import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
@@ -23,9 +24,8 @@ import { CertificationBaseFormData, certificationBaseSchema, UpdateCertification
 import type { CertificationInterface } from '@/lib/interfaces/certification'
 import DateInput from '@/components/shared/form/DateInput'
 import toaster from '@/lib/utils/toaster'
-import FormFileUpload from '@/components/shared/form/FormFileUpload'
-import { FileBaseFormData, fileBaseSchema } from '@/lib/validators/file'
-import { objectToFormData } from '@/lib/utils/objectToFormData'
+import Modal from '@/components/shared/modal/Modal'
+import FileDropzone from '@/components/shared/form/FileDropzone'
 import FileCard from '@/components/file/FileCard'
 import ListEmpty from '@/components/shared/ListEmpty'
 import { AdminListSkeleton } from '@/components/shared/Skeleton'
@@ -35,12 +35,12 @@ export default function CertificationsPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, certifications, isLoading, isSubmitting, selectedCertification } = useAppSelector((state: RootState) => state.certification)
     const { confirm, ConfirmDialog } = useConfirm()
-    const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isUploadOpen, setIsUploadOpen] = useState(false)
     const [openCertificationFilesId, setOpenCertificationFilesId] = useState<string | null>(null);
+    const hasLoadedOnce = useRef(false)
 
     const [search, setSearch] = useState("")
     const [filtersState, setFiltersState] = useState<{
@@ -49,33 +49,19 @@ export default function CertificationsPage() {
         name?: string
     }>({})
 
-    
+
     const createMethods = useZodForm<CertificationBaseFormData>(certificationBaseSchema)
     const editMethods = useZodForm<UpdateCertificationFormData>(updateCertificationSchema)
-    const uploadMethods = useZodForm<FileBaseFormData>(fileBaseSchema, {
-        model_id: selectedCertification?.id ?? "",
-        model_name: "certifications",
-        file_name: `${selectedCertification?.name} Certification File`
-    })
-    
+
     useEffect(() => {
         dispatch(getCertifications({
             ...filtersState,
-        }))
+        })).finally(() => { hasLoadedOnce.current = true })
 
         dispatch(getFiles({
             model_name: "others",
         }))
-
-        if (selectedCertification) {
-            uploadMethods.reset({
-                model_id: selectedCertification.id,
-                model_name: "certifications",
-                file_name: `${selectedCertification.name} Certification File`
-            })
-        }
-
-    }, [dispatch, filtersState, selectedCertification])
+    }, [dispatch, filtersState])
 
     const onSubmit = async (data: CertificationBaseFormData) => {
         await dispatch(createCertification(data))
@@ -99,15 +85,6 @@ export default function CertificationsPage() {
             id: certification.id,
             payload: { is_published: !certification.is_published },
         }))
-    }
-
-    const onUploadSubmit = async (data: FileBaseFormData) => {
-        const formData = objectToFormData(data)
-        await dispatch(createFile(formData))
-        // Refetch certifications after upload completes
-        dispatch(getCertifications({ ...filtersState }))
-        uploadMethods.reset()
-        setIsUploadOpen(false)
     }
 
     return (
@@ -229,21 +206,28 @@ export default function CertificationsPage() {
                 />
             </FormModal>
 
-            <FormModal
-                methods={uploadMethods}
+            <Modal
                 isOpen={isUploadOpen}
-                setIsOpen={setIsUploadOpen}
-                onSubmit={uploadMethods.handleSubmit(onUploadSubmit)}
+                onClose={() => setIsUploadOpen(false)}
                 title="Upload Certification File"
-                subtitle="Upload a new certification file"
-                isSubmitting={fileLoading}
             >
-                <FormFileUpload
-                    name="file"
-                    label="Upload Certification File"
-                    required
+                <FileDropzone
+                    multiple={false}
+                    label="Drop the certification file here or click to browse"
+                    onUpload={async (file) => {
+                        const formData = new FormData()
+                        formData.append('file', file)
+                        formData.append('model_name', 'certifications')
+                        formData.append('model_id', selectedCertification?.id ?? '')
+                        formData.append('file_name', `${selectedCertification?.name} Certification File`)
+                        return await dispatch(createFile(formData)).unwrap()
+                    }}
+                    onUploaded={() => {
+                        dispatch(getCertifications({ ...filtersState }))
+                        setIsUploadOpen(false)
+                    }}
                 />
-            </FormModal>
+            </Modal>
 
             <ActionBreadcrumb
                 title="Certification Management"
@@ -260,12 +244,11 @@ export default function CertificationsPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            {isLoading ? (
+            {isLoading && !hasLoadedOnce.current ? (
                 <AdminListSkeleton rows={5} />
             ) : (
-                <>
+                <div className={clsx('transition-opacity duration-(--dur-base)', isLoading ? 'opacity-60' : 'opacity-100')} aria-busy={isLoading}>
                 <ListSection
-                title="Certification Management"
                 subtitle={`${total} certification(s) total`}
                 icon={Wrench}
             >
@@ -400,7 +383,7 @@ export default function CertificationsPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
-                </>
+                </div>
             )}
         </div>
     )

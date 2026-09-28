@@ -31,4 +31,9 @@ export type FormWrapperProps = {
   width?: number
   buttonWidth?: number
   afterButtonContent?: ReactNode
+  /** Pin the submit button to a sticky bar at the bottom of the form,
+   *  visible only while the form is dirty (unsaved changes) — for long
+   *  settings-style forms where an always-inline button scrolls out of
+   *  reach. Off by default so existing short forms are unaffected. */
+  stickyFooter?: boolean
 };

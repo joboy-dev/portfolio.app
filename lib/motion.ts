@@ -48,6 +48,13 @@ export const sheetVariantsRight = {
   exit: { transform: 'translateX(100%)' },
 }
 
+/** Presets for left-side sheets/drawers (eg. the mobile admin sidebar). */
+export const sheetVariantsLeft = {
+  initial: { transform: 'translateX(-100%)' },
+  animate: { transform: 'translateX(0%)' },
+  exit: { transform: 'translateX(-100%)' },
+}
+
 /** Presets for bottom sheets (mobile modals, mobile nav). */
 export const sheetVariantsBottom = {
   initial: { transform: 'translateY(100%)' },
