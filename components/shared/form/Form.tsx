@@ -3,6 +3,13 @@ import Button from '../button/Button';
 import { FormProvider } from 'react-hook-form';
 import clsx from 'clsx';
 
+const backgroundColorClasses: Record<string, string> = {
+  transparent: 'bg-transparent',
+  background: 'bg-background',
+  foreground: 'bg-foreground',
+  card: 'bg-card',
+}
+
 function FormWrapper({
   methods,
   onSubmit,
@@ -25,13 +32,13 @@ function FormWrapper({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log('Form submit triggered');
           onSubmit();
         }}
+        style={width ? { width: `${width}%` } : undefined}
         className={clsx(
-          `max-md:w-full p-4 md:p-6 rounded-xl shadow-lg`,
-          width ? `w-[${width}%]` : 'w-full',
-          `bg-${backgroundColor}`,
+          'max-md:w-full p-4 md:p-6 rounded-xl shadow-lg',
+          !width && 'w-full',
+          backgroundColorClasses[backgroundColor] ?? 'bg-transparent',
           className
         )}
       >
@@ -44,7 +51,8 @@ function FormWrapper({
           type='submit'
           isLoading={isSubmitting}
           variant={buttonVariant}
-          className={buttonWidth ? `w-[${buttonWidth}%]`: 'w-full'}
+          style={buttonWidth ? { width: `${buttonWidth}%` } : undefined}
+          className={!buttonWidth ? 'w-full' : undefined}
         >
           {isSubmitting 
             ? <p>{submittingLabel}</p> 

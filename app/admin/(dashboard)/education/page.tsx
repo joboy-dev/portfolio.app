@@ -5,28 +5,33 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { getFiles, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
 import FileSelectField from '@/components/shared/form/FileSelectField'
-import { Pencil, Trash, Wrench } from 'lucide-react'
+import FormToggle from '@/components/shared/form/FormToggle'
+import { CheckCircle2, Pencil, Trash, Wrench, XCircle } from 'lucide-react'
 import ListSection from '@/components/shared/ListSection'
 import Avatar from '@/components/shared/Avatar'
+import Badge from '@/components/shared/Badge'
 import { formatDate } from '@/lib/utils/formatter'
 import Pagination from '@/components/shared/Pagination'
 import { createEducation, deleteEducation, getEducations, setSelectedEducation, updateEducation } from '@/lib/redux/slices/education/education'
 import DateInput from '@/components/shared/form/DateInput'
+import type { EducationInterface } from '@/lib/interfaces/education'
 import { EducationBaseFormData, educationBaseSchema, UpdateEducationFormData } from '@/lib/validators/education'
 import { updateEducationSchema } from '@/lib/validators/education'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function EducationPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, educations, isLoading, isSubmitting, selectedEducation } = useAppSelector((state: RootState) => state.education)
+    const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -69,8 +74,17 @@ export default function EducationPage() {
         setIsEditOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    const togglePublish = (education: EducationInterface) => {
+        dispatch(updateEducation({
+            id: education.id,
+            payload: { is_published: !education.is_published },
+        }))
+    }
+
+    return (
         <div>
+            {ConfirmDialog}
+
             <FormModal
                 methods={createMethods}
                 isOpen={isCreateOpen}
@@ -128,6 +142,12 @@ export default function EducationPage() {
                     label="School logo"
                     placeholder="Select school logo"
                     model_name="others"
+                />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this education entry visible on the public site"
                 />
             </FormModal>
 
@@ -190,6 +210,12 @@ export default function EducationPage() {
                     model_name="others"
                 />
 
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this education entry visible on the public site"
+                />
+
             </FormModal>
 
             <ActionBreadcrumb
@@ -207,7 +233,11 @@ export default function EducationPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Education Management"
                 subtitle={`${total} education(s) total`}
                 icon={Wrench}
@@ -236,6 +266,7 @@ export default function EducationPage() {
                                                 start_date: education.start_date ? new Date(education.start_date) : undefined,
                                                 end_date: education.end_date ? new Date(education.end_date) : undefined,
                                                 file_id: education.file_id,
+                                                is_published: education.is_published,
                                             })
                                         },
                                         icon: <Pencil className='w-4 h-4' />
@@ -243,12 +274,22 @@ export default function EducationPage() {
                                     {
                                         label: "Delete",
                                         variant: "ghostDanger",
-                                        onSelect: () => {
-                                            dispatch(deleteEducation({
-                                                id: education?.id ?? "",
-                                            }))
-                                        },
+                                        onSelect: () => confirm({
+                                            title: "Delete education",
+                                            content: `Delete "${education.school}"? This can't be undone.`,
+                                            confirmLabel: "Delete",
+                                            onConfirm: () => dispatch(deleteEducation({ id: education?.id ?? "" })).unwrap(),
+                                        }),
                                         icon: <Trash className='w-4 h-4' />
+                                    }
+                                ]}
+                                actions={[
+                                    {
+                                        text: education.is_published ? "Unpublish" : "Publish",
+                                        onSelect: () => togglePublish(education),
+                                        icon: education.is_published
+                                            ? <XCircle className='w-4 h-4' />
+                                            : <CheckCircle2 className='w-4 h-4' />
                                     }
                                 ]}
                             >
@@ -261,7 +302,12 @@ export default function EducationPage() {
                                         objectFit='contain'
                                     />
                                     <div>
-                                        <h3 className='text-xl text-foreground font-bold mb-2'>{education.school}</h3>
+                                        <div className='flex items-center gap-2 mb-2'>
+                                            <h3 className='text-xl text-foreground font-bold'>{education.school}</h3>
+                                            <Badge variant={education.is_published ? 'primary' : 'outlineSecondary'}>
+                                                {education.is_published ? 'Published' : 'Draft'}
+                                            </Badge>
+                                        </div>
                                         <p className='text-lg text-muted-foreground'>Location: <span className='font-bold'>{education.location}</span></p>
                                         <p className='text-lg text-muted-foreground'>Degree: <span className='font-bold'>{education.degree}</span></p>
                                         <p className='text-lg text-muted-foreground'>Grade: <span className='font-bold'>{education.grade}</span></p>
@@ -279,6 +325,8 @@ export default function EducationPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

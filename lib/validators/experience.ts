@@ -10,6 +10,7 @@ export const experienceBaseSchema = z.object({
   start_date: z.date(),
   end_date: z.date().optional().nullable(),
   file_id: z.string().optional(),
+  is_published: z.boolean().optional(),
 })
 
 export const updateExperienceSchema = experienceBaseSchema.partial()

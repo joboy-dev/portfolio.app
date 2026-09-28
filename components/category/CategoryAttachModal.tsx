@@ -36,7 +36,6 @@ export default function CategoryAttachModal({
     }, [dispatch, model_type])
 
     const submitForm = async(data: AttachOrDetatchCategoryFormData) => {
-        console.log(data)
         await categoryService.attachCategoriesToEntity({
             payload: data
         })

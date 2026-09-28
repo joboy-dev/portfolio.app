@@ -28,7 +28,7 @@ export default function LoginForm() {
           submittingLabel="Signing in..."
           isSubmitting={isLoading}
           buttonVariant="primary"
-          backgroundColor="foreground"
+          backgroundColor="card"
           width={100}
           title="Welcome back"
           description='Sign in to access your admin dashboard'
@@ -36,7 +36,7 @@ export default function LoginForm() {
         >
           <FormInput
             name="email"
-            label="Emai Address"
+            label="Email Address"
             placeholder="Enter your email"
             type="email"
           />

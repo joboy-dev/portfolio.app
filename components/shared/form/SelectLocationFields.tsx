@@ -45,8 +45,6 @@ function SelectLocationFields({
                 setSelectedCountry(selectedCountryData?.shortName ?? "")
                 setStates(locationHandler.getStatesByShort(selectedCountryData?.shortName ?? "") ?? [])
                 setCities([])
-                console.log(option?.value)
-                console.log(selectedCountryData)
             }}
             options={countries.map((country, i) => ({
                 key: i,
@@ -64,13 +62,10 @@ function SelectLocationFields({
             placeholder='Select state'
             onChange={(option) => {
                 // field.onChange(option?.value)
-                console.log(selectedCountry)
-                console.log(option?.value)
                 setCities(locationHandler.getCities(
                     selectedCountry ?? "", 
                     option?.value ?? ""
                 ) ?? [])
-                console.log(cities)
             }}
             options={states.map((state, i) => ({
                 key: i,
@@ -87,7 +82,6 @@ function SelectLocationFields({
             disabled={cities.length === 0}
             placeholder='Select city'
             onChange={(option) => {
-                console.log(option?.value)
             }}
             options={cities.map((city, i) => ({
                 key: i,

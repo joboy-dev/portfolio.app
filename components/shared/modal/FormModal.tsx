@@ -4,8 +4,10 @@ import { type ReactNode } from "react";
 import type { StepInterface } from "@/lib/interfaces/general";
 import Button from "../button/Button";
 import FormWrapper from "../form/Form";
-import { ArrowLeft } from "lucide-react";
+import Dialog from "./Dialog";
+import { ArrowLeft, X } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
+import clsx from "clsx";
 
 interface ModalProps {
   methods: UseFormReturn<any, any, any>;
@@ -24,12 +26,6 @@ interface ModalProps {
   onClose?: () => void;
   resetAfterSubmit?: boolean;
 }
-
-const sizeMap = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-3xl",
-};
 
 export default function FormModal({
   methods,
@@ -60,13 +56,18 @@ export default function FormModal({
     }
   };
 
+  const handleClose = () => {
+    if (isSubmitting) return;
+    methods.reset();
+    if (setCurrentStep) setCurrentStep(0);
+    setIsOpen(false);
+    if (onClose) onClose();
+  };
+
   const handleStepSubmit = steps
     ? currentStep === steps.length - 1
       ? () => {
         onSubmit();
-        if (onClose) {
-          onClose();
-        }
         if (resetAfterSubmit) {
           methods.reset();
         }
@@ -74,135 +75,125 @@ export default function FormModal({
       : () => increaseStep()
     : () => {
         onSubmit();
-        if (onClose) {
-          onClose();
-        }
         if (resetAfterSubmit) {
           methods.reset();
         }
       };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30 flex items-center justify-center p-4">
-      <div
-        className={`z-50 bg-background rounded-xl shadow-xl w-full max-h-screen overflow-hidden ${sizeMap[size]} relative`}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-center px-6 py-4">
-          <div className="flex flex-col w-full">
-            <div className="flex items-center justify-between gap-3 mb-4">
-              <div className="flex items-center justify-between max-md:flex-col max-md:items-start">
-                {icon && (
-                  <div className="h-12 w-12 bg-gradient-primary rounded-lg flex items-center justify-center mr-4">
-                    {icon}
-                  </div>
-                )}
-
-                <div className="mr-12">
-                  <h2 className="font-bold text-2xl">{title}</h2>
-                  <p className="text-lg text-muted-foreground">{subtitle}</p>
-                </div>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => { if (!open) handleClose() }}
+      title={title}
+      description={subtitle}
+      size={size}
+      hideHeader
+      noPadding
+      closeDisabled={isSubmitting}
+    >
+      {/* Header */}
+      <div className="px-6 py-4 border-b border-border shrink-0">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-4">
+            {icon && (
+              <div className="h-12 w-12 bg-gradient-primary rounded-lg flex items-center justify-center shrink-0">
+                {icon}
               </div>
-
-              <Button
-                variant="danger"
-                size="sm"
-                disabled={isSubmitting}
-                onClick={() => {
-                  methods.reset();
-                  if (setCurrentStep) setCurrentStep(0);
-                  setIsOpen(false);
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-              >
-                <p className="text-base font-extrabold">x</p>
-              </Button>
+            )}
+            <div>
+              <h2 className="font-bold text-xl text-foreground">{title}</h2>
+              {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
             </div>
-
-            {/* Steps Progress */}
-            {steps && (
-              <div className="flex items-center justify-between mb-6">
-                {steps.map((step, index) => (
-                  <div key={step.number} className="flex items-center">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                          currentStep >= step.number
-                            ? "bg-gradient-primary text-white"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {step.number + 1}
-                      </div>
-                      <div className="text-center mt-2">
-                        <div className="text-xs font-medium text-foreground">
-                          {step.title}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {step.description}
-                        </div>
-                      </div>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div
-                        className={`w-16 h-px mx-4 ${
-                          currentStep > step.number
-                            ? "bg-primary"
-                            : "bg-muted"
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
+
+          <button
+            type="button"
+            aria-label="Close"
+            disabled={isSubmitting}
+            onClick={handleClose}
+            className="shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-(--dur-fast) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
 
-        {/* Body */}
-        {/* <div className="overflow-y-auto max-h-[70vh] px-4 py-6"> */}
-        <div className="overflow-y-auto max-h-[70vh]">
-          <FormWrapper
-            methods={methods}
-            onSubmit={handleStepSubmit}
-            submitLabel={
-              steps
-                ? currentStep === steps.length - 1
-                  ? "Save"
-                  : "Next"
-                : "Submit"
-            }
-            submittingLabel={
-              steps
-                ? currentStep === steps.length - 1
-                  ? "Saving"
-                  : ""
-                : "Submitting"
-            }
-            backgroundColor="background"
-            isSubmitting={isSubmitting}
-            className="shadow-none m-0 w-full"
-          >
-            {currentStep > 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                startIcon={<ArrowLeft />}
-                onClick={reduceStep}
-                className="p-0 m-0 mb-4"
-              >
-                Previous
-              </Button>
-            )}
-            {children}
-          </FormWrapper>
-        </div>
+        {/* Steps Progress */}
+        {steps && (
+          <div className="flex items-center justify-between mt-5">
+            {steps.map((step, index) => (
+              <div key={step.number} className="flex items-center">
+                <div className="flex flex-col items-center">
+                  <div
+                    className={clsx(
+                      "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
+                      currentStep >= step.number
+                        ? "bg-primary-strong text-white"
+                        : "bg-muted text-muted-foreground"
+                    )}
+                  >
+                    {step.number + 1}
+                  </div>
+                  <div className="text-center mt-2">
+                    <div className="text-xs font-medium text-foreground">
+                      {step.title}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {step.description}
+                    </div>
+                  </div>
+                </div>
+                {index < steps.length - 1 && (
+                  <div
+                    className={clsx(
+                      "w-16 h-px mx-4",
+                      currentStep > step.number ? "bg-primary" : "bg-muted"
+                    )}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+
+      {/* Body */}
+      <div className="overflow-y-auto max-h-[65vh]">
+        <FormWrapper
+          methods={methods}
+          onSubmit={handleStepSubmit}
+          submitLabel={
+            steps
+              ? currentStep === steps.length - 1
+                ? "Save"
+                : "Next"
+              : "Submit"
+          }
+          submittingLabel={
+            steps
+              ? currentStep === steps.length - 1
+                ? "Saving"
+                : ""
+              : "Submitting"
+          }
+          backgroundColor="background"
+          isSubmitting={isSubmitting}
+          className="shadow-none m-0 w-full px-6 py-4"
+        >
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              startIcon={<ArrowLeft />}
+              onClick={reduceStep}
+              className="p-0 m-0 mb-4"
+            >
+              Previous
+            </Button>
+          )}
+          {children}
+        </FormWrapper>
+      </div>
+    </Dialog>
   );
 }

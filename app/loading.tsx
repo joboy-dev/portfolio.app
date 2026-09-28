@@ -1,13 +1,21 @@
+import Skeleton, { SkeletonHero } from "@/components/shared/Skeleton"
+
+/**
+ * Next.js's implicit route-level Suspense fallback (shown briefly during
+ * hard navigation, before any page-specific skeleton takes over). Shaped
+ * like a generic hero + content page rather than a spinner, so it doesn't
+ * clash with the content-shaped skeletons every page shows once mounted.
+ */
 export default function Loading() {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-4">
-        <svg className="animate-spin h-10 w-10 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-        </svg>
-        <span className="text-lg text-muted-foreground">Loading...</span>
+    <div className="min-h-dvh bg-background">
+      <div className="nav-padding flex items-center justify-between">
+        <Skeleton className="h-10 w-32" rounded="md" />
+        <Skeleton className="h-9 w-9" rounded="md" />
       </div>
+      <section className="page-padding min-h-[60dvh] flex items-center bg-secondary/50">
+        <SkeletonHero className="w-full" />
+      </section>
     </div>
   )
 }

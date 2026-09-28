@@ -17,7 +17,6 @@ import FormFileUpload from '@/components/shared/form/FormFileUpload'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { FaGreaterThan } from 'react-icons/fa6'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Loading from '@/app/loading'
 import { capitalizeFirstLetter } from '@/lib/utils/string'
 import FileCard from '@/components/file/FileCard'
 import ActionBreadcrumb from '@/components/shared/breadcrumb/ActionBreadcrumb'
@@ -25,6 +24,7 @@ import BackButton from '@/components/shared/button/BackButton'
 import ListSection from '@/components/shared/ListSection'
 import Pagination from '@/components/shared/Pagination'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
 
 export default function FilesPage() {
     const router = useRouter()
@@ -74,8 +74,6 @@ export default function FilesPage() {
             key: 2
         },
     ]
-
-    if (isLoading) return <Loading />
 
     return (
         <div>
@@ -130,7 +128,9 @@ export default function FilesPage() {
             />
 
             <div>
-                {model !== null 
+                {isLoading ? (
+                    <AdminListSkeleton rows={5} />
+                ) : model !== null
                     ? <div>
                         <BackButton href="/admin/files" />
 

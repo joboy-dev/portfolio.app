@@ -89,9 +89,24 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable}`}>
       <body className='bg-background'>
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           <StoreProvider>
-            <Toaster position='top-center' reverseOrder={false} />
+            <Toaster
+              position='top-center'
+              reverseOrder={false}
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: 'var(--card)',
+                  color: 'var(--card-foreground)',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--shadow-md)',
+                  fontSize: '0.875rem',
+                },
+                success: { iconTheme: { primary: 'var(--success)', secondary: 'var(--success-foreground)' } },
+                error: { iconTheme: { primary: 'var(--destructive)', secondary: 'var(--destructive-foreground)' } },
+              }}
+            />
             {children}
           </StoreProvider>
         </ThemeProvider>

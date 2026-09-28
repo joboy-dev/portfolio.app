@@ -1,6 +1,5 @@
 'use client'
 
-import Loading from '@/app/loading'
 import ContactForm from '@/components/messages/ContactForm'
 import { ProjectCard } from '@/components/projects/Card'
 import { DropdownButton } from '@/components/shared/button/DropdownButton'
@@ -12,6 +11,7 @@ import { Filter, Star, User2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Option } from '@/lib/interfaces/general'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { SkeletonProjectCard } from '@/components/shared/Skeleton'
 import Reveal from '@/components/shared/motion/Reveal'
 import Eyebrow from '@/components/shared/motion/Eyebrow'
 import CTASection from '@/components/shared/CTASection'
@@ -26,6 +26,7 @@ export default function ProjectsPage() {
         page: 1,
         per_page: 10,
         name: searchQuery,
+        is_published: true,
     })
 
     useEffect(() => {
@@ -102,17 +103,16 @@ export default function ProjectsPage() {
                 subtitle='Send me a message and let us discuss your next project.'
             />
 
-            <section className='relative overflow-hidden page-padding min-h-[80vh] flex flex-col items-center justify-center bg-secondary/50'>
+            <section className='relative overflow-hidden nav-padding min-h-[45vh] flex flex-col items-center justify-center bg-secondary/50'>
                 <div className="hero-texture absolute inset-0 pointer-events-none" aria-hidden="true" />
                 <Reveal className="relative flex flex-col items-center">
                     <Eyebrow>portfolio</Eyebrow>
-                    <h1 className="text-5xl lg:text-7xl font-semibold mb-6 leading-tight tracking-tight text-center" >
-                        <span className="text-foreground">My</span>
-                        <br />
+                    <h1 className="text-5xl md:text-6xl font-semibold mb-4 leading-tight tracking-tight text-center" >
+                        <span className="text-foreground">My </span>
                         <span className="bg-gradient-primary bg-clip-text text-transparent">Projects</span>
                     </h1>
-                    <p className='text-xl text-foreground/60 font-normal leading-relaxed text-center max-md:text-base max-w-3xl'>
-                    A showcase of my work spanning full-stack development, mobile applications, data visualization, and emerging technologies. Each project represents a unique challenge and innovative solution.
+                    <p className='text-lg text-foreground/60 font-normal leading-relaxed text-center max-md:text-base max-w-2xl'>
+                    A showcase of my work spanning full-stack development, mobile applications, and emerging technologies.
                     </p>
                 </Reveal>
             </section>
@@ -123,7 +123,7 @@ export default function ProjectsPage() {
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     onSearch={() => setFilterState({...filterState, name: searchQuery, page: 1})}
-                    onSearchClear={() => dispatch(getProjects({}))}
+                    onSearchClear={() => setFilterState({...filterState, name: '', page: 1})}
                 />
 
                 <DropdownButton
@@ -139,7 +139,13 @@ export default function ProjectsPage() {
 
             {/* Projects */}
             {isLoading ? (
-                <Loading />
+                <section className='page-padding bg-secondary/50'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <SkeletonProjectCard key={index} />
+                        ))}
+                    </div>
+                </section>
             ) : (
                 <>
                     {projects.length === 0 && <ListEmpty title='projects'/>}
@@ -187,7 +193,7 @@ export default function ProjectsPage() {
 
             <CTASection
                 heading="Interested in Working Together?"
-                subtitle="I am always excited to take on new challenges and create innovative solutions. Let us discuss your next project."
+                subtitle="I'm always excited to take on new challenges. Let's discuss your next project."
                 primaryAction={{ label: "Learn More About Me", icon: <User2 className="ml-2 h-5 w-5 inline" />, to: "/about" }}
                 secondaryAction={{ label: "Get In Touch", onClick: () => setIsOpen(true) }}
             />

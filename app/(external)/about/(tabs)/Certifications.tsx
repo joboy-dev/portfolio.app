@@ -1,4 +1,3 @@
-import Loading from '@/app/loading'
 import Button from '@/components/shared/button/Button'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
@@ -9,7 +8,8 @@ import { getCertifications } from '@/lib/redux/slices/certification/certificatio
 import { GetCertificationsParams } from '@/lib/redux/slices/certification/certification.service'
 import { formatDate } from '@/lib/utils/formatter'
 import { Calendar, ExternalLink } from 'lucide-react'
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState } from 'react'
+import { SkeletonCard } from '@/components/shared/Skeleton'
 
 export default function Certifications() {
   const { certifications, isLoading, totalPages, currentPage } = useAppSelector(state => state.certification)
@@ -17,13 +17,22 @@ export default function Certifications() {
   const [ filterState, setFilterState ] = useState<GetCertificationsParams>({
     page: 1,
     per_page: 10,
+    is_published: true,
   })
 
   useEffect(() => {
     dispatch(getCertifications({...filterState}))
   }, [dispatch, filterState])
 
-  return isLoading ? <Loading/> : (
+  if (isLoading) {
+    return (
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className='rounded-lg border border-border' />)}
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col gap-4'>
         {certifications?.length === 0 && (
             <ListEmpty title='certification' />

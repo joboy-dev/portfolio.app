@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
@@ -21,10 +20,13 @@ import { TestimonialBaseFormData, testimonialBaseSchema, UpdateTestimonialFormDa
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
 import FormCheckbox from '@/components/shared/form/FormCheckbox'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function TestimonialsPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, testimonials, isLoading, isSubmitting, selectedTestimonial } = useAppSelector((state: RootState) => state.testimonial)
+    const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -68,8 +70,10 @@ export default function TestimonialsPage() {
         setIsEditOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    return (
         <div>
+            {ConfirmDialog}
+
             <FormModal
                 methods={createMethods}
                 isOpen={isCreateOpen}
@@ -164,7 +168,11 @@ export default function TestimonialsPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Testimonial Management"
                 subtitle={`${total} testimonial(s) total`}
                 icon={Wrench}
@@ -197,11 +205,12 @@ export default function TestimonialsPage() {
                                     {
                                         label: "Delete",
                                         variant: "ghostDanger",
-                                        onSelect: () => {
-                                            dispatch(deleteTestimonial({
-                                                id: testimonial?.id ?? "",
-                                            }))
-                                        },
+                                        onSelect: () => confirm({
+                                            title: "Delete testimonial",
+                                            content: `Delete "${testimonial.name}"? This can't be undone.`,
+                                            confirmLabel: "Delete",
+                                            onConfirm: () => dispatch(deleteTestimonial({ id: testimonial?.id ?? "" })).unwrap(),
+                                        }),
                                         icon: <Trash className='w-4 h-4' />
                                     }
                                 ]}
@@ -225,6 +234,8 @@ export default function TestimonialsPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

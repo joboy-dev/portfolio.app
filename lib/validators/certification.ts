@@ -7,6 +7,7 @@ export const certificationBaseSchema = z.object({
   credential_id: z.string().optional().nullable(),
   credential_url: z.string().optional().nullable(),
   issuer_file_id: z.string().optional().nullable(),
+  is_published: z.boolean().optional(),
 })
 
 export const updateCertificationSchema = certificationBaseSchema.extend({

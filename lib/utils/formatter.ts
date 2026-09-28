@@ -54,6 +54,18 @@ export function formatPercent(value: number): string {
 }
 
 /**
+ * Turn a raw 0-100 proficiency number into a level word for public display.
+ * The exact number stays admin-only (see admin/skills).
+ */
+export function getSkillLevel(proficiency?: number): string {
+  const value = proficiency ?? 0
+  if (value >= 90) return "Expert"
+  if (value >= 70) return "Advanced"
+  if (value >= 40) return "Proficient"
+  return "Familiar"
+}
+
+/**
  * Format file size
  */
 export function formatFileSize(bytes: number): string {

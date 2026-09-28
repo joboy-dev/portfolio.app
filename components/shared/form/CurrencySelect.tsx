@@ -14,7 +14,6 @@ export default function CurrencySelect({
         label="Currency"
         placeholder='Select currency'
         onChange={(option) => {
-            console.log(option?.value)
         }}
         options={countries.map((country, i) => ({
             key: i,

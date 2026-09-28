@@ -1,4 +1,3 @@
-import Loading from '@/app/loading'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
 import ListEmpty from '@/components/shared/ListEmpty'
@@ -7,7 +6,8 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getAwards } from '@/lib/redux/slices/award/award'
 import { GetAwardsParams } from '@/lib/redux/slices/award/award.service'
 import { formatDate } from '@/lib/utils/formatter'
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState } from 'react'
+import { SkeletonCard } from '@/components/shared/Skeleton'
 
 export default function Awards() {
   const { awards, isLoading, totalPages, currentPage } = useAppSelector(state => state.award)
@@ -15,13 +15,22 @@ export default function Awards() {
   const [ filterState, setFilterState ] = useState<GetAwardsParams>({
     page: 1,
     per_page: 10,
+    is_published: true,
   })
 
   useEffect(() => {
     dispatch(getAwards({...filterState}))
   }, [dispatch, filterState])
 
-  return isLoading ? <Loading/> : (
+  if (isLoading) {
+    return (
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className='rounded-lg border border-border' />)}
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col gap-4'>
         {awards?.length === 0 && (
             <ListEmpty title='award' />

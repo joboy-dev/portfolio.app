@@ -1,6 +1,6 @@
 'use client'
 
-import Loading from '@/app/loading'
+import Skeleton, { SkeletonText } from '@/components/shared/Skeleton'
 import { ProjectCard } from '@/components/projects/Card'
 import Badge from '@/components/shared/Badge'
 import Button from '@/components/shared/button/Button'
@@ -27,38 +27,33 @@ import Reveal from '@/components/shared/motion/Reveal'
 export default function ProjectDetailPage() {
     const { slug } = useParams()
     const dispatch = useAppDispatch()
-    const { projects, isLoading, selectedProject:project } = useAppSelector(state => state.project)
+    const { isLoading, selectedProject:project } = useAppSelector(state => state.project)
     const [similarProjects, setSimilarProjects] = useState<ProjectInterface[]>([])
     const [images, setImages] = useState<string[]>([])
     const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
 
-    // const getSimilarProjects = async () => {
-    //     const { data } = await projectsService.getProjects({
-    //         page: 1,
-    //         per_page: 3,
-    //         sort_by: 'position',
-    //         order: 'asc',
-    //         tags: project?.tags?.map((tag) => tag.name).join(','),
-    //     })
-    //     const projectsWithoutCurrent = data?.filter((project) => project.id !== project?.id)
-    //     setSimilarProjects(projectsWithoutCurrent ?? [])
-    // }
-
     useEffect(() => {
         dispatch(getProjectById({id: slug as string}))
+    }, [dispatch, slug])
+
+    // Runs once the project itself has loaded, so the tag-based query uses
+    // this project's tags, not whatever project was loaded previously.
+    useEffect(() => {
+        if (!project?.id) return
+
+        const tags = project.tags?.map((tag) => tag.name).join(',')
+
         dispatch(getProjects({
             page: 1,
-            per_page: 3,
+            per_page: 4,
             sort_by: 'position',
             order: 'asc',
-            tags: project?.tags?.map((tag) => tag.name).join(','),
-        }))
-        const projectsWithoutCurrent = projects?.filter((project) => project.id !== project?.id)
-        setSimilarProjects(projectsWithoutCurrent ?? [])
-
-        // getSimilarProjects()
-    }, [dispatch, slug])
-    // }, [slug, projects, project?.tags, dispatch])
+            tags,
+        })).unwrap().then((response) => {
+            const related = (response?.data ?? []).filter((p) => p.id !== project.id).slice(0, 3)
+            setSimilarProjects(related)
+        })
+    }, [dispatch, project?.id])
 
     useEffect(() => {
         if (project && project.files) {
@@ -97,7 +92,38 @@ export default function ProjectDetailPage() {
         }
     ]
 
-    return isLoading ? <Loading/> : (
+    if (isLoading) {
+        return (
+            <div>
+                <section className='page-padding min-h-dvh flex items-center max-md:flex-col-reverse gap-10 bg-secondary/60'>
+                    <div className='flex flex-col gap-4 w-full'>
+                        <Skeleton height='0.75rem' width='6rem' />
+                        <div className='flex items-center gap-2'>
+                            <Skeleton height='1.5rem' width='5rem' rounded='full' />
+                            <Skeleton height='1.5rem' width='5rem' rounded='full' />
+                        </div>
+                        <Skeleton height='3rem' className='w-3/4' />
+                        <SkeletonText lines={3} />
+                        <div className='grid grid-cols-2 gap-4 max-sm:grid-cols-1'>
+                            {Array.from({ length: 6 }).map((_, i) => (
+                                <div key={i} className='space-y-2'>
+                                    <Skeleton height='1rem' width='6rem' />
+                                    <Skeleton height='0.875rem' width='8rem' />
+                                </div>
+                            ))}
+                        </div>
+                        <div className='flex gap-2'>
+                            <Skeleton height='2.5rem' width='8rem' rounded='md' />
+                            <Skeleton height='2.5rem' width='8rem' rounded='md' />
+                        </div>
+                    </div>
+                    <Skeleton className='w-full aspect-video' />
+                </section>
+            </div>
+        )
+    }
+
+    return (
         <div>
             <section className='page-padding min-h-screen flex items-center justify-center max-md:flex-col-reverse max-md:items-start max-md:justify-start gap-10 bg-secondary/60'>
                 <div className='flex flex-col gap-4 w-full'>
@@ -178,50 +204,77 @@ export default function ProjectDetailPage() {
                         </Button>}
                     </div>
                 </div>
-                <div className='w-full h-full flex flex-col items-center justify-center gap-4'>
+                <div
+                    className='w-full h-full flex flex-col items-center justify-center gap-4'
+                    role='group'
+                    aria-roledescription='carousel'
+                    aria-label={`${project?.name ?? 'Project'} screenshots`}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === 'ArrowLeft' && currentImageIndex > 0) setCurrentImageIndex(currentImageIndex - 1)
+                        if (e.key === 'ArrowRight' && currentImageIndex < images.length - 1) setCurrentImageIndex(currentImageIndex + 1)
+                    }}
+                >
                     <div className='w-full h-full flex items-center justify-center gap-2'>
-                        {currentImageIndex > 0 && <ArrowLeftIcon 
-                            className='w-4 h-4 cursor-pointer max-sm:hidden' 
+                        <button
+                            type='button'
+                            aria-label='Previous screenshot'
+                            disabled={currentImageIndex === 0}
                             onClick={() => setCurrentImageIndex(currentImageIndex - 1)}
-                        />}
-                        <ImageComponent 
-                            src={images[currentImageIndex] ?? '/images/placeholder.png'} 
-                            alt={project?.name ?? ''} 
+                            className='h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-(--dur-fast) disabled:opacity-30 disabled:pointer-events-none max-sm:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
+                        >
+                            <ArrowLeftIcon className='w-5 h-5' aria-hidden='true' />
+                        </button>
+                        <ImageComponent
+                            src={images[currentImageIndex] ?? '/images/placeholder.png'}
+                            alt={`${project?.name ?? 'Project'} screenshot ${currentImageIndex + 1} of ${images.length}`}
                             objectFit='contain'
                             className='rounded-lg max-sm:w-full max-sm:h-full'
                             width={450}
                             height={300}
                         />
-                       {currentImageIndex < images.length - 1 && <ArrowRightIcon 
-                            className='w-4 h-4 cursor-pointer max-sm:hidden' 
+                        <button
+                            type='button'
+                            aria-label='Next screenshot'
+                            disabled={currentImageIndex >= images.length - 1}
                             onClick={() => setCurrentImageIndex(currentImageIndex + 1)}
-                        />}
+                            className='h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-(--dur-fast) disabled:opacity-30 disabled:pointer-events-none max-sm:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
+                        >
+                            <ArrowRightIcon className='w-5 h-5' aria-hidden='true' />
+                        </button>
                     </div>
                     <div className='w-full h-full flex items-center justify-center gap-2 flex-wrap'>
                         {images.map((image, index) => (
-                            <ImageComponent 
+                            <button
+                                type='button'
                                 key={index}
-                                src={image} 
-                                alt={project?.name ?? ''} 
-                                width={75}
-                                height={75}
-                                objectFit='contain'
-                                className={clsx(
-                                    'rounded-sm',
-                                    currentImageIndex === index && 'border-3 border-primary'
-                                )}
+                                aria-label={`Show screenshot ${index + 1}`}
+                                aria-current={currentImageIndex === index}
                                 onClick={() => setCurrentImageIndex(index)}
-                            />
+                                className={clsx(
+                                    'rounded-sm outline-2 outline-offset-2 transition-[outline-color] duration-(--dur-fast)',
+                                    currentImageIndex === index ? 'outline-primary' : 'outline-transparent'
+                                )}
+                            >
+                                <ImageComponent
+                                    src={image}
+                                    alt=''
+                                    width={75}
+                                    height={75}
+                                    objectFit='contain'
+                                    className='rounded-sm'
+                                />
+                            </button>
                         ))}
                     </div>
                 </div>
             </section>
 
-            <section className='page-padding min-h-screen bg-background'>
+            <section className='page-padding bg-background'>
                 <NavigationBar tabs={tabs} defaultTab='overview' />
             </section>
 
-           {similarProjects.length > 0 && <section className='page-padding min-h-screen'>
+           {similarProjects.length > 0 && <section className='page-padding'>
                 <Reveal className='flex flex-col gap-4'>
                     <Eyebrow>related</Eyebrow>
                     <h2 className='text-4xl font-semibold tracking-tight'>Similar Projects</h2>

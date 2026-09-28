@@ -1,6 +1,6 @@
 'use client'
 
-import Loading from '@/app/loading'
+import Skeleton, { SkeletonText } from '@/components/shared/Skeleton'
 import { BlogCard } from '@/components/blog/Card'
 import Badge from '@/components/shared/Badge'
 import ImageComponent from '@/components/shared/Image'
@@ -40,7 +40,27 @@ export default function BlogDetailPage() {
         }
     }, [dispatch, post])
 
-    return isLoading ? <Loading /> : (
+    if (isLoading) {
+        return (
+            <div>
+                <section className='page-padding min-h-dvh flex items-center max-md:flex-col-reverse gap-10 bg-secondary/60'>
+                    <div className='flex flex-col gap-4 w-full'>
+                        <div className='flex items-center gap-2'>
+                            <Skeleton height='1.5rem' width='5rem' rounded='full' />
+                            <Skeleton height='1.5rem' width='5rem' rounded='full' />
+                        </div>
+                        <Skeleton height='0.75rem' width='5rem' />
+                        <Skeleton height='3rem' className='w-4/5' />
+                        <Skeleton height='1rem' width='8rem' />
+                        <SkeletonText lines={2} />
+                    </div>
+                    <Skeleton className='w-full aspect-video' />
+                </section>
+            </div>
+        )
+    }
+
+    return (
         <div>
             <section className='page-padding min-h-screen flex items-center justify-center max-md:flex-col-reverse max-md:items-start max-md:justify-start gap-10 bg-secondary/60'>
                 <div className='flex flex-col gap-4 w-full'>
@@ -78,12 +98,12 @@ export default function BlogDetailPage() {
                 </div>
             </section>
 
-            <section className='page-padding min-h-screen bg-background'>
-                <MarkdownRenderer content={post?.content ?? ''} className='prose max-w-none' />
+            <section className='page-padding bg-background'>
+                <MarkdownRenderer content={post?.content ?? ''} className='max-w-[68ch] mx-auto' />
             </section>
 
             {relatedPosts.length > 0 && (
-                <section className='page-padding min-h-screen'>
+                <section className='page-padding'>
                     <Reveal className='flex flex-col gap-4'>
                         <Eyebrow>related</Eyebrow>
                         <h2 className='text-4xl font-semibold tracking-tight'>Related Posts</h2>

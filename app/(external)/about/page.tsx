@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { FaEnvelope, FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaWhatsapp, FaX } from "react-icons/fa6";
+import { FaEnvelope, FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux';
 import ImageComponent from '@/components/shared/Image';
 import { getProfile } from '@/lib/redux/slices/profile/profile';
-import Loading from '@/app/loading';
+import Skeleton, { SkeletonHero } from '@/components/shared/Skeleton';
 import { Sparkles, Mail, User, Brain, Briefcase, GraduationCap, MessageCircle, Eye } from 'lucide-react';
 import { Award } from 'lucide-react';
 import LinkButton from '@/components/shared/button/LinkButton';
@@ -45,7 +45,7 @@ export default function AboutPage() {
     },
     {
       name: "Twitter",
-      icon: <FaX className="h-5 w-5" />,
+      icon: <FaXTwitter className="h-5 w-5" />,
       url: profile?.twitter_url,
     },
     {
@@ -117,7 +117,21 @@ export default function AboutPage() {
 
   const defaultTab = 'about-me'
 
-  return isLoading ? <Loading/> : (
+  if (isLoading) {
+    return (
+      <div>
+        <section className='page-padding min-h-dvh flex items-center bg-secondary/50'>
+          <SkeletonHero className='w-full' />
+        </section>
+        <section className='page-padding'>
+          <Skeleton height='2.5rem' className='w-full max-w-2xl mx-auto mb-8' rounded='lg' />
+          <Skeleton height='16rem' className='w-full' rounded='lg' />
+        </section>
+      </div>
+    )
+  }
+
+  return (
     <div>
       <ContactForm
         isOpen={isOpen}
@@ -139,10 +153,6 @@ export default function AboutPage() {
                   className="rounded-lg overflow-clip"
                   showImageInModalOnClick={true}
               />
-
-              {/* Floating Elements */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 max-md:w-16 max-md:h-16 bg-linear-to-br from-teal-400 to-emerald-500 rounded-2xl opacity-20 animate-pulse"></div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 max-md:w-24 max-md:h-24 bg-linear-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-10 animate-pulse delay-1000"></div>
           </div>
 
           <div className="relative flex flex-col justify-center items-start gap-8 w-[60%] max-md:w-full">
@@ -158,10 +168,10 @@ export default function AboutPage() {
 
             <div>
               <Eyebrow>about</Eyebrow>
-              <h1 className="text-5xl lg:text-7xl font-semibold leading-tight tracking-tight" >
-                <span className="text-foreground">{profile?.first_name}</span>
+              <h1 className="text-5xl lg:text-7xl font-semibold leading-tight tracking-tight text-foreground" >
+                {profile?.first_name}
                 <br />
-                <span className="bg-gradient-primary bg-clip-text text-transparent">{profile?.last_name}</span>
+                {profile?.last_name}
               </h1>
               <p className="text-xl max-md:text-lg text-foreground/60 font-normal leading-relaxed max-w-lg mt-6">
                 {profile?.title ?? "Software Engineer"}
@@ -221,8 +231,8 @@ export default function AboutPage() {
       </section>
 
       <CTASection
-        heading="Let us Work Together"
-        subtitle="I am always interested in new opportunities and exciting projects. Let us discuss how we can bring your ideas to life."
+        heading="Let's Work Together"
+        subtitle="I'm always interested in new opportunities. Let's discuss how we can bring your ideas to life."
         primaryAction={{
           label: "Start a Conversation",
           icon: <Mail className="ml-2 h-5 w-5 inline" />,

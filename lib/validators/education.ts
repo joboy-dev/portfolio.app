@@ -11,6 +11,7 @@ export const educationBaseSchema = z.object({
   file_id: z.string().optional(),
 //   description: z.string().optional(),
   description: richTextSchema.optional(),
+  is_published: z.boolean().optional(),
 })
 
 export const updateEducationSchema = educationBaseSchema.partial()

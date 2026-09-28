@@ -5,6 +5,7 @@ export const awardBaseSchema = z.object({
   issuer: z.string(),
   issue_date: z.coerce.date().optional(),
   file_id: z.string().optional(),
+  is_published: z.boolean().optional(),
 })
 
 export const updateAwardSchema = awardBaseSchema.partial()

@@ -21,8 +21,8 @@ export default function StoreProvider({
     if (storeRef.current) {
       // Dispatch initial data loading after component mounts
       storeRef.current.dispatch(getProfile())
-      storeRef.current.dispatch(getSkills({}))
-      storeRef.current.dispatch(getServices({}))
+      storeRef.current.dispatch(getSkills({ is_published: true }))
+      storeRef.current.dispatch(getServices({ is_published: true }))
     }
   }, [])
 

@@ -1,4 +1,3 @@
-import Loading from '@/app/loading'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
 import ListEmpty from '@/components/shared/ListEmpty'
@@ -11,6 +10,7 @@ import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Timeline, TimelineItem } from '@/components/shared/Timeline'
+import { SkeletonTimelineItem } from '@/components/shared/Skeleton'
 
 export default function Experience() {
   const { experiences, isLoading, totalPages, currentPage } = useAppSelector(state => state.experience)
@@ -18,6 +18,7 @@ export default function Experience() {
   const [filterState, setFilterState] = useState<GetExperiencesParams>({
     page: 1,
     per_page: 10,
+    is_published: true,
   })
 
   // Manage open description by experience id
@@ -34,7 +35,15 @@ export default function Experience() {
     }))
   }
 
-  return isLoading ? <Loading /> : (
+  if (isLoading) {
+    return (
+      <div className='flex flex-col'>
+        {Array.from({ length: 3 }).map((_, i) => <SkeletonTimelineItem key={i} isLast={i === 2} />)}
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col gap-4'>
       {experiences?.length === 0 && (
         <ListEmpty title='experience' />

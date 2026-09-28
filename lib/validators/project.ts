@@ -25,6 +25,7 @@ export const projectBaseSchema = z.object({
   results: z.array(z.string()).optional().nullable(),
   challenges_and_solutions: z.array(z.string()).optional().nullable(),
   technical_details: additionalInfoSchema.optional().nullable(),
+  is_published: z.boolean().optional(),
 });
 
 export const updateProjectSchema = projectBaseSchema.extend({

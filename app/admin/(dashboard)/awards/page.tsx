@@ -5,27 +5,32 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { getFiles, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
 import FileSelectField from '@/components/shared/form/FileSelectField'
-import { Pencil, Trash, Wrench } from 'lucide-react'
+import FormToggle from '@/components/shared/form/FormToggle'
+import { CheckCircle2, Pencil, Trash, Wrench, XCircle } from 'lucide-react'
 import ListSection from '@/components/shared/ListSection'
 import Avatar from '@/components/shared/Avatar'
+import Badge from '@/components/shared/Badge'
 import { formatDate } from '@/lib/utils/formatter'
 import Pagination from '@/components/shared/Pagination'
 import { createAward, deleteAward, getAwards, setSelectedAward, updateAward } from '@/lib/redux/slices/award/award'
 import { AwardBaseFormData, awardBaseSchema, UpdateAwardFormData } from '@/lib/validators/award'
 import { updateAwardSchema } from '@/lib/validators/award'
+import type { AwardInterface } from '@/lib/interfaces/award'
 import DateInput from '@/components/shared/form/DateInput'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function AwardsPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, awards, isLoading, isSubmitting, selectedAward } = useAppSelector((state: RootState) => state.award)
+    const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -68,8 +73,17 @@ export default function AwardsPage() {
         setIsEditOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    const togglePublish = (award: AwardInterface) => {
+        dispatch(updateAward({
+            id: award.id,
+            payload: { is_published: !award.is_published },
+        }))
+    }
+
+    return (
         <div>
+            {ConfirmDialog}
+
             <FormModal
                 methods={createMethods}
                 isOpen={isCreateOpen}
@@ -103,6 +117,12 @@ export default function AwardsPage() {
                     label="Award image"
                     placeholder="Select award image"
                     model_name="others"
+                />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this award visible on the public site"
                 />
             </FormModal>
 
@@ -141,6 +161,12 @@ export default function AwardsPage() {
                     model_name="others"
                 />
 
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this award visible on the public site"
+                />
+
             </FormModal>
 
             <ActionBreadcrumb
@@ -158,7 +184,11 @@ export default function AwardsPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Award Management"
                 subtitle={`${total} award(s) total`}
                 icon={Wrench}
@@ -183,6 +213,7 @@ export default function AwardsPage() {
                                                 issuer: award.issuer,
                                                 issue_date: award.issue_date ? new Date(award.issue_date) : undefined,
                                                 file_id: award.file_id,
+                                                is_published: award.is_published,
                                             })
                                         },
                                         icon: <Pencil className='w-4 h-4' />
@@ -190,12 +221,22 @@ export default function AwardsPage() {
                                     {
                                         label: "Delete",
                                         variant: "ghostDanger",
-                                        onSelect: () => {
-                                            dispatch(deleteAward({
-                                                id: award?.id ?? "",
-                                            }))
-                                        },
+                                        onSelect: () => confirm({
+                                            title: "Delete award",
+                                            content: `Delete "${award.name}"? This can't be undone.`,
+                                            confirmLabel: "Delete",
+                                            onConfirm: () => dispatch(deleteAward({ id: award?.id ?? "" })).unwrap(),
+                                        }),
                                         icon: <Trash className='w-4 h-4' />
+                                    }
+                                ]}
+                                actions={[
+                                    {
+                                        text: award.is_published ? "Unpublish" : "Publish",
+                                        onSelect: () => togglePublish(award),
+                                        icon: award.is_published
+                                            ? <XCircle className='w-4 h-4' />
+                                            : <CheckCircle2 className='w-4 h-4' />
                                     }
                                 ]}
                             >
@@ -208,7 +249,12 @@ export default function AwardsPage() {
                                         objectFit='contain'
                                     />
                                     <div>
-                                        <h3 className='text-xl text-foreground font-bold mb-2'>{award.name}</h3>
+                                        <div className='flex items-center gap-2 mb-2'>
+                                            <h3 className='text-xl text-foreground font-bold'>{award.name}</h3>
+                                            <Badge variant={award.is_published ? 'primary' : 'outlineSecondary'}>
+                                                {award.is_published ? 'Published' : 'Draft'}
+                                            </Badge>
+                                        </div>
                                         <p className='text-lg text-muted-foreground'>Issued by: <span className='font-bold'>{award.issuer}</span></p>
                                         <p className='text-lg text-muted-foreground'>Issue Date: <span className='font-bold'>{award.issue_date ? formatDate(award.issue_date) : "N/A"}</span></p>
                                     </div>
@@ -223,6 +269,8 @@ export default function AwardsPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
@@ -39,6 +38,7 @@ import Badge from '@/components/shared/Badge'
 import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
 import type { BlogInterface } from '@/lib/interfaces/blog'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
 
 export default function BlogPage() {
     const dispatch = useAppDispatch()
@@ -131,7 +131,7 @@ export default function BlogPage() {
         setIsDeleteOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    return (
         <div>
             <FormModal
                 methods={createMethods}
@@ -284,7 +284,11 @@ export default function BlogPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Blog Management"
                 subtitle={`${total} post(s) total`}
                 icon={BookOpen}
@@ -430,6 +434,8 @@ export default function BlogPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

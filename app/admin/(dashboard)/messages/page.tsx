@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { getFiles, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
@@ -16,10 +15,13 @@ import { deleteMessage, getMessages } from '@/lib/redux/slices/message/message'
 import { MessageBaseFormData, messageBaseSchema } from '@/lib/validators/message'
 import { createMessage } from '@/lib/redux/slices/message/message'
 import ContactForm from '@/components/messages/ContactForm'
+import { useConfirm } from '@/lib/hooks/useConfirm'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
 
 export default function MessagesPage() {
     const dispatch = useAppDispatch()
-    const { total, totalPages, messages, isLoading, selectedMessage } = useAppSelector((state: RootState) => state.message)    
+    const { total, totalPages, messages, isLoading, selectedMessage } = useAppSelector((state: RootState) => state.message)
+    const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
 
@@ -45,15 +47,16 @@ export default function MessagesPage() {
     const createMethods = useZodForm<MessageBaseFormData>(messageBaseSchema)
 
     const onSubmit = (data: MessageBaseFormData) => {
-        console.log(data)
         dispatch(createMessage(data))
         createMethods.reset()
         dispatch(setSelectedFile(undefined))
         setIsCreateOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    return (
         <div>
+            {ConfirmDialog}
+
             <ContactForm
                 isOpen={isCreateOpen}
                 setIsOpen={setIsCreateOpen}
@@ -76,7 +79,11 @@ export default function MessagesPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Message Management"
                 subtitle={`${total} message(s) total`}
                 icon={Wrench}
@@ -92,15 +99,16 @@ export default function MessagesPage() {
                         {messages.map((message) => (
                             <ListCard
                                 key={message.id}
-                                actions={[  
+                                actions={[
                                     {
                                         text: "Delete",
-                                        onSelect: () => {
-                                            dispatch(deleteMessage({
-                                                id: message?.id ?? "",
-                                            }))
-                                        },
-                                        icon: <Trash className='w-4 h-4 text-red-500' />
+                                        onSelect: () => confirm({
+                                            title: "Delete message",
+                                            content: `Delete the message from "${message.name}"? This can't be undone.`,
+                                            confirmLabel: "Delete",
+                                            onConfirm: () => dispatch(deleteMessage({ id: message?.id ?? "" })).unwrap(),
+                                        }),
+                                        icon: <Trash className='w-4 h-4 text-destructive' />
                                     }
                                 ]}
                             >
@@ -123,6 +131,8 @@ export default function MessagesPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

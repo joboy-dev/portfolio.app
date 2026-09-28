@@ -1,4 +1,4 @@
-import Modal from './Modal'
+import Dialog from './Dialog'
 import Button from '../button/Button';
 
 interface ModalProps {
@@ -8,6 +8,10 @@ interface ModalProps {
   onConfirm: () => void;
   content?: string;
   isLoading: boolean;
+  confirmLabel?: string
+  cancelLabel?: string
+  /** Most confirmations here guard a destructive action (delete, detach). */
+  danger?: boolean
 }
 
 export default function ConfirmationModal({
@@ -17,35 +21,39 @@ export default function ConfirmationModal({
   onConfirm,
   content,
   onClose,
+  confirmLabel = 'Proceed',
+  cancelLabel = 'Cancel',
+  danger = true,
 }: ModalProps ) {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => { if (!open && !isLoading) onClose() }}
       title={title ?? 'Are you sure?'}
       size='sm'
+      closeDisabled={isLoading}
     >
-      <p className='text-lg text-muted-foreground mb-4 '>{content}</p>
-      <div className='flex items-end justify-end gap-6'>
+      <p className='text-base text-muted-foreground mb-6'>{content}</p>
+      <div className='flex items-center justify-end gap-3'>
         <Button
           size='sm'
-          variant='danger'
+          variant='outlineSecondary'
           onClick={onClose}
           disabled={isLoading}
         >
-          Cancel
+          {cancelLabel}
         </Button>
 
          <Button
           size='sm'
-          variant='primary'
+          variant={danger ? 'danger' : 'primary'}
           onClick={onConfirm}
           isLoading={isLoading}
           disabled={isLoading}
         >
-          Proceed
+          {confirmLabel}
         </Button>
       </div>
-    </Modal>
+    </Dialog>
   )
 }

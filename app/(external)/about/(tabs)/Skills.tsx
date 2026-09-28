@@ -1,13 +1,12 @@
-import Loading from '@/app/loading'
-import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
 import ListEmpty from '@/components/shared/ListEmpty'
 import Pagination from '@/components/shared/Pagination'
-import ProgressBar from '@/components/shared/ProgressBar'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getSkills } from '@/lib/redux/slices/skill/skill'
 import { GetSkillsParams } from '@/lib/redux/slices/skill/skill.service'
+import { getSkillLevel } from '@/lib/utils/formatter'
 import React, { useEffect, useState } from 'react'
+import { SkeletonCard } from '@/components/shared/Skeleton'
 
 export default function Skills() {
   const { skills, isLoading, totalPages, currentPage } = useAppSelector(state => state.skill)
@@ -15,36 +14,41 @@ export default function Skills() {
   const [ filterState, setFilterState ] = useState<GetSkillsParams>({
     page: 1,
     per_page: 50,
+    is_published: true,
   })
 
   useEffect(() => {
     dispatch(getSkills({...filterState}))
   }, [dispatch, filterState])
 
-  return isLoading ? <Loading/> : (
+  if (isLoading) {
+    return (
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className='rounded-lg border border-border' />)}
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col gap-4'>
         {skills?.length === 0 && (
           <ListEmpty title='skills' />
         )}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
             {skills?.map((skill) => (
-              <Card key={skill.id}>
-                  <div className='flex items-center gap-4 mb-2'>
-                      <ImageComponent
-                          src={skill.skill_logo?.url ?? ""}
-                          alt={skill.name}
-                          width={50}
-                          height={50}
-                          className='rounded-lg'
-                          objectFit='contain'
-                      />
-                      <div className='w-full'>
-                          <h3 className='text-lg font-semibold'>{skill.name}</h3>
-                          <p className='text-sm text-muted-foreground'>{skill.proficiency}% Proficiency</p>
-                      </div>
+              <div key={skill.id} className='flex flex-col items-center justify-center gap-3 p-5 rounded-lg border border-border bg-secondary/40 text-center'>
+                  <ImageComponent
+                      src={skill.skill_logo?.url ?? ""}
+                      alt={skill.name}
+                      width={40}
+                      height={40}
+                      objectFit='contain'
+                  />
+                  <div>
+                    <p className='text-sm font-semibold text-foreground'>{skill.name}</p>
+                    <p className='text-xs text-muted-foreground mt-0.5'>{getSkillLevel(skill.proficiency)}</p>
                   </div>
-                  <ProgressBar value={skill.proficiency ?? 0} max={100} width='full'/>
-              </Card>
+              </div>
             ))}
         </div>
         <Pagination

@@ -1,4 +1,3 @@
-import Loading from '@/app/loading'
 import Badge from '@/components/shared/Badge'
 import Card from '@/components/shared/card/Card'
 import ImageComponent from '@/components/shared/Image'
@@ -12,6 +11,7 @@ import MarkdownRenderer from '@/components/shared/MarkdownRenderer'
 import { Building, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Timeline, TimelineItem } from '@/components/shared/Timeline'
+import { SkeletonTimelineItem } from '@/components/shared/Skeleton'
 
 export default function Education() {
   const { educations, isLoading, totalPages, currentPage } = useAppSelector(state => state.education)
@@ -19,6 +19,7 @@ export default function Education() {
   const [ filterState, setFilterState ] = useState<GetEducationsParams>({
     page: 1,
     per_page: 10,
+    is_published: true,
   })
 
   // Manage open description by education id
@@ -35,7 +36,15 @@ export default function Education() {
     }))
   }
 
-  return isLoading ? <Loading/> : (
+  if (isLoading) {
+    return (
+      <div className='flex flex-col'>
+        {Array.from({ length: 3 }).map((_, i) => <SkeletonTimelineItem key={i} isLast={i === 2} />)}
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col gap-4'>
         {educations?.length === 0 && (
             <ListEmpty title='education' />

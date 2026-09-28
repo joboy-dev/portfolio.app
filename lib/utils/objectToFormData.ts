@@ -31,9 +31,7 @@ export function objectToFormData(
                 }
                 continue; 
             } else if (value instanceof FileList) {
-                console.log('File list detected', value)
                 Array.from(value).forEach(file => {
-                    console.log('File detected', file)
                     formData.append(formKey, file, file.name); // Append each file with the SAME key
                 });
                 continue; 

@@ -18,6 +18,7 @@ import { useZodForm } from '@/lib/hooks/useZodForm'
 import { UpdateFileFormData, updateFileSchema } from '@/lib/validators/file'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
 import toaster from '@/lib/utils/toaster'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function FileCard({ file }: { file: FileInterface }) {
   const dispatch = useAppDispatch()
@@ -25,10 +26,14 @@ export default function FileCard({ file }: { file: FileInterface }) {
 
   const [isOpen, setIsOpen] = useState(false)
   const methods = useZodForm<UpdateFileFormData>(updateFileSchema)
+  const { confirm, ConfirmDialog } = useConfirm()
 
-  const handleDelete = () => {
-    dispatch(deleteFile({id: file.id}))
-  }
+  const handleDelete = () => confirm({
+    title: "Delete file",
+    content: `Delete "${file.file_name ?? 'this file'}"? This can't be undone.`,
+    confirmLabel: "Delete",
+    onConfirm: () => dispatch(deleteFile({ id: file.id })).unwrap(),
+  })
 
   const onSubmit = (data: UpdateFileFormData) => {
     const formData = objectToFormData(data)
@@ -50,6 +55,8 @@ export default function FileCard({ file }: { file: FileInterface }) {
           "flex items-center justify-between p-4 hover:bg-background/10 transition-colors border-b border-border",
         )}
     >
+        {ConfirmDialog}
+
         <FormModal
             methods={methods}
             isOpen={isOpen}

@@ -8,27 +8,26 @@ interface LinkButtonProps extends HTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
   className?: string;
   variant?: keyof typeof variantStyles;
-  size?: 'sm' | 'md' | 'lg' | 'none';
+  size?: 'sm' | 'md' | 'lg' | 'icon' | 'full' | 'none';
   disabled?: boolean;
 };
 
 const baseStyles =
-  'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none active:scale-[0.97] hover:scale-[1.02]';
+  'inline-flex items-center justify-center rounded-md font-medium transition-[color,background-color,border-color,transform] duration-(--dur-fast) ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-[0.97]';
 
 const sizeStyles = {
-  sm: 'px-4 py-2 text-sm',
-  md: 'px-5 py-2.5',
-  lg: 'px-6 py-3 text-lg',
-  full: 'w-full px-5 py-3',
+  sm: 'h-9 px-4 text-sm',
+  md: 'h-10 px-5',
+  lg: 'h-12 px-6 text-lg',
+  icon: 'h-10 w-10 shrink-0',
+  full: 'w-full h-10 px-5',
   none: 'p-0',
 }
 
-// const sizeStyles = {
-//   sm: 'px-3 py-1 text-sm h-7 w-16',   // Height 28px, Width 64px
-//   md: 'px-4 py-2 h-9 w-20',           // Height 36px, Width 80px
-//   lg: 'px-6 py-3 text-lg h-10 w-24',  // Height 40px, Width 96px (as you provided)
-//   full: 'w-full px-5 py-3 h-12',      // Full width, Height 48px
-// };
+/** True for anything that isn't an internal app route: http(s), mailto, tel, or a bare `#` placeholder. */
+function isExternal(to: string) {
+  return /^(https?:)?\/\//.test(to) || to.startsWith('mailto:') || to.startsWith('tel:')
+}
 
 export default function LinkButton({
   to,
@@ -39,16 +38,29 @@ export default function LinkButton({
   disabled = false,
   ...props
 }: LinkButtonProps) {
+  const external = !disabled && to !== '#' && isExternal(to)
+
+  const classes = clsx(
+    baseStyles,
+    sizeStyles[size],
+    variantStyles[variant],
+    disabled && 'opacity-50 cursor-not-allowed pointer-events-none active:scale-100',
+    className
+  )
+
+  if (external) {
+    return (
+      <a href={to} target="_blank" rel="noreferrer noopener" className={classes} {...props}>
+        {children}
+      </a>
+    )
+  }
+
   return (
     <Link
       href={disabled ? '#' : to}
-      className={clsx(
-        baseStyles,
-        sizeStyles[size],
-        variantStyles[variant],
-        disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
-        className
-      )}
+      aria-disabled={disabled || undefined}
+      className={classes}
       {...props}
     >
       {children}

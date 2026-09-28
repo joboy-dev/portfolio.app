@@ -25,6 +25,7 @@ export interface BaseModelInterface {
   created_at: string
   updated_at: string
   is_deleted: boolean
+  is_published?: boolean
 }
 
 export interface BaseGetParams {
@@ -32,6 +33,7 @@ export interface BaseGetParams {
   per_page?: number;
   sort_by?: string;
   order?: 'asc' | 'desc';
+  is_published?: boolean;
 };
 
 export type GetByIdParams = {

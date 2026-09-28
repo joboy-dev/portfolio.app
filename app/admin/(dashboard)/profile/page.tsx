@@ -1,7 +1,7 @@
 "use client"
 
-import Loading from "@/app/loading";
 import Breadcrumb from "@/components/shared/breadcrumb/Breadcrumb";
+import Skeleton, { SkeletonText } from "@/components/shared/Skeleton";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { getProfile, updateProfile } from "@/lib/redux/slices/profile/profile";
 import { RootState } from "@/lib/redux/store";
@@ -36,12 +36,36 @@ export default function ProfilePage() {
     }, [profile])
 
     const onSave = (data: ProfileFormData) => {
-        console.log(data)
         const formData = objectToFormData(data)
         dispatch(updateProfile(formData))
     }
 
-    return isLoading ? <Loading /> : (
+    // Only the initial fetch shows a skeleton. `isLoading` also flips true on
+    // every save (getProfile and updateProfile share one flag in the slice),
+    // and gating the whole page on it made the form vanish on every Save
+    // click. Once we have profile data once, the page stays put; the Save
+    // button alone reflects isLoading via isSubmitting below.
+    if (!profile) {
+        return (
+            <div>
+                <Breadcrumb title="Profile Settings" subtitle="Manage your personal information and portfolio details" />
+                <div className="max-md:w-full p-4 md:p-6 rounded-xl shadow-lg bg-transparent mt-4 space-y-6">
+                    <Skeleton className="h-24 w-24" rounded="full" />
+                    <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="space-y-2">
+                                <Skeleton height="0.875rem" width="6rem" />
+                                <Skeleton height="2.5rem" className="w-full" rounded="md" />
+                            </div>
+                        ))}
+                    </div>
+                    <SkeletonText lines={3} />
+                </div>
+            </div>
+        )
+    }
+
+    return (
         <div>
             <Breadcrumb title="Profile Settings" subtitle="Manage your personal information and portfolio details" />
 

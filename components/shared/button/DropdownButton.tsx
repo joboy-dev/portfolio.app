@@ -1,10 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
+import { AnimatePresence, motion } from 'framer-motion';
 import Button from './Button';
+import { dur, ease } from '@/lib/motion';
+import clsx from 'clsx';
 
 export type DropdownItem = {
   text: string;
   onSelect: () => void;
   icon?: React.ReactNode;
+  danger?: boolean;
 };
 
 type DropdownButtonProps = {
@@ -15,6 +20,7 @@ type DropdownButtonProps = {
   className?: string;
   buttonClassName?: string;
   buttonIcon?: React.ReactNode
+  align?: 'start' | 'end'
 };
 
 export const DropdownButton: React.FC<DropdownButtonProps> = ({
@@ -24,53 +30,55 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   size = 'sm',
   className = '',
   buttonClassName = '',
-  buttonIcon
+  buttonIcon,
+  align = 'end',
 }) => {
-  const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const [open, setOpen] = React.useState(false)
 
   return (
-    <div className={`relative inline-block ${className}`} ref={dropdownRef}>
-      <Button
-        variant={variant}
-        size={size}
-        onClick={() => setOpen(!open)}
-        className={buttonClassName}
-      >
-        {buttonText && buttonText}
-        {buttonIcon && buttonIcon}
-      </Button>
-      {open && (
-        <div className="absolute top-full mt-2 right-0 rounded-lg shadow-lg p-2 bg-background border border-border z-50 w-60">
-          {items.map((item, idx) => (
-            <div
-              key={idx}
-              className="cursor-pointer text-sm text-muted-foreground px-4 py-2 hover:bg-muted rounded flex items-center gap-2"
-              onClick={() => {
-                item.onSelect();
-                setOpen(false);
-              }}
-            >
-              {item.icon}
-              {item.text}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <RadixDropdownMenu.Root open={open} onOpenChange={setOpen}>
+      <RadixDropdownMenu.Trigger asChild>
+        <Button
+          variant={variant}
+          size={size}
+          className={clsx(className, buttonClassName)}
+        >
+          {buttonText}
+          {buttonIcon}
+        </Button>
+      </RadixDropdownMenu.Trigger>
+
+      <AnimatePresence>
+        {open && (
+          <RadixDropdownMenu.Portal forceMount>
+            <RadixDropdownMenu.Content asChild align={align} sideOffset={8} collisionPadding={16}>
+              <motion.div
+                className="z-(--z-dropdown) w-60 rounded-md shadow-md p-1.5 bg-popover border border-border origin-(--radix-dropdown-menu-content-transform-origin)"
+                initial={{ opacity: 0, transform: 'scale(0.97)' }}
+                animate={{ opacity: 1, transform: 'scale(1)' }}
+                exit={{ opacity: 0, transform: 'scale(0.97)' }}
+                transition={{ duration: dur.fast, ease: ease.out }}
+              >
+                {items.map((item, idx) => (
+                  <RadixDropdownMenu.Item
+                    key={idx}
+                    onSelect={item.onSelect}
+                    className={clsx(
+                      'cursor-pointer text-sm px-3 py-2 rounded outline-none flex items-center gap-2 transition-colors duration-(--dur-fast)',
+                      item.danger
+                        ? 'text-destructive data-highlighted:bg-destructive/10'
+                        : 'text-foreground/80 data-highlighted:bg-muted data-highlighted:text-foreground'
+                    )}
+                  >
+                    {item.icon}
+                    {item.text}
+                  </RadixDropdownMenu.Item>
+                ))}
+              </motion.div>
+            </RadixDropdownMenu.Content>
+          </RadixDropdownMenu.Portal>
+        )}
+      </AnimatePresence>
+    </RadixDropdownMenu.Root>
   );
 };

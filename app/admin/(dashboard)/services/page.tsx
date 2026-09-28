@@ -6,7 +6,6 @@ import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import { ServiceBaseFormData, serviceBaseSchema, UpdateServiceFormData, updateServiceSchema } from '@/lib/validators/service'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import { createService, deleteService, getServices, setSelectedService, updateService } from '@/lib/redux/slices/service/service'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
@@ -15,18 +14,23 @@ import { SearchField } from '@/components/shared/form/SearchField'
 import { getFiles, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
 import FileSelectField from '@/components/shared/form/FileSelectField'
-import { Pencil, Trash, Wrench } from 'lucide-react'
+import FormToggle from '@/components/shared/form/FormToggle'
+import { CheckCircle2, Pencil, Trash, Wrench, XCircle } from 'lucide-react'
 import ListSection from '@/components/shared/ListSection'
 import Avatar from '@/components/shared/Avatar'
 import Badge from '@/components/shared/Badge'
+import type { ServiceInterface } from '@/lib/interfaces/service'
 import { formatDate } from '@/lib/utils/formatter'
 import Pagination from '@/components/shared/Pagination'
 import TextAreaInput from '@/components/shared/form/TextAreaInput'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function ServicesPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, services, isLoading, isSubmitting, selectedService } = useAppSelector((state: RootState) => state.service)
+    const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -69,8 +73,17 @@ export default function ServicesPage() {
         setIsEditOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    const togglePublish = (service: ServiceInterface) => {
+        dispatch(updateService({
+            id: service.id,
+            payload: { is_published: !service.is_published },
+        }))
+    }
+
+    return (
         <div>
+            {ConfirmDialog}
+
             <FormModal
                 methods={createMethods}
                 isOpen={isCreateOpen}
@@ -106,6 +119,12 @@ export default function ServicesPage() {
                     label="Service image"
                     placeholder="Select service image"
                     model_name="others"
+                />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this service visible on the public site"
                 />
             </FormModal>
 
@@ -157,6 +176,12 @@ export default function ServicesPage() {
                     placeholder="Enter the position of the service"
                     type="number"
                 />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this service visible on the public site"
+                />
             </FormModal>
 
             <ActionBreadcrumb
@@ -174,7 +199,11 @@ export default function ServicesPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Service Management"
                 subtitle={`${total} service(s) total`}
                 icon={Wrench}
@@ -201,12 +230,22 @@ export default function ServicesPage() {
                                     {
                                         label: "Delete",
                                         variant: "ghostDanger",
-                                        onSelect: () => {
-                                            dispatch(deleteService({
-                                                id: service?.id ?? "",
-                                            }))
-                                        },
+                                        onSelect: () => confirm({
+                                            title: "Delete service",
+                                            content: `Delete "${service.name}"? This can't be undone.`,
+                                            confirmLabel: "Delete",
+                                            onConfirm: () => dispatch(deleteService({ id: service?.id ?? "" })).unwrap(),
+                                        }),
                                         icon: <Trash className='w-4 h-4' />
+                                    }
+                                ]}
+                                actions={[
+                                    {
+                                        text: service.is_published ? "Unpublish" : "Publish",
+                                        onSelect: () => togglePublish(service),
+                                        icon: service.is_published
+                                            ? <XCircle className='w-4 h-4' />
+                                            : <CheckCircle2 className='w-4 h-4' />
                                     }
                                 ]}
                             >
@@ -218,7 +257,12 @@ export default function ServicesPage() {
                                         rounded='md'
                                     />
                                     <div>
-                                        <h3 className='text-xl text-foreground font-bold mb-2'>{service.name}</h3>
+                                        <div className='flex items-center gap-2 mb-2'>
+                                            <h3 className='text-xl text-foreground font-bold'>{service.name}</h3>
+                                            <Badge variant={service.is_published ? 'primary' : 'outlineSecondary'}>
+                                                {service.is_published ? 'Published' : 'Draft'}
+                                            </Badge>
+                                        </div>
                                         <p className='text-lg text-muted-foreground'>{service.description}</p>
                                         {service.skills && service.skills.length > 0 && (
                                             <div className='flex items-center gap-2 mt-2 flex-wrap w-full'>
@@ -249,6 +293,8 @@ export default function ServicesPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

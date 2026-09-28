@@ -35,7 +35,6 @@ export default function AdditionalInfoField({
           if (keyToRemoveName) {
             const updatedKeys = [group.first, ...keysToRemove];
             setKeysToRemove(updatedKeys);
-            console.log(updatedKeys);
             methods.setValue(keyToRemoveName, updatedKeys);
           }
         }}

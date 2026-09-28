@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import LinkButton from './button/LinkButton'
+import Reveal from './motion/Reveal'
 
 interface CTAAction {
   label: string
@@ -20,36 +21,44 @@ export default function CTASection({
   secondaryAction: CTAAction
 }) {
   return (
-    <section className="page-padding bg-gradient-primary">
-      <div className="max-w-4xl mx-auto text-center pb-12">
-        <h2 className="text-4xl font-semibold text-primary-foreground mb-6 text-center">{heading}</h2>
-        <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed font-medium text-center">
-          {subtitle}
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <LinkButton
-            to={primaryAction.to ?? '#'}
-            onClick={primaryAction.onClick}
-            size="lg"
-            variant="ghost"
-            className="bg-white text-lg font-medium text-primary"
-          >
-            {primaryAction.label}
-            {primaryAction.icon}
-          </LinkButton>
+    <section className="page-padding">
+      <Reveal
+        className="relative overflow-hidden rounded-lg border border-border bg-card px-8 py-14 md:px-16 md:py-16 max-w-5xl mx-auto text-center"
+      >
+        <div
+          className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/15 blur-3xl pointer-events-none"
+          aria-hidden="true"
+        />
+        <div className="relative flex flex-col items-center">
+          <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">{heading}</h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
+            {subtitle}
+          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <LinkButton
+              to={primaryAction.to ?? '#'}
+              onClick={primaryAction.onClick}
+              size="lg"
+              variant="primary"
+              className="font-bold"
+            >
+              {primaryAction.label}
+              {primaryAction.icon}
+            </LinkButton>
 
-          <LinkButton
-            to={secondaryAction.to ?? '#'}
-            onClick={secondaryAction.onClick}
-            variant="outline"
-            size="lg"
-            className="border-2 border-white text-white px-8 py-4 text-lg font-medium"
-          >
-            {secondaryAction.label}
-            {secondaryAction.icon}
-          </LinkButton>
+            <LinkButton
+              to={secondaryAction.to ?? '#'}
+              onClick={secondaryAction.onClick}
+              variant="ghostPrimary"
+              size="lg"
+              className="font-medium"
+            >
+              {secondaryAction.label}
+              {secondaryAction.icon}
+            </LinkButton>
+          </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }

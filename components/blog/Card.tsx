@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import Card from '../shared/card/Card'
 import { BlogInterface } from '@/lib/interfaces/blog'
 import ImageComponent from '../shared/Image'
@@ -12,18 +13,20 @@ import { CalendarIcon, Eye, Tag } from 'lucide-react'
 export function BlogCard({ blog }: { blog: BlogInterface }) {
     return (
         <Card key={blog.id} className='px-0 py-0 h-full w-full' backgroundColor='bg-background'>
-            <div className='p-2 rounded-lg'>
-                <div className='w-full h-full flex items-center justify-center p-2 bg-accent/70'>
-                    <ImageComponent
-                        src={blog.cover_image_url ?? '/images/placeholder.png'}
-                        alt={blog.title}
-                        width={500}
-                        height={250}
-                        objectFit='contain'
-                        className='rounded-sm'
-                    />
+            <Link href={`/blog/${blog.slug}`} className='block'>
+                <div className='p-2 rounded-lg'>
+                    <div className='w-full h-full flex items-center justify-center p-2 bg-accent/70'>
+                        <ImageComponent
+                            src={blog.cover_image_url ?? '/images/placeholder.png'}
+                            alt={blog.title}
+                            width={500}
+                            height={250}
+                            objectFit='contain'
+                            className='rounded-sm'
+                        />
+                    </div>
                 </div>
-            </div>
+            </Link>
             <div className='flex flex-col gap-2 p-4 mt-4'>
                 {blog.published_at && (
                     <div className='flex items-center gap-2 text-sm text-muted-foreground'>
@@ -31,7 +34,9 @@ export function BlogCard({ blog }: { blog: BlogInterface }) {
                         {formatDate(blog.published_at)}
                     </div>
                 )}
-                <h3 className='text-xl font-bold'>{blog.title}</h3>
+                <Link href={`/blog/${blog.slug}`}>
+                    <h3 className='text-xl font-bold hover:text-primary-strong transition-colors duration-(--dur-fast)'>{blog.title}</h3>
+                </Link>
                 <p className='text-base text-foreground/60 line-clamp-3 break-words'>
                     {blog.excerpt ?? 'No excerpt'}
                 </p>

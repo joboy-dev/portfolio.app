@@ -1,15 +1,13 @@
-import React, { useState } from "react"
+import React, { useId } from "react"
 import { useFormContext, type FieldError } from "react-hook-form"
 import type { InputHTMLAttributes, ReactNode } from "react"
-
+import clsx from "clsx"
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
   label?: string
   type?: string
   placeholder?: string
-  // register: UseFormRegisterReturn
-  // error?: FieldError
   className?: string,
   startIcon?: ReactNode
   endIcon?: ReactNode
@@ -20,42 +18,53 @@ const FormInput: React.FC<FormInputProps> = ({
   name,
   type = "text",
   placeholder = "",
-  // register,
-  // error,
   className = "",
   startIcon,
   endIcon,
+  id,
   ...props
 }) => {
-  const [activeField, setActiveField] = useState(false)
+  const generatedId = useId()
+  const inputId = id ?? `${name}-${generatedId}`
+  const errorId = `${inputId}-error`
   const { register, formState: { errors } } = useFormContext();
+  const error = errors[name] as FieldError | undefined
 
   return (
     <div className="w-full mb-4">
-      {label && <label className="block text-left text-sm font-medium text-foreground mb-1">{label} {props.required ? <span className="text-red-500">*</span> : ""}</label>}
-      <div 
-        className={`w-full h-[40px] flex items-start justify-start gap-5 text-xs p-2 border rounded-lg outline-none ${activeField && "ring-1 ring-primary"} ${errors[name] ? 'border-red-500' : 'border-border'} ${className}`}
-        onFocus={() => setActiveField(true)}
-        onBlur={() => setActiveField(false)}
+      {label && (
+        <label htmlFor={inputId} className="block text-left text-sm font-medium text-foreground mb-1.5">
+          {label} {props.required ? <span className="text-destructive">*</span> : ""}
+        </label>
+      )}
+      <div
+        className={clsx(
+          "w-full h-10 flex items-center gap-2 text-sm px-3 border rounded-md bg-transparent transition-colors duration-(--dur-fast)",
+          "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring",
+          error ? "border-destructive" : "border-border",
+          className
+        )}
       >
-        {startIcon && startIcon}
+        {startIcon && <span className="shrink-0 text-muted-foreground">{startIcon}</span>}
 
         <input
+          id={inputId}
           type={type}
           placeholder={placeholder}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           {...register(name, {
-            valueAsNumber: type === "number",            
+            valueAsNumber: type === "number",
           })}
-          className="outline-none w-full h-full text-[14px]"
-          // className={`w-full text-xs p-2 border rounded outline-none focus:ring-1 focus:ring-primary ${error ? 'border-red-500' : 'border-border'} ${className}`}
+          className="outline-none w-full h-full bg-transparent text-foreground placeholder:text-muted-foreground text-sm"
           {...props}
         />
 
-        {endIcon && endIcon}
+        {endIcon && <span className="shrink-0 text-muted-foreground">{endIcon}</span>}
       </div>
-      {errors[name] && (
-        <p className="text-sm text-red-500">
-          {(errors[name] as FieldError).message}
+      {error && (
+        <p id={errorId} role="alert" className="text-sm text-destructive mt-1">
+          {error.message}
         </p>
       )}
     </div>

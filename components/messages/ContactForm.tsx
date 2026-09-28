@@ -23,7 +23,6 @@ export default function ContactForm({
     const createMethods = useZodForm<MessageBaseFormData>(messageBaseSchema)
 
     const onSubmit = (data: MessageBaseFormData) => {
-        console.log(data)
         dispatch(createMessage(data))
         createMethods.reset()
         setIsOpen(false)

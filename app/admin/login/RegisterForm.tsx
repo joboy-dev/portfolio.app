@@ -28,7 +28,7 @@ export default function RegisterForm() {
           submittingLabel="Registering..."
           isSubmitting={isLoading}
           buttonVariant="primary"
-          backgroundColor="foreground"
+          backgroundColor="card"
           width={100}
           title="Register"
           description='Set up your admin account to get started'

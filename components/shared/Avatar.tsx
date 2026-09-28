@@ -43,7 +43,7 @@ const Avatar: React.FC<AvatarProps & { objectFit?: 'cover' | 'contain' | 'fill' 
     <div className="relative inline-block" onClick={onClick}>
       <div
         className={clsx(
-          "flex items-center justify-center bg-muted text-white font-semibold",
+          "flex items-center justify-center bg-primary-soft text-primary-strong font-semibold",
           sizeClasses[size],
           rounded === "full" ? "rounded-full" : rounded === "md" ? "rounded-md" : "",
           className

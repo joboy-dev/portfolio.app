@@ -11,8 +11,9 @@ import { useZodForm } from '@/lib/hooks/useZodForm'
 import { fileBaseSchema, type FileBaseFormData } from '@/lib/validators/file'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
 import { createFile } from '@/lib/redux/slices/file/file'
-import Loading from '@/app/loading'
+import { SkeletonImage } from '@/components/shared/Skeleton'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
+import toaster from '@/lib/utils/toaster'
 
 export default function Gallery({   
     model_name,
@@ -35,14 +36,27 @@ export default function Gallery({
     }, [dispatch, model_id, model_name])
 
     // Change signature to accept any to fix the type error for react-hook-form's SubmitHandler<FieldValues>
-    const submitCreateForm = (data: any) => {
+    const submitCreateForm = async (data: any) => {
         // Optionally: Validate shape if needed
-        // console.log(data)
         const formData = objectToFormData(data)
-        dispatch(createFile(formData))
+        try {
+            await dispatch(createFile(formData)).unwrap()
+            methods.reset()
+            setOpenFileUploadModal(false)
+        } catch {
+            toaster.error('Could not upload the file. Please try again.')
+        }
     }
 
-    return isLoading ? <Loading/> : (
+    if (isLoading) {
+        return (
+            <div className='p-6 grid grid-cols-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4'>
+                {Array.from({ length: 5 }).map((_, i) => <SkeletonImage key={i} aspectRatio='square' />)}
+            </div>
+        )
+    }
+
+    return (
         <div>
             <FormModal
                 title='Upload File'

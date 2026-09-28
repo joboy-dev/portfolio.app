@@ -32,7 +32,6 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
             placeholder='Code'
             className="text-sm border-none outline-none bg-transparent pr-2 max-w-[200px]"
             onChange={(option) => {
-                console.log(option?.value)
             }}
             options={countries.map((country, i) => ({
                 key: i,

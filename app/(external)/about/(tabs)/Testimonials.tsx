@@ -1,12 +1,12 @@
-import Loading from '@/app/loading'
 import Card from '@/components/shared/card/Card'
 import ListEmpty from '@/components/shared/ListEmpty'
 import Pagination from '@/components/shared/Pagination'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { getTestimonials } from '@/lib/redux/slices/testimonial/testimonial'
 import { GetTestimonialsParams } from '@/lib/redux/slices/testimonial/testimonial.service'
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState } from 'react'
 import { FaQuoteRight } from 'react-icons/fa6'
+import { SkeletonCard } from '@/components/shared/Skeleton'
 
 export default function Testimonials() {
   const { testimonials, isLoading, totalPages, currentPage } = useAppSelector(state => state.testimonial)
@@ -21,7 +21,15 @@ export default function Testimonials() {
     dispatch(getTestimonials({...filterState}))
   }, [dispatch, filterState])
 
-  return isLoading ? <Loading/> : (
+  if (isLoading) {
+    return (
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} className='rounded-lg border border-border' />)}
+      </div>
+    )
+  }
+
+  return (
     <div className='flex flex-col gap-4'>
         {testimonials?.length === 0 && (
             <ListEmpty title='testimonial' />
@@ -48,7 +56,7 @@ export default function Testimonials() {
                                 <FaQuoteRight className='text-primary/10 text-4xl'/>
                             </div>
                             <div className='pl-4'>
-                                <p className='text-sm text-muted-foreground'>{testimonial.message}</p>
+                                <p className='text-sm text-muted-foreground line-clamp-3'>{testimonial.message}</p>
                             </div>
                         </div>
 

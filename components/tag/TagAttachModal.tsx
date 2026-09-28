@@ -34,7 +34,6 @@ export default function TagAttachModal({
     }, [dispatch, model_type])
 
     const submitForm = async (data: AttachOrDetatchTagFormData) => {
-        console.log(data)
         await tagService.attachTagsToEntity({
             payload: data
         })
@@ -58,7 +57,6 @@ export default function TagAttachModal({
                 label='Tags'   
                 methods={methods}
                 onChange={(value) => {
-                    console.log(value)
                 }}
                 options={tags.map((tag, index) => ({
                     label: capitalizeFirstLetter(tag.name),

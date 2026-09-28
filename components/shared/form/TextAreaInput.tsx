@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useId } from "react"
 import type { TextareaHTMLAttributes, ReactNode } from "react"
 import { useFormContext, type FieldError } from "react-hook-form"
+import clsx from "clsx"
 
 interface FormTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
@@ -16,30 +17,39 @@ const TextAreaInput: React.FC<FormTextAreaProps> = ({
   name,
   placeholder = "",
   className = "",
+  id,
   ...props
 }) => {
-  const [activeField, setActiveField] = useState(false)
+  const generatedId = useId()
+  const inputId = id ?? `${name}-${generatedId}`
+  const errorId = `${inputId}-error`
   const { register, formState: { errors } } = useFormContext();
+  const error = errors[name] as FieldError | undefined
 
   return (
-    <div className="w-full space-y-1 mb-4">
-      {label && <label className="block text-sm font-medium text-foreground">{label}</label>}
+    <div className="w-full mb-4">
+      {label && <label htmlFor={inputId} className="block text-left text-sm font-medium text-foreground mb-1.5">{label}</label>}
       <div
-        className={`w-full flex items-start gap-2 text-xs p-2 border rounded-lg ${activeField && "ring-1 ring-primary"} ${errors[name] ? 'border-red-500' : 'border-border'} ${className}`}
-        onClick={() => setActiveField(true)}
+        className={clsx(
+          "w-full flex items-start gap-2 text-sm p-3 border rounded-md bg-transparent transition-colors duration-(--dur-fast)",
+          "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring",
+          error ? "border-destructive" : "border-border",
+          className
+        )}
       >
         <textarea
+          id={inputId}
           placeholder={placeholder}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           {...register(name)}
-          onFocus={() => setActiveField(true)}
-          onBlur={() => setActiveField(false)}
-          className="w-full h-24 outline-none resize-none text-[14px]"
+          className="w-full h-24 outline-none resize-none bg-transparent text-foreground placeholder:text-muted-foreground text-sm"
           {...props}
         />
       </div>
-      {errors[name] && (
-        <p className="text-sm text-red-500">
-          {(errors[name] as FieldError).message}
+      {error && (
+        <p id={errorId} role="alert" className="text-sm text-destructive mt-1">
+          {error.message}
         </p>
       )}
     </div>

@@ -5,13 +5,13 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { bulkUploadFile, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
-import { File, Pencil, Tag, Trash, Upload, Wrench } from 'lucide-react'
+import FormToggle from '@/components/shared/form/FormToggle'
+import { CheckCircle2, File, Pencil, Tag, Trash, Upload, Wrench, XCircle } from 'lucide-react'
 import ListSection from '@/components/shared/ListSection'
 import Avatar from '@/components/shared/Avatar'
 import Pagination from '@/components/shared/Pagination'
@@ -21,6 +21,7 @@ import { ProjectBaseFormData, projectBaseSchema } from '@/lib/validators/project
 import { updateProjectSchema } from '@/lib/validators/project'
 import { createProject } from '@/lib/redux/slices/project/project'
 import { UpdateProjectFormData } from '@/lib/validators/project'
+import type { ProjectInterface } from '@/lib/interfaces/project'
 import CreatableMultiSelectField from '@/components/shared/form/CreatableMultiSelect'
 import SearchableSelectField from '@/components/shared/form/SearchableSelect'
 import { Option } from '@/lib/interfaces/general'
@@ -36,6 +37,8 @@ import AdditionalInfoField from '@/components/shared/form/AdditionalInfoField'
 import DateInput from '@/components/shared/form/DateInput'
 import { setSelectedTag } from '@/lib/redux/slices/tag/tag'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function ProjectsPage() {
     const projectDomain: Option[] = [
@@ -165,6 +168,7 @@ export default function ProjectsPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, projects, isLoading, isSubmitting, selectedProject } = useAppSelector((state: RootState) => state.project)
     const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
+    const { confirm, ConfirmDialog } = useConfirm()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
@@ -220,6 +224,13 @@ export default function ProjectsPage() {
         setIsEditOpen(false)
     }
 
+    const togglePublish = (project: ProjectInterface) => {
+        dispatch(updateProject({
+            id: project.id,
+            payload: { is_published: !project.is_published },
+        }))
+    }
+
     const onUploadSubmit = async (data: BulkUploadFileFormData) => {
         const formData = objectToFormData(data)
         await dispatch(bulkUploadFile(formData))
@@ -229,8 +240,10 @@ export default function ProjectsPage() {
         setIsUploadOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    return (
         <div>
+            {ConfirmDialog}
+
             <FormModal
                 methods={createMethods}
                 isOpen={isCreateOpen}
@@ -380,6 +393,12 @@ export default function ProjectsPage() {
                     header='Technical Details'
                     methods={createMethods}
                     name='technical_details'
+                />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this project visible on the public site"
                 />
 
             </FormModal>
@@ -571,6 +590,12 @@ export default function ProjectsPage() {
                         second: value,
                     })) : []}
                 />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this project visible on the public site"
+                />
             </FormModal>
 
             <FormModal
@@ -619,7 +644,11 @@ export default function ProjectsPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Project Management"
                 subtitle={`${total} project(s) total`}
                 icon={Wrench}
@@ -660,6 +689,7 @@ export default function ProjectsPage() {
                                                     start_date: project.start_date ? new Date(project.start_date) : null,
                                                     end_date: project.end_date ? new Date(project.end_date) : null,
                                                     status: project.status,
+                                                    is_published: project.is_published,
                                                 });
                                             },
                                             icon: <Pencil className='w-4 h-4' />
@@ -667,11 +697,12 @@ export default function ProjectsPage() {
                                         {
                                             label: "Delete",
                                             variant: "ghostDanger",
-                                            onSelect: () => {
-                                                dispatch(deleteProject({
-                                                    id: project?.id ?? "",
-                                                }));
-                                            },
+                                            onSelect: () => confirm({
+                                                title: "Delete project",
+                                                content: `Delete "${project.name}"? This can't be undone.`,
+                                                confirmLabel: "Delete",
+                                                onConfirm: () => dispatch(deleteProject({ id: project?.id ?? "" })).unwrap(),
+                                            }),
                                             icon: <Trash className='w-4 h-4' />
                                         }
                                     ]}
@@ -705,6 +736,13 @@ export default function ProjectsPage() {
                                             },
                                             icon: <Tag className='w-4 h-4' />
                                         },
+                                        {
+                                            text: project.is_published ? "Unpublish" : "Publish",
+                                            onSelect: () => togglePublish(project),
+                                            icon: project.is_published
+                                                ? <XCircle className='w-4 h-4' />
+                                                : <CheckCircle2 className='w-4 h-4' />
+                                        },
                                     ]}
                                 >
                                     <div className='flex items-start gap-8 max-md:flex-col max-md:items-start max-md:gap-4 max-md:justify-between'>
@@ -719,7 +757,12 @@ export default function ProjectsPage() {
                                             objectFit='contain'
                                         />
                                         <div>
-                                            <h3 className='text-xl text-foreground font-bold mb-2'>{project.name}</h3>
+                                            <div className='flex items-center gap-2 mb-2'>
+                                                <h3 className='text-xl text-foreground font-bold'>{project.name}</h3>
+                                                <Badge variant={project.is_published ? 'primary' : 'outlineSecondary'}>
+                                                    {project.is_published ? 'Published' : 'Draft'}
+                                                </Badge>
+                                            </div>
                                             <p className='text-lg text-muted-foreground'>Domain: <span className='font-bold'>{project.domain}</span></p>
                                             <p className='text-lg text-muted-foreground'>Project Type: <span className='font-bold'>{project.project_type}</span></p>
                                             <p className='text-lg text-muted-foreground'>Role: <span className='font-bold'>{project.role}</span></p>
@@ -763,6 +806,8 @@ export default function ProjectsPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }

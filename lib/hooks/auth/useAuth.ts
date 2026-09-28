@@ -13,6 +13,7 @@ export const useAuth = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
+    let cancelled = false;
     const token = session.get("access_token");
 
     if (!token) {
@@ -21,23 +22,45 @@ export const useAuth = () => {
       setLoading(false);
       return;
     }
-    
-    const loadUser = async () => {
+
+    // At most one refresh-and-retry: a token that's still invalid after a
+    // fresh refresh means the session is dead, not a transient hiccup.
+    // Retrying unconditionally here was recursing forever whenever the
+    // backend kept rejecting the request, flooding the network tab.
+    const loadUser = async (hasRetried: boolean) => {
       try {
-        const fetchPromise = userService.getCurrentUser();
-        const currentUser = await fetchPromise;
+        const currentUser = await userService.getCurrentUser();
+        if (cancelled) return;
         dispatch(setUser(currentUser));
         setIsAuthenticated(true);
       } catch (err) {
-        const data = await authService.refreshAccessToken()
-        session.set("access_token", data.access_token)
-        loadUser()
-      } finally {
-        setLoading(false);
+        if (hasRetried) {
+          session.remove("access_token");
+          dispatch(setUser(undefined));
+          setIsAuthenticated(false);
+          return;
+        }
+        try {
+          const data = await authService.refreshAccessToken();
+          if (cancelled) return;
+          session.set("access_token", data.access_token);
+          await loadUser(true);
+          return;
+        } catch {
+          session.remove("access_token");
+          dispatch(setUser(undefined));
+          setIsAuthenticated(false);
+        }
       }
     };
 
-    loadUser();
+    loadUser(false).finally(() => {
+      if (!cancelled) setLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [dispatch]);
 
   return { user, isAuthenticated, loading };

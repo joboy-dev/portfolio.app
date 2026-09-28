@@ -5,20 +5,22 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks/redux'
 import { useZodForm } from '@/lib/hooks/useZodForm'
 import { RootState } from '@/lib/redux/store'
 import React, { useEffect, useState } from 'react'
-import Loading from '@/app/loading'
 import FormModal from '@/components/shared/modal/FormModal'
 import FormInput from '@/components/shared/form/FormInput'
 import { SearchField } from '@/components/shared/form/SearchField'
 import { createFile, getFiles, setSelectedFile } from '@/lib/redux/slices/file/file'
 import ListCard from '@/components/shared/card/ListCard'
 import FileSelectField from '@/components/shared/form/FileSelectField'
-import { Eye, File, Pencil, Trash, Upload, Wrench } from 'lucide-react'
+import FormToggle from '@/components/shared/form/FormToggle'
+import { CheckCircle2, Eye, File, Pencil, Trash, Upload, Wrench, XCircle } from 'lucide-react'
 import ListSection from '@/components/shared/ListSection'
 import Avatar from '@/components/shared/Avatar'
+import Badge from '@/components/shared/Badge'
 import { formatDate } from '@/lib/utils/formatter'
 import Pagination from '@/components/shared/Pagination'
 import { createCertification, deleteCertification, getCertifications, setSelectedCertification, updateCertification } from '@/lib/redux/slices/certification/certification'
 import { CertificationBaseFormData, certificationBaseSchema, UpdateCertificationFormData, updateCertificationSchema } from '@/lib/validators/certification'
+import type { CertificationInterface } from '@/lib/interfaces/certification'
 import DateInput from '@/components/shared/form/DateInput'
 import toaster from '@/lib/utils/toaster'
 import FormFileUpload from '@/components/shared/form/FormFileUpload'
@@ -26,10 +28,13 @@ import { FileBaseFormData, fileBaseSchema } from '@/lib/validators/file'
 import { objectToFormData } from '@/lib/utils/objectToFormData'
 import FileCard from '@/components/file/FileCard'
 import ListEmpty from '@/components/shared/ListEmpty'
+import { AdminListSkeleton } from '@/components/shared/Skeleton'
+import { useConfirm } from '@/lib/hooks/useConfirm'
 
 export default function CertificationsPage() {
     const dispatch = useAppDispatch()
     const { total, totalPages, certifications, isLoading, isSubmitting, selectedCertification } = useAppSelector((state: RootState) => state.certification)
+    const { confirm, ConfirmDialog } = useConfirm()
     const { isLoading: fileLoading } = useAppSelector((state: RootState) => state.file)
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -89,6 +94,13 @@ export default function CertificationsPage() {
         setIsEditOpen(false)
     }
 
+    const togglePublish = (certification: CertificationInterface) => {
+        dispatch(updateCertification({
+            id: certification.id,
+            payload: { is_published: !certification.is_published },
+        }))
+    }
+
     const onUploadSubmit = async (data: FileBaseFormData) => {
         const formData = objectToFormData(data)
         await dispatch(createFile(formData))
@@ -98,8 +110,10 @@ export default function CertificationsPage() {
         setIsUploadOpen(false)
     }
 
-    return isLoading ? <Loading /> : (
+    return (
         <div>
+            {ConfirmDialog}
+
             <FormModal
                 methods={createMethods}
                 isOpen={isCreateOpen}
@@ -145,6 +159,12 @@ export default function CertificationsPage() {
                     label="Issuer image"
                     placeholder="Select issuer image"
                     model_name="others"
+                />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this certification visible on the public site"
                 />
             </FormModal>
 
@@ -201,6 +221,12 @@ export default function CertificationsPage() {
                     placeholder="Select issuer image"
                     model_name="others"
                 />
+
+                <FormToggle
+                    name="is_published"
+                    label="Published"
+                    description="Make this certification visible on the public site"
+                />
             </FormModal>
 
             <FormModal
@@ -234,7 +260,11 @@ export default function CertificationsPage() {
                 onSearchClear={() => setFiltersState({})}
             />
 
-            <ListSection
+            {isLoading ? (
+                <AdminListSkeleton rows={5} />
+            ) : (
+                <>
+                <ListSection
                 title="Certification Management"
                 subtitle={`${total} certification(s) total`}
                 icon={Wrench}
@@ -265,6 +295,7 @@ export default function CertificationsPage() {
                                                     credential_url: certification.credential_url,
                                                     issuer_file_id: certification.issuer_file_id,
                                                     position: certification.position,
+                                                    is_published: certification.is_published,
                                                 })
                                             },
                                             icon: <Pencil className='w-4 h-4' />
@@ -272,7 +303,12 @@ export default function CertificationsPage() {
                                         {
                                             label: "Delete",
                                             variant: "ghostDanger",
-                                            onSelect: () => dispatch(deleteCertification({id: certification.id})),
+                                            onSelect: () => confirm({
+                                                title: "Delete certification",
+                                                content: `Delete "${certification.name}"? This can't be undone.`,
+                                                confirmLabel: "Delete",
+                                                onConfirm: () => dispatch(deleteCertification({ id: certification.id })).unwrap(),
+                                            }),
                                             icon: <Trash className='w-4 h-4' />
                                         }
                                     ]}
@@ -295,7 +331,6 @@ export default function CertificationsPage() {
                                                     toaster.error("Certification file already uploaded")
                                                 } else {
                                                     dispatch(setSelectedCertification(certification))
-                                                    console.log(selectedCertification)
                                                     setIsUploadOpen(true)
                                                 }
                                             },
@@ -314,6 +349,13 @@ export default function CertificationsPage() {
                                             },
                                             icon: <File className='w-4 h-4' />
                                         },
+                                        {
+                                            text: certification.is_published ? "Unpublish" : "Publish",
+                                            onSelect: () => togglePublish(certification),
+                                            icon: certification.is_published
+                                                ? <XCircle className='w-4 h-4' />
+                                                : <CheckCircle2 className='w-4 h-4' />
+                                        },
                                     ]}
                                 >
                                     <div className='flex items-center gap-8 w-full max-md:flex-col max-md:items-start max-md:gap-4 max-md:justify-between'>
@@ -325,7 +367,12 @@ export default function CertificationsPage() {
                                             objectFit='contain'
                                         />
                                         <div>
-                                            <h3 className='text-xl text-foreground font-bold'>{certification.name}</h3>
+                                            <div className='flex items-center gap-2 mb-2'>
+                                                <h3 className='text-xl text-foreground font-bold'>{certification.name}</h3>
+                                                <Badge variant={certification.is_published ? 'primary' : 'outlineSecondary'}>
+                                                    {certification.is_published ? 'Published' : 'Draft'}
+                                                </Badge>
+                                            </div>
                                             <div className='flex flex-col items-start gap-2'>
                                                 <p className='text-sm text-muted-foreground'>Issued by: <span className='font-bold'>{certification.issuer}</span></p>
                                                 <p className='text-sm text-muted-foreground'>Credential ID: <span className='font-bold'>{certification.credential_id}</span></p>
@@ -353,6 +400,8 @@ export default function CertificationsPage() {
                 totalPages={totalPages ?? 1}
                 onPageChange={(page) => setFiltersState({...filtersState, page})}
             />
+                </>
+            )}
         </div>
     )
 }
